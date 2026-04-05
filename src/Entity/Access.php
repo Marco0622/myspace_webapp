@@ -15,11 +15,11 @@ class Access
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'userAccesses')]
-    #[ORM\JoinColumn(name: 'acc_member_id', nullable: false)] 
+    #[ORM\JoinColumn(name: 'acc_member_id', nullable: false, referencedColumnName: 'usr_id')] 
     private ?User $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionAccesses')]
-    #[ORM\JoinColumn(name: 'acc_session_id', nullable: false)] 
+    #[ORM\JoinColumn(name: 'acc_session_id', referencedColumnName: 'ses_id', nullable: false)] 
     private ?Session $session = null;
 
     #[ORM\Column(name: 'acc_role', length: 20)] 

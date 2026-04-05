@@ -27,11 +27,11 @@ class Pictures
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionPictures')]
-    #[ORM\JoinColumn(name: 'pic_session_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'pic_session_id', referencedColumnName: 'ses_id', nullable: false)]
     private ?Session $session = null;
 
     #[ORM\ManyToOne(inversedBy: 'userPictures')]
-    #[ORM\JoinColumn(name: 'pic_add_by', nullable: false)]
+    #[ORM\JoinColumn(name: 'pic_add_by', referencedColumnName: 'usr_id', nullable: false)]
     private ?User $add_by = null;
 
     public function getId(): ?int

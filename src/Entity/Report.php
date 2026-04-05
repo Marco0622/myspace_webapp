@@ -25,7 +25,7 @@ class Report
     private ?\DateTimeImmutable $send_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'userSendReports')]
-    #[ORM\JoinColumn(name: 'rep_author_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'rep_author_id', referencedColumnName: 'usr_id', nullable: false)]
     private ?user $author = null;
 
     public function getId(): ?int

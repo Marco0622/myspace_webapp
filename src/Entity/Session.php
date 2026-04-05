@@ -29,7 +29,7 @@ class Session
     private ?\DateTimeImmutable $last_activity = null;
 
     #[ORM\ManyToOne(inversedBy: 'storageSessions')]
-    #[ORM\JoinColumn(name: 'ses_storage_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'ses_storage_id', referencedColumnName: 'sto_id', nullable: false)]
     private ?Storage $storage = null;
 
     /**

@@ -27,21 +27,21 @@ class Node
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionNodes')]
-    #[ORM\JoinColumn(name: 'nod_session_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'nod_session_id', referencedColumnName: 'ses_id', nullable: false)]
     private ?session $session = null;
 
     #[ORM\Column(name: 'nod_type', length: 10)]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'userAddNodes')]
-    #[ORM\JoinColumn(name: 'nod_add_by', nullable: false)]
+    #[ORM\JoinColumn(name: 'nod_add_by', referencedColumnName: 'usr_id', nullable: false)]
     private ?user $add_by = null;
 
     /**
      * @var Collection<int, Node>
      */
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
-    #[ORM\JoinColumn(name: 'nod_parent_id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(name: 'nod_parent_id', referencedColumnName: 'nod_id', nullable: true, onDelete: 'CASCADE')]
     private Collection $parentNodes;
 
     public function __construct()

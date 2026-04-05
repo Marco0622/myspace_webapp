@@ -22,28 +22,28 @@ class Page
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionPages')]
-    #[ORM\JoinColumn(name: 'pag_session_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'pag_session_id', referencedColumnName: 'ses_id', nullable: false)]
     private ?session $session = null;
 
     #[ORM\Column(name: 'pag_created_at',)]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'userCreatedPages')]
-    #[ORM\JoinColumn(name: 'pag_created_by', nullable: false)]
+    #[ORM\JoinColumn(name: 'pag_created_by', referencedColumnName: 'usr_id', nullable: false)]
     private ?user $created_by = null;
 
     #[ORM\Column(name: 'pag_edited_at',)]
     private ?\DateTimeImmutable $edited_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'userEditedPages')]
-    #[ORM\JoinColumn(name: 'pag_edited_by' ,nullable: false)]
+    #[ORM\JoinColumn(name: 'pag_edited_by', referencedColumnName: 'usr_id', nullable: false)]
     private ?user $edited_by = null;
 
     #[ORM\Column(name: 'pag_is_locked')]
     private ?bool $is_locked = null;
 
     #[ORM\ManyToOne(inversedBy: 'userLockedPages')]
-    #[ORM\JoinColumn(name: 'pag_locked_by' ,nullable: true)]
+    #[ORM\JoinColumn(name: 'pag_locked_by', referencedColumnName: 'usr_id', nullable: true)]
     private ?user $locked_by = null;
 
     #[ORM\Column(name: 'pag_locked_at' ,nullable: true)]

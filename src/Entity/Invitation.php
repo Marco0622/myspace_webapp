@@ -15,11 +15,11 @@ class Invitation
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'sentInvitations')]
-    #[ORM\JoinColumn(name: "inv_sender_id", nullable: false)]
+    #[ORM\JoinColumn(name: "inv_sender_id", referencedColumnName: 'usr_id', nullable: false)]
     private ?user $sender_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'receivedInvitations')]
-    #[ORM\JoinColumn(name: "inv_receiver_id", nullable: false)]
+    #[ORM\JoinColumn(name: "inv_receiver_id", referencedColumnName: 'usr_id', nullable: false)]
     private ?user $receiver_id = null;
 
     #[ORM\Column(name: 'inv_responce')]
@@ -29,7 +29,7 @@ class Invitation
     private ?\DateTimeImmutable $send_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionInvitations')]
-    #[ORM\JoinColumn(name: 'inv_session_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'inv_session_id', referencedColumnName: 'ses_id', nullable: false)]
     private ?session $session = null;
 
     public function getId(): ?int
