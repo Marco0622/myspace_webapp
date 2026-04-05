@@ -159,7 +159,7 @@ class Session
         return $this->storage;
     }
 
-    public function setStorage(storage $storage): static
+    public function setStorage(?Storage $storage): static
     {
         $this->storage = $storage;
 

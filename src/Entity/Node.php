@@ -26,27 +26,29 @@ class Node
     #[ORM\Column(name: 'nod_name', length: 80)]
     private ?string $name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'sessionNodes')]
-    #[ORM\JoinColumn(name: 'nod_session_id', referencedColumnName: 'ses_id', nullable: false)]
-    private ?session $session = null;
-
     #[ORM\Column(name: 'nod_type', length: 10)]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'userAddNodes')]
-    #[ORM\JoinColumn(name: 'nod_add_by', referencedColumnName: 'usr_id', nullable: false)]
-    private ?user $add_by = null;
+    #[ORM\ManyToOne(targetEntity: Session::class, inversedBy: 'sessionNodes')]
+    #[ORM\JoinColumn(name: 'nod_session_id', referencedColumnName: 'ses_id', nullable: false)]
+    private ?Session $session = null;
 
-    /**
-     * @var Collection<int, Node>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAddNodes')]
+    #[ORM\JoinColumn(name: 'nod_add_by', referencedColumnName: 'usr_id', nullable: false)]
+    private ?User $add_by = null;
+
+    // --- RELATION AUTO-RÉFÉRENCÉE (Parent / Enfants) ---
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'nod_parent_id', referencedColumnName: 'nod_id', nullable: true, onDelete: 'CASCADE')]
-    private Collection $parentNodes;
+    private ?self $parent = null;
+
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
+    private Collection $children;
 
     public function __construct()
     {
-        $this->parentNodes = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,7 +64,6 @@ class Node
     public function setPath(string $path): static
     {
         $this->path = $path;
-
         return $this;
     }
 
@@ -74,7 +75,6 @@ class Node
     public function setSize(string $size): static
     {
         $this->size = $size;
-
         return $this;
     }
 
@@ -86,19 +86,17 @@ class Node
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getSession(): ?session
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?session $session): static
+    public function setSession(?Session $session): static
     {
         $this->session = $session;
-
         return $this;
     }
 
@@ -110,49 +108,55 @@ class Node
     public function setType(string $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
-    public function getAddBy(): ?user
+    public function getAddBy(): ?User
     {
         return $this->add_by;
     }
 
-    public function setAddBy(?user $add_by): static
+    public function setAddBy(?User $add_by): static
     {
         $this->add_by = $add_by;
+        return $this;
+    }
 
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): static
+    {
+        $this->parent = $parent;
         return $this;
     }
 
     /**
-     * @return Collection<int, Node>
+     * @return Collection<int, self>
      */
-    public function getParentNodes(): Collection
+    public function getChildren(): Collection
     {
-        return $this->parentNodes;
+        return $this->children;
     }
 
-    public function addParentNode(self $parentNode): static
+    public function addChild(self $child): static
     {
-        if (!$this->parentNodes->contains($parentNode)) {
-            $this->parentNodes->add($parentNode);
-            $parentNode->setParent($this);
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+            $child->setParent($this);
         }
-
         return $this;
     }
 
-    public function removeParentNode(self $parentNode): static
+    public function removeChild(self $child): static
     {
-        if ($this->parentNodes->removeElement($parentNode)) {
-            // set the owning side to null (unless already changed)
-            if ($parentNode->getParent() === $this) {
-                $parentNode->setParent(null);
+        if ($this->children->removeElement($child)) {
+            if ($child->getParent() === $this) {
+                $child->setParent(null);
             }
         }
-
         return $this;
     }
 }
