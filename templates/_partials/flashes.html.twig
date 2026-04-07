@@ -1,0 +1,25 @@
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+
+        {% set alert_class = type == 'error' ? 'danger' : (type == 'success' ? 'success' : 'info') %}
+        
+        <div class="alert alert-{{ alert_class }} alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+            
+            <div class="me-2">
+                {% if type == 'success' %}
+                    <i class="bi bi-check-circle-fill"></i>
+                {% elseif type == 'error' or type == 'danger' %}
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                {% else %}
+                    <i class="bi bi-info-circle-fill"></i>
+                {% endif %}
+            </div>
+
+            <div>
+                {{ message|trans }}
+            </div>
+
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}
