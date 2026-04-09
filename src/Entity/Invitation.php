@@ -30,7 +30,7 @@ class Invitation
 
     #[ORM\ManyToOne(inversedBy: 'sessionInvitations')]
     #[ORM\JoinColumn(name: 'inv_session_id', referencedColumnName: 'ses_id', nullable: false)]
-    private ?session $session = null;
+    private ?Session $session = null;
 
     public function getId(): ?int
     {
@@ -85,12 +85,12 @@ class Invitation
         return $this;
     }
 
-    public function getSession(): ?session
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?session $session): static
+    public function setSession(?Session $session): static
     {
         $this->session = $session;
 

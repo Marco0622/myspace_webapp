@@ -37,6 +37,7 @@
         "symfony/string": "8.0.*",
         "symfony/translation": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
+        "symfony/ux-icons": "^2.34",
         "symfony/ux-turbo": "^2.34",
         "symfony/validator": "8.0.*",
         "symfony/web-link": "8.0.*",
@@ -106,6 +107,7 @@
         "symfony/debug-bundle": "8.0.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/stopwatch": "8.0.*",
-        "symfony/web-profiler-bundle": "8.0.*"
+        "symfony/web-profiler-bundle": "8.0.*",
+        "zenstruck/foundry": "^2.9"
     }
 }

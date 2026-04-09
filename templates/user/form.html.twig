@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Informations utilisateur{% endblock %}
+
+{% block body %}
+<div class="py-4" >
+    {% if user is defined and user %}  
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
+                {% if user.photo is null %}
+                    <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
+                {% else %}
+                    <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                {% endif %}
+            </div>
+            <div>
+                <h1 class="h5 mb-1 fw-500">{{ user.firstname }} {{ user.name }}</h1>
+                {% for role in user.roles %}
+                    {% if role != 'ROLE_USER' %}
+                        <span class="badge bg-white text-dark">
+                            {{ role == 'ROLE_ADMIN' ? 'Administrateur' : role }}
+                        </span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+        <div class="card border mb-3">
+            <div class="card-body">
+                <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
+                    Informations personnelles
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-6">{{ form_row(userForm.name) }}</div>
+                    <div class="col-md-6">{{ form_row(userForm.firstname) }}</div>
+                    <div class="col-md-6">{{ form_row(userForm.pseudo) }}</div>
+                    <div class="col-md-6">{{ form_row(userForm.birthdate) }}</div>
+                    <div class="col-12">{{ form_row(userForm.email) }}</div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-center gap-3">
+                            {% if user is defined and user %}  
+                                <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
+                                    {% if user.photo is null %}
+                                        <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
+                                    {% else %}
+                                        <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            <div class="flex-grow-1">
+                                {{ form_row(userForm.photo) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
+                    Mot de passe
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-6">{{ form_row(userForm.plainPassword.first) }}</div>
+                    <div class="col-md-6">{{ form_row(userForm.plainPassword.second) }}</div>
+                </div>
+                <small class="text-muted d-flex align-items-center gap-1 mt-1">
+                    {{ ux_icon('lucide:info', {width: 12, height: 12}) }}
+                    12 caractères minimum — laisser vide pour ne pas modifier
+                </small>
+                {% if app.user.id == user.id %}
+                    <a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
+                {% endif %}
+                
+
+                
+            </div>
+        </div>
+
+        {{ form_row(userForm.submit) }}
+
+    {{ form_end(userForm) }}
+{% endblock %}

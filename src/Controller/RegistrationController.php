@@ -46,8 +46,11 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('contact@marco-dev.fr', 'Contact MySpace'))
                     ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Confirmez votre adresse email - MySpace')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->context([
+                        'user' => $user, 
+                    ])
             );
 
             // do anything else you need here, like send an email

@@ -24,34 +24,40 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'attr' => ['placeholder' => 'Votre nom...'],
-                'label' => 'Nom*'
+                'label' => 'Nom*',
+                'label_attr' => ['class' => 'text-white'],
             ])
 
             ->add('firstname', TextType::class, [
                 'attr' => ['placeholder' => 'Votre prenom...'],
-                'label' => 'Prénom*'
+                'label' => 'Prénom*',
+                'label_attr' => ['class' => 'text-white'],
             ])
 
             ->add('pseudo', TextType::class, [ 'required' => false,
                 'attr' => ['placeholder' => 'Votre pseudo...'],
-                'label' => 'Pseudo'
+                'label' => 'Pseudo',
+                'label_attr' => ['class' => 'text-white'],
             ])
 
             ->add('birthdate', DateType::class, [
-                'label' => 'Date de naissance*'
+                'label' => 'Date de naissance*',
+                'label_attr' => ['class' => 'text-white'],
             ])
 
             ->add('email', EmailType::class, [
                 'attr' => ['placeholder' => 'nom@exemple.com'],
-                'label' => 'Adresse e-mail*'
+                'label' => 'Adresse e-mail*',
+                'label_attr' => ['class' => 'text-white'],
             ])
 
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => "J'accepte les conditions d'utilisation.*",
+                'label_attr' => ['class' => 'text-white'],
                 'constraints' => [
                     new IsTrue(
-                        message: 'You should agree to our terms.',
+                        message: "Vous devez accepter les conditions d'utilisation.",
                     ),
                 ],
             ])
@@ -59,7 +65,7 @@ class RegistrationFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                
+                'label_attr' => ['class' => 'text-white'],
                 'invalid_message' => 'The password fields must match.',
                 'mapped' => false,
                 'required' => true,

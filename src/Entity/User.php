@@ -54,11 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'usr_ban_at', nullable: true)]
     private ?\DateTimeImmutable $ban_at = null;
 
-    /**
-     * @var Collection<int, Invitation>
-     */
-    #[ORM\ManyToMany(targetEntity: Invitation::class, mappedBy: 'sender_id')]
-    private Collection $invitations;
+   
 
     /**
      * @var Collection<int, Invitation>
@@ -122,7 +118,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->invitations = new ArrayCollection();
         $this->sentInvitations = new ArrayCollection();
         $this->receivedInvitations = new ArrayCollection();
         $this->userAccesses = new ArrayCollection();
@@ -301,33 +296,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBanAt(?\DateTimeImmutable $ban_at): static
     {
         $this->ban_at = $ban_at;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Invitation>
-     */
-    public function getInvitations(): Collection
-    {
-        return $this->invitations;
-    }
-
-    public function addInvitation(Invitation $invitation): static
-    {
-        if (!$this->invitations->contains($invitation)) {
-            $this->invitations->add($invitation);
-            $invitation->setSenderId($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvitation(Invitation $invitation): static
-    {
-        if ($this->invitations->removeElement($invitation)) {
-            $invitation->setSenderId(null);
-        }
 
         return $this;
     }

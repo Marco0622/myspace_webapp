@@ -45,12 +45,12 @@ class Access
         return $this;
     }
 
-    public function getSession(): ?session
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function setSession(?session $session): static
+    public function setSession(?Session $session): static
     {
         $this->session = $session;
 

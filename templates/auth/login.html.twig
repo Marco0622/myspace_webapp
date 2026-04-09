@@ -3,33 +3,49 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <form method="post">
-    {% if error %}
-        <div class="alert alert-danger shadow-sm">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-
-    <div class="text-center">
-        <h1 class="text-uppercase">Connexion</h1>
-        <p> 
-            Si vous n'avez pas de compte, vous pouvez en créer un sur la page <a class="text-white" href="{{ path('app_register') }}">d'inscription !</a>      
-        </p>
-    </div>
-
-    <div class="mb-3">
-        <label for="username" class="form-label">Adresse e-mail</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" placeholder="Votre e-mail" class="form-control" autocomplete="email" required autofocus>
-    </div>
-
-    <div class="mb-3">
-        <label for="password" class="form-label">Mot de passe</label>
-        <input type="password" name="_password" id="password" class="form-control" placeholder="Votre mot de passe" autocomplete="current-password" required>
-        <a href="{{ path('app_forgot_password_request')}}"> Mot de passe oublié ? </a>
-    </div>
+   <div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
     
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <div class="card" style="max-width: 800px; width: 100%; border-radius: 1rem;">
+        <div class="card-body p-4 p-md-5">
+            
+            <div class="text-center mb-4 text-white">
+                <h2 class="fw-bold ">Connexion</h2>
+                <p class="text-muted small text-white">Heureux de vous revoir !</p>
+            </div>
 
-    <button class="btn btn-light btn-lg w-100 my-3" type="submit">
-        Se connecter
-    </button>
-</form>
+            <form method="post" class="text-white">
+                {% if error %}
+                   <div class="alert alert-danger shadow-sm">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label for="inputEmail" class="form-label text-uppercase fw-semibold">Email</label>
+                    <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" 
+                           class="form-control form-control-lg fs-6" autocomplete="email" required autofocus 
+                           placeholder="nom@exemple.com" style="border-radius: 0.75rem;">
+                </div>
+
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label text-uppercase fw-semibold">Mot de passe</label>
+                    <input type="password" name="_password" id="inputPassword" 
+                           class="form-control form-control-lg fs-6" autocomplete="current-password" required 
+                           placeholder="••••••••" style="border-radius: 0.75rem;">
+                    <a href="{{ path('app_forgot_password_request')}}" class="small  text-white text py-1">Mot de passe oublié ?</a>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button class="btn btn-light w-100 fw-bold py-2 shadow-sm" type="submit" style="border-radius: 0.75rem;">
+                    Se connecter
+                </button>
+
+                <div class="text-center mt-4">
+                    <span class="text-muted small text-white">Pas de compte ?</span>
+                    <a href="{{ path('app_register') }}" class="small fw-bold text-white">Créer un profil</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

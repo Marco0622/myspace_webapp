@@ -1,0 +1,3 @@
+php:
+    env:
+        MAILER_DSN: 'smtp://11bbded5e01691:e9baf7ab52cfed@sandbox.smtp.mailtrap.io:2525'
