@@ -85,7 +85,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findAllActiveWithSearch(int $number, int $page, string $query): array
     {
         $queryBuilder = $this->createQueryBuilder('u')
-            ->where('LOWER(u.firstname) LIKE LOWER(:q) OR LOWER(u.name) LIKE LOWER(:q) AND u.deleted_at IS NULL')
+            ->where('(LOWER(u.firstname) LIKE LOWER(:q) OR LOWER(u.name) LIKE LOWER(:q)) AND u.deleted_at IS NULL')
             ->setParameter('q', '%' . $query . '%')
             ->orderBy('u.created_at', 'DESC');
             

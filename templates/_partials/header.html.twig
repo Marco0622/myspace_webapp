@@ -30,6 +30,7 @@
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="profileDropdown">
+                        
                             <li><h6 class="dropdown-header text-capitalize pe-5">{{ app.user.firstname }} {{ app.user.name }}</h6></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
@@ -37,13 +38,16 @@
                                     {{ ux_icon('bi:person-circle', {class: 'me-2'}) }} Mon Profil
                                 </a>
                             </li>
-                            <li><h6 class="dropdown-header text-capitalize pe-5">Session</h6></li>
+                           
+                            <li><h6 class="dropdown-header text-capitalize pe-5">Vos Session</h6></li>
                             <li><hr class="dropdown-divider"></li>
+                            
                             <li>
                                 <a class="dropdown-item d-flex align-items-center text-danger pe-5" href="{{ path('app_logout') }}">
                                     {{ ux_icon('bi:box-arrow-right', {class: 'me-2'}) }} Déconnexion
                                 </a>
                             </li>
+                           
                         </ul>
                     </li>
 
@@ -52,13 +56,13 @@
                         <a class="nav-link text-white fw-medium" href="{{ path('app_login') }}">Connexion</a>
                     </li>
                     <li class="nav-item w-100 w-lg-auto mt-2 mt-lg-0">
-                        <a class="nav-link fw-medium text-white ms-lg-3 px-4 rounded-pill border border-white" href="{{ path('app_register') }}">Inscription</a>
+                        <a class="nav-link fw-medium text-white ms-lg-3 px-4" href="{{ path('app_register') }}">Inscription</a>
                     </li>
                 {% endif %}
 
                 <li class="nav-item w-100 w-lg-auto mt-2 mt-lg-0 d-flex align-items-center border-start ms-lg-3 ps-lg-3">
-                    <a class="nav-link fw-medium text-white p-0" href="#">
-                        {{ ux_icon('bi:question-circle-fill', {width: '25px', height: '25px'}) }}
+                    <a class="btn btn-outline-light ms-lg-2 text-nowrap" href="{{ path('app_page_contact') }}">
+                        Nous Contacter
                     </a>
                 </li>
             </ul>

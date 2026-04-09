@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions Légales{% endblock %}
+
+{% block body %}
+<section class="py-5 border-bottom border-secondary">
+    <h1 class="display-5 mb-5 text-uppercase fw-bold">Mentions Légales</h1>
+    
+    <div class="row g-5">
+        <div class="col-md-6">
+            <h2 class="h4 mb-3 border-start border-white border-4 ps-3">Édition du site</h2>
+            <p class="text-white-50">
+                <strong class="text-white">Propriétaire :</strong> [Votre Nom/Entreprise]<br>
+                <strong class="text-white">Statut :</strong> [Ex: SAS, Auto-entrepreneur]<br>
+                <strong class="text-white">Adresse :</strong> [Votre Adresse]<br>
+                <strong class="text-white">SIRET :</strong> [Numéro SIRET]<br>
+                <strong class="text-white">Contact :</strong> [Email / Téléphone]
+            </p>
+        </div>
+
+        <div class="col-md-6">
+            <h2 class="h4 mb-3 border-start border-white border-4 ps-3">Hébergement</h2>
+            <p class="text-white-50">
+                <strong class="text-white">Hébergeur :</strong> [Nom de l'hébergeur]<br>
+                <strong class="text-white">Adresse :</strong> [Adresse de l'hébergeur]<br>
+                <strong class="text-white">Site Web :</strong> [Lien de l'hébergeur]
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h2 class="h4 mb-3 border-start border-white border-4 ps-3">Propriété intellectuelle</h2>
+        <p class="text-white-50">
+            Tout le contenu de ce site (textes, images, logos) est protégé par le droit d'auteur. 
+            Toute reproduction est interdite sans accord préalable.
+        </p>
+    </div>
+</section>
+{% endblock %}
