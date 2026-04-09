@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+   <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+            
+            <img src="{{ asset('assets/images/icon/404.svg') }}" class="bi bi-exclamation-octagon-fill text-danger" width="100%" >
+
+            
+            <h2>Oups ! Page introuvable</h2>
+
+            <p class=" mb-5 text-white fs-6">
+                Désolé, la page que vous recherchez n'est pas disponible ou a été déplacée. Veuillez vérifier l'adresse saisie ou retourner à la page d'accueil pour continuer votre navigation.
+            </p>
+
+            {% if app.user.id is defined %}
+            <a href="{{ path('app_user_home') }}" class="btn btn-outline-light btn-lg px-5">
+                Retour à l'accueil
+            </a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg px-5">
+                    Retour à l'accueil
+                </a>
+            {% endif %}
+
+        </div>
+    </div>
+{% endblock %}

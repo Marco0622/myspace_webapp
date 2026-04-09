@@ -45,7 +45,7 @@ final class PageController extends AbstractController
             
             if (!$this->isCsrfTokenValid('contact_form', $submittedToken)) {
                 $strFormError = "Jeton de sécurité invalide.";
-            } elseif ((empty($fullName) && strlen($fullName) > 1) || empty($subject) || empty($message)) {
+            } elseif (empty($fullName) || empty($subject) || empty($message)) {
                 $strFormError = "Tous les champs obligatoires ne sont pas remplis.";
             } elseif (!filter_var($emailUser, FILTER_VALIDATE_EMAIL)) {
                 $strFormError = "L'adresse email n'est pas valide.";
@@ -66,7 +66,11 @@ final class PageController extends AbstractController
                 $mailer->send($email);
                 $this->addFlash('success', "L'email a bien été envoyé !");
 
-                return $this->redirectToRoute('app_user_home');
+                if ($this->getUser()) {
+                    return $this->redirectToRoute('app_user_home');
+                }
+
+                return $this->redirectToRoute('app_landing_page');
             }
 
             
