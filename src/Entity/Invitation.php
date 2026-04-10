@@ -22,7 +22,7 @@ class Invitation
     #[ORM\JoinColumn(name: "inv_receiver_id", referencedColumnName: 'usr_id', nullable: false)]
     private ?user $receiver_id = null;
 
-    #[ORM\Column(name: 'inv_responce')]
+    #[ORM\Column(name: 'inv_responce', nullable: true)]
     private ?bool $responce = null;
 
     #[ORM\Column(name: 'inv_send_at')]
@@ -37,24 +37,24 @@ class Invitation
         return $this->id;
     }
 
-    public function getSenderId(): ?user
+    public function getSenderId(): ?User
     {
         return $this->sender_id;
     }
 
-    public function setSenderId(?user $sender_id): static
+    public function setSenderId(?User $sender_id): static
     {
         $this->sender_id = $sender_id;
 
         return $this;
     }
 
-    public function getReceiverId(): ?user
+    public function getReceiverId(): ?User
     {
         return $this->receiver_id;
     }
 
-    public function setReceiverId(?user $receiver_id): static
+    public function setReceiverId(?User $receiver_id): static
     {
         $this->receiver_id = $receiver_id;
 
@@ -66,7 +66,7 @@ class Invitation
         return $this->responce;
     }
 
-    public function setResponce(bool $responce): static
+    public function setResponce(?bool $responce): static
     {
         $this->responce = $responce;
 

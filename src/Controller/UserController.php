@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserInfoFormType;
+use App\Repository\InvitationRepository;
+use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,17 +19,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_home')]
-    public function index(): Response
+    public function index(InvitationRepository $invitationRepository, SessionRepository $sessionRepository): Response
     {
+
+        $objUser = $this->getUser();
+
         //Si l'utilisateur n'est pas cconnecter redirection vers la page de connection
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+        $arrSession = $sessionRepository->findSessionsForUser($objUser);
+        $arrInvitation = $invitationRepository->findInvitationsForUser($objUser);
 
 
         return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+            'arrSession' => $arrSession,
+            'arrInvitation' => $arrInvitation,
+        ]); 
     }
 
     #[Route('/user/dashboard', name: 'app_user_dashboard')]

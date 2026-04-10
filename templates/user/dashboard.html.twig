@@ -71,8 +71,6 @@
                                                 <span class="badge bg-danger text-white small">Admin</span>
                                             {% elseif role == 'ROLE_USER' %}
                                                 <span class="badge bg-secondary text-white small">Utilisateur</span>
-                                            {% else %}
-                                                <span class="badge bg-info text-dark small">{{ role|replace({'ROLE_': ''}) }}</span>
                                             {% endif %}
                                         {% endfor %}
                                     </div>
@@ -129,13 +127,13 @@
                 <ul class="pagination justify-content-center mt-4">
                 
                     <li class="page-item {{ previous < 1 ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ previous >= 1 ? path('app_user_dashboard', { page: previous }) : '#' }}">Précédent</a>
+                        <a class="page-link" href="{{ previous >= 1 ? path('app_user_dashboard', { page: previous, query: query }) : '#' }}">Précédent</a>
                     </li>
 
                 
                     {% for p in 1..allPage %}
                         <li class="page-item {{ p == current_page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ path('app_user_dashboard', { page: p }) }}">
+                            <a class="page-link" href="{{ path('app_user_dashboard', { page: p, query: query  }) }}">
                                 {{ p }}
                             </a>
                         </li>
@@ -143,7 +141,7 @@
 
                     
                     <li class="page-item {{ next > allPage ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ next <= allPage ? path('app_user_dashboard', { page: next }) : '#' }}">Suivant</a>
+                        <a class="page-link" href="{{ next <= allPage ? path('app_user_dashboard', { page: next, query: query  }) : '#' }}">Suivant</a>
                     </li>
                 </ul>
             </nav>

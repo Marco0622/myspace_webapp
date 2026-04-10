@@ -26,7 +26,7 @@ class Report
 
     #[ORM\ManyToOne(inversedBy: 'userSendReports')]
     #[ORM\JoinColumn(name: 'rep_author_id', referencedColumnName: 'usr_id', nullable: false)]
-    private ?user $author = null;
+    private ?User $author = null;
 
     public function getId(): ?int
     {
@@ -69,12 +69,12 @@ class Report
         return $this;
     }
 
-    public function getAuthor(): ?user
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?user $author): static
+    public function setAuthor(?User $author): static
     {
         $this->author = $author;
 

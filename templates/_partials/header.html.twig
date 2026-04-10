@@ -11,14 +11,7 @@
         <div class="collapse navbar-collapse" id="navbarMain">
             <ul class="navbar-nav ms-auto align-items-center text-uppercase">
                 {% if app.user %}
-                    {% if 'ROLE_ADMIN' in app.user.roles %}
-                        <li class="nav-item">
-                            <a class="nav-link text-white fw-medium d-flex align-items-center" href="{{ path('app_user_dashboard') }}">
-                                {{ ux_icon('bi:speedometer2', {class: 'me-2', width: '20px', height: '20px'}) }}
-                                Dashboard
-                            </a>
-                        </li>
-                    {% endif %}
+                    
                     <li class="nav-item dropdown ms-lg-3">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="rounded-circle overflow-hidden border border-2 border-white" style="width: 40px; height: 40px;">
@@ -33,6 +26,14 @@
                         
                             <li><h6 class="dropdown-header text-capitalize pe-5">{{ app.user.firstname }} {{ app.user.name }}</h6></li>
                             <li><hr class="dropdown-divider"></li>
+                            {% if 'ROLE_ADMIN' in app.user.roles %}
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center pe-5 text-white" href="{{ path('app_user_dashboard') }}">
+                                        {{ ux_icon('bi:speedometer2', {class: 'me-2', width: '20px', height: '20px'}) }}
+                                        Dashboard
+                                    </a>
+                                </li>
+                            {% endif %}
                             <li>
                                 <a class="dropdown-item d-flex align-items-center pe-5 text-white" href="{{ path('app_user_update', { id: app.user.id }) }}">
                                     {{ ux_icon('bi:person-circle', {class: 'me-2'}) }} Mon Profil
