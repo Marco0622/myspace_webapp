@@ -19,6 +19,12 @@ final class UserController extends AbstractController
     #[Route('/', name: 'app_user_home')]
     public function index(): Response
     {
+        //Si l'utilisateur n'est pas cconnecter redirection vers la page de connection
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
         ]);

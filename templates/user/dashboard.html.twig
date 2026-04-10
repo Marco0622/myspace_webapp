@@ -2,11 +2,15 @@
 
 {% block title %}Dashboard{% endblock %}
 
+{% block javascripts %}
+    {{ importmap(['app', 'popPup']) }}
+{% endblock %}
+
 {% block body %}
 <div class="mt-4">
     <div class="d-flex flex-column  align-items-start mb-4">
         <h2 class="text-white">Gestion des Utilisateurs</h2>
-        <span class="badge bg-light rounded-pill text-dark p-2 col-auto">{{ arrUser|length }} Utilisateurs Trouver</span>
+        <span class="badge bg-light rounded-pill text-dark p-2 col-auto">{{ arrUser|length -1  }} Utilisateurs Trouver</span>
     </div>
     <div class="py-3">
         <a href="{{ path('app_user_create') }}" class="btn btn-outline-light">
@@ -45,47 +49,70 @@
                     </thead>
                     <tbody>
                     {% for user in arrUser %}
-                        <tr>
-                             <td class="ps-4 py-3 border-secondary">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
-                                        {% if user.photo is null %}
-                                            <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
-                                        {% else %}
-                                            <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-                                        {% endif %}
+                        {% if user.id != app.user.id %}
+                            <tr>
+                                <td class="ps-4 py-3 border-secondary">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+                                            {% if user.photo is null %}
+                                                <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
+                                            {% else %}
+                                                <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                            {% endif %}
+                                        </div>
+                                        <p class="fw-bold text-white m-0">{{ user.firstname }} {{ user.name }}</p>
                                     </div>
-                                    <p class="fw-bold text-white m-0">{{ user.firstname }} {{ user.name }}</p>
-                                </div>
-                            </td>
-                            <td class="py-3 text-white-50 border-secondary">{{ user.email }}</td>
-                            <td class="py-3 border-secondary">
-                                <div class="d-flex flex-column align-items-center gap-2">
-                                    {% for role in user.roles %}
-                                        {% if role == 'ROLE_ADMIN' %}
-                                            <span class="badge bg-danger text-white small">Admin</span>
-                                        {% elseif role == 'ROLE_USER' %}
-                                            <span class="badge bg-secondary text-white small">Utilisateur</span>
-                                        {% else %}
-                                            <span class="badge bg-info text-dark small">{{ role|replace({'ROLE_': ''}) }}</span>
-                                        {% endif %}
-                                    {% endfor %}
-                                </div>
-                            </td>
-                            <td class="py-3 text-center border-secondary">
-                    
-                            {% if user.banAt is null %}
-                                <a href="{{ path('app_user_update', { id: user.id }) }}" class="btn btn-sm btn-outline-info">Modifier</a>
-                                <a href="{{ path('app_user_delete', { id: user.id }) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Supprimer ?')">Supprimer</a>
-                                <a href="{{ path('app_user_ban', { id: user.id }) }}" class="btn btn-sm btn-outline-warning">Bannir</a>
-                                <a href="{{ path('app_user_roles', { id: user.id }) }}" class="btn btn-sm btn-outline-success">Role</a>      
-                            {% else %} 
-                                <a href="{{ path('app_user_ban', {'id': user.id}) }}" class="btn btn-sm btn-outline-success">Débannir</a>   
-                            {% endif %} 
-                             
-                                                             
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="py-3 text-white-50 border-secondary">{{ user.email }}</td>
+                                <td class="py-3 border-secondary">
+                                    <div class="d-flex flex-column align-items-center gap-2">
+                                        {% for role in user.roles %}
+                                            {% if role == 'ROLE_ADMIN' %}
+                                                <span class="badge bg-danger text-white small">Admin</span>
+                                            {% elseif role == 'ROLE_USER' %}
+                                                <span class="badge bg-secondary text-white small">Utilisateur</span>
+                                            {% else %}
+                                                <span class="badge bg-info text-dark small">{{ role|replace({'ROLE_': ''}) }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </td>
+                                <td class="py-3 text-center border-secondary">
+                        
+                                {% if user.banAt is null %}
+                                    <a href="{{ path('app_user_update', { id: user.id }) }}" class="btn btn-sm btn-outline-info">Modifier</a>
+
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                            data-fullname="{{ user.firstname }} {{ user.name }}"
+                                            data-photo="{{ user.photo is not null ? user.photo : '' }}"
+                                            data-id="{{ user.id }}">
+                                        Supprimer
+                                    </button>
+
+                                    <button type="button" class="btn btn-sm btn-outline-warning"
+                                            data-bs-toggle="modal" data-bs-target="#modalBan"
+                                            data-fullname="{{ user.firstname }} {{ user.name }}"
+                                            data-photo="{{ user.photo is not null ? user.photo : '' }}"
+                                            data-id="{{ user.id }}">
+                                        Bannir
+                                    </button>
+
+                                    <a href="{{ path('app_user_roles', { id: user.id }) }}" class="btn btn-sm btn-outline-success">Rôle</a>
+                                {% else %}
+                                    <button type="button" class="btn btn-sm btn-outline-success"
+                                            data-bs-toggle="modal" data-bs-target="#modalUnban"
+                                            data-fullname="{{ user.firstname }} {{ user.name }}"
+                                            data-photo="{{ user.photo is not null ? user.photo : '' }}"
+                                            data-id="{{ user.id }}">
+                                        Débannir
+                                    </button>
+                                {% endif %}
+                                
+                                                                
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% else %}
                         <tr>
                             <td colspan="4" class="text-center py-5 text-muted border-secondary">
@@ -97,28 +124,96 @@
                 </table>
             </div>
         </div>
-        <nav aria-label="Pagination">
-            <ul class="pagination justify-content-center mt-4">
-            
-                <li class="page-item {{ previous < 1 ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ previous >= 1 ? path('app_user_dashboard', { page: previous }) : '#' }}">Précédent</a>
-                </li>
-
-            
-                {% for p in 1..allPage %}
-                    <li class="page-item {{ p == current_page ? 'active' : '' }}">
-                        <a class="page-link" href="{{ path('app_user_dashboard', { page: p }) }}">
-                            {{ p }}
-                        </a>
+        {% if allPage > 1 %}
+            <nav aria-label="Pagination">
+                <ul class="pagination justify-content-center mt-4">
+                
+                    <li class="page-item {{ previous < 1 ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ previous >= 1 ? path('app_user_dashboard', { page: previous }) : '#' }}">Précédent</a>
                     </li>
-                {% endfor %}
 
                 
-                <li class="page-item {{ next > allPage ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ next <= allPage ? path('app_user_dashboard', { page: next }) : '#' }}">Suivant</a>
-                </li>
-            </ul>
-        </nav>
+                    {% for p in 1..allPage %}
+                        <li class="page-item {{ p == current_page ? 'active' : '' }}">
+                            <a class="page-link" href="{{ path('app_user_dashboard', { page: p }) }}">
+                                {{ p }}
+                            </a>
+                        </li>
+                    {% endfor %}
+
+                    
+                    <li class="page-item {{ next > allPage ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ next <= allPage ? path('app_user_dashboard', { page: next }) : '#' }}">Suivant</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{# Modal Ban #}
+<div class="modal fade" id="modalBan" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-dark">Bannir l'utilisateur</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="rounded-circle overflow-hidden border border-2 mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <img id="banPhoto" src="" alt="Profil" class="w-100 h-100 object-fit-cover">
+                </div>
+                <h5 id="banFullName"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Annuler</button>
+                <a id="banBtn" href="#" class="btn btn-warning">Bannir</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal Unban #}
+<div class="modal fade" id="modalUnban" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-dark">Débannir l'utilisateur</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="rounded-circle overflow-hidden border border-2 mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <img id="unbanPhoto" src="" alt="Profil" class="w-100 h-100 object-fit-cover">
+                </div>
+                <h5 id="unbanFullName"></h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Annuler</button>
+                <a id="unbanBtn" href="#" class="btn btn-success">Débannir</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Modal Delete #}
+<div class="modal fade" id="modalDelete" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-dark">Supprimer l'utilisateur</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div class="rounded-circle overflow-hidden border border-2 mx-auto mb-3" style="width: 80px; height: 80px;">
+                    <img id="deletePhoto" src="" alt="Profil" class="w-100 h-100 object-fit-cover">
+                </div>
+                <h5 id="deleteFullName"></h5>
+                <p class="text-muted mt-2">Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Annuler</button>
+                <a id="deleteBtn" href="#" class="btn btn-danger">Supprimer</a>
+            </div>
+        </div>
     </div>
 </div>
 

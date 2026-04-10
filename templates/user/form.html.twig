@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="py-4" >
-    {% if user is defined and user %}  
+    {% if user is defined and user is not null %}
         <div class="d-flex align-items-center gap-3 mb-4">
             <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
                 {% if user.photo is null %}
@@ -65,8 +65,10 @@
                     {{ ux_icon('lucide:info', {width: 12, height: 12}) }}
                     12 caractères minimum — laisser vide pour ne pas modifier
                 </small>
-                {% if app.user.id == user.id %}
-                    <a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
+                {% if user is defined and user is not null %}
+                    {% if app.user.id == user.id %}
+                        <a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
+                    {% endif %}
                 {% endif %}
                 
 

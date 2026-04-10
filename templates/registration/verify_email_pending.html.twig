@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée{% endblock %}
+
+{% block body %}
+   <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 text-center">
+            
+            <img src="{{ asset('assets/images/icon/happy.svg') }}" class="w-100"  >
+
+            
+            <h2>Votre compte a bien été créé !</h2>
+
+            <p class=" mb-5 text-white fs-6">
+                Veuillez valider votre adresse e-mail via le lien envoyé dans votre boîte de réception. Cette étape est indispensable pour activer votre compte et vous connecter.           
+            </p>
+
+            
+            <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg px-5">
+                Retour à l'accueil
+            </a>
+           
+
+        </div>
+    </div>
+{% endblock %}

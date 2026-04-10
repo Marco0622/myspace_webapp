@@ -39,11 +39,11 @@ final class UserFactory extends PersistentObjectFactory
         return [
             'email'         => self::faker()->email(),
             'firstname'     => self::faker()->firstName(),
-            'name'      => self::faker()->lastName(),
+            'name'          => self::faker()->lastName(),
             'password'      => $this->userPasswordHasher->hashPassword(new User(), self::DEFAULT_PASSWORD),
             'isVerified'    => self::faker()->boolean(),
             'birthdate'     => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
-            'created_at'  => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'created_at'    => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'roles'         => [],
         ];
     }

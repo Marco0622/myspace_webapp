@@ -1,0 +1,36 @@
+{# templates/registration/resend_verification_request.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Renvoyer le mail de vérification{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card bg-dark text-white shadow-lg" style="width: 100%; max-width: 450px; border: 1px solid #444;">
+        <div class="card-body p-5">
+            <h2 class="text-uppercase text-center mb-4">Vérification</h2>
+            <p class="text-center text-white mb-4">
+                Entrez votre adresse email pour recevoir un nouveau lien de confirmation.
+            </p>
+
+            <form method="post">
+                <div class="mb-4">
+                    <label for="inputEmail" class="form-label text-light">Adresse Email</label>
+                    <input type="email" name="email" id="inputEmail" class="form-control text-dark border-0" placeholder="exemple@mail.com" required autofocus>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-outline-light btn-lg">
+                        Renvoyer le lien
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a href="{{ path('app_login') }}" class="text-white small text-decoration-none">
+                    &larr; Retour à la connexion
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

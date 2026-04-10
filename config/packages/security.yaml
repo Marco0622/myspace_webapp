@@ -16,9 +16,11 @@ security:
             # Ensure dev tools and static assets are always allowed
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
+            
         main:
             lazy: true
             provider: app_user_provider
+            user_checker: App\Security\UserChecker
             form_login:
                 login_path: app_login
                 check_path: app_login
@@ -40,8 +42,8 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         # Bloquage des page d'inscription et de cconnexion pour les utilisateur connecter
-        - { path: ^/login, allow_if: "!is_authenticated()" }
-        - { path: ^/register, allow_if: "!is_authenticated()" }
+        #- { path: ^/login, allow_if: "!is_authenticated()" }
+        #- { path: ^/register, allow_if: "!is_authenticated()" }
         - { path: ^/user, allow_if: "is_authenticated()" }
         - { path: ^/user/dashboard, roles: ROLE_ADMIN }
         - { path: ^/session, allow_if: "is_authenticated()" }
