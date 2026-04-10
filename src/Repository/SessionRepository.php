@@ -22,6 +22,10 @@ class SessionRepository extends ServiceEntityRepository
             ->innerJoin('s.sessionAccesses', 'a')
             ->andWhere('a.member = :user')
             ->setParameter('user', $user)
+            ->leftJoin('s.sessionAccesses', 'all_accesses')
+            ->addSelect('all_accesses')
+            ->leftJoin('all_accesses.member', 'members')
+            ->addSelect('members')
             ->orderBy('s.created_at', 'DESC')
             ->getQuery()
             ->getResult();

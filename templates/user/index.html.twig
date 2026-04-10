@@ -20,10 +20,8 @@
     </a>
 </div>
 
-{{ dump() }}
-
 <div class="row g-3 my-2">
-    {% for Invitation in arrInvitation %}
+    {% for invitation in arrInvitation %}
         <div class="col-12 mb-2">
             <div class="card border">
                 <div class="card-body py-2">
@@ -32,23 +30,23 @@
                             <span class="badge bg-success">Invitation</span>
                         </div>
                         <div class="col-12 col-md">
-                            <h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">Session Deep Learning</h6>
-                            <small class="text-white-50 d-block text-center text-md-start">Par : Jean Dupont • il y a 2h</small>
+                            <h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">{{ invitation.session.name }}</h6>
+                            <small class="text-white-50 d-block text-center text-md-start">De : {{ invitation.senderId.pseudo ?? invitation.senderId.name ~ " " ~ invitation.senderId.firstname}} • il y a 2h</small>
                         </div>
                         <div class="col-12 col-md-auto d-flex flex-column flex-md-row gap-2 ms-md-auto">
-                            <button class="btn btn-sm btn-success d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
+                            <a href="{{ path('app_invitation_accept', { id: invitation.id })}}" class="btn btn-sm btn-success d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
                                 {{ ux_icon('rivet-icons:check') }} Accepter
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
+                            </a>
+                            <a href="{{ path('app_invitation_decline', { id: invitation.id })}}" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
                                 {{ ux_icon('lucide:x') }} Refuser
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     {% else %}
-        <h5> Aucun Invitation pour le moments  </h5>
+        <h5 class="text-center text-white-50"> Aucune Invitation ! </h5>
     {% endfor %}
 </div>
 
@@ -68,26 +66,40 @@
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="d-flex align-items-start justify-content-between">
                         <span class="badge bg-primary">Session</span>
-                        <small class="text-white">10 avr. 2026</small>
+                        <small class="text-white">{{ session.createdAt.date|format_datetime( 'long', 'none', locale='fr') }}</small>
                     </div>
-                    <h6 class="mb-0 fw-medium text-white text-uppercase">Intro au Machine Learning</h6>
-                    <div class="d-flex align-items-center gap-2 text-white">
-                        owner
-                    </div>
+                    <h6 class="mb-0 fw-medium text-white text-uppercase">{{ session.name }}</h6>
+                    <p class="text-white"> <strong>Propriétaire :</strong> </p>
+                    {% for access in session.sessionAccesses %}
+                        {% if access.role == 'ROLE_OWNER' %}
+                            {% if app.user.id != access.member.id %}
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+                                        {% if access.member.photo is null %}
+                                            <img src="https://ui-avatars.com/api/?name={{ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
+                                        {% else %}
+                                            <img src="{{ asset('assets/uploads/user/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                        {% endif %}
+                                    </div>
+                                    <p class="fw-bold text-white m-0">{{ access.member.firstname }} {{ access.member.name }}</p>
+                                </div>
+                            {% else %}
+                                <p class="text-white"> <strong>Vous</strong> </p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    
                     <div class="d-flex align-items-center gap-1 text-white small">
-                        {{ ux_icon('tdesign:member-filled') }} 4 membres
+                        {{ ux_icon('tdesign:member-filled') }} {{ session.sessionAccesses|length }} membres
                     </div>
                 </div>
                 <div class="card-footer border-top d-flex gap-2 py-2 px-3">
-                    <a href="#" class="btn btn-sm btn-primary flex-fill">Rejoindre</a>
-                    <button class="btn btn-sm btn-outline-danger">
-                        {{ ux_icon('octicon:trash-24') }}
-                    </button>
+                    <a href="{{ path('app_session_home', {id: session.id}) }} " class="btn btn-sm btn-primary flex-fill">Rejoindre</a>
                 </div>
             </div>
         </div>
     {% else %}
-        <h5> Aucun Invitation pour le moments  </h5>
+        <h5 class="text-center text-white-50"> Aucune Session. Créez votre session !</h5>
     {% endfor %}
 </div>
 

@@ -31,6 +31,7 @@ final class UserController extends AbstractController
         $arrSession = $sessionRepository->findSessionsForUser($objUser);
         $arrInvitation = $invitationRepository->findInvitationsForUser($objUser);
 
+       
 
         return $this->render('user/index.html.twig', [
             'arrSession' => $arrSession,

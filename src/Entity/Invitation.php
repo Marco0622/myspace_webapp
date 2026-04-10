@@ -16,11 +16,11 @@ class Invitation
 
     #[ORM\ManyToOne(inversedBy: 'sentInvitations')]
     #[ORM\JoinColumn(name: "inv_sender_id", referencedColumnName: 'usr_id', nullable: false)]
-    private ?user $sender_id = null;
+    private ?User $sender_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'receivedInvitations')]
     #[ORM\JoinColumn(name: "inv_receiver_id", referencedColumnName: 'usr_id', nullable: false)]
-    private ?user $receiver_id = null;
+    private ?User $receiver_id = null;
 
     #[ORM\Column(name: 'inv_responce', nullable: true)]
     private ?bool $responce = null;

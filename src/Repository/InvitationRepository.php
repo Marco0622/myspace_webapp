@@ -18,6 +18,8 @@ class InvitationRepository extends ServiceEntityRepository
 
     public function findInvitationsForUser($user){
         return $this->createQueryBuilder('i')
+            ->leftJoin('i.sender_id', 's') 
+            ->addSelect('s')
             ->where('i.receiver_id = :user')
             ->setParameter('user', $user)
             ->orderBy('i.send_at', 'ASC')

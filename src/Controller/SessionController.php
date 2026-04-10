@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/session', name: 'app_session_')]
 final class SessionController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('/{id<\d+>}', name: 'home')]
     public function index(): Response
     {
         return $this->render('session/index.html.twig', [
