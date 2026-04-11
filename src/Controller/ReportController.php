@@ -50,10 +50,17 @@ final class ReportController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $entityManager->remove($report);
-        $entityManager->flush();
-         $this->addFlash('success', "Le signalement a été supprimé !");
+        if($report->getAuthor() == $this->getUser()){
 
+            $entityManager->remove($report);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Le signalement a été supprimé !");
+
+            return $this->redirectToRoute('app_user_home');
+        }
+
+        $this->addFlash('warning', "Erreur !");
         return $this->redirectToRoute('app_user_home');
     }
 

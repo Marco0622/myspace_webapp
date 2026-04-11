@@ -13,9 +13,77 @@
           <twig:ux:icon name="lucide:users" class="text-primary" style="width:24px;height:24px;" />
         </div>
         <h3 class="text-uppercase text-white small mb-1 fw-semibold">Utilisateurs</h3>
-        <h4 class="fs-2 fw-bold text-white mb-0">4 821</h4>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.users }}</h4>
       </div>
     </div>
   </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-secondary h-100">
+      <div class="card-body">
+        <div class="bg-primary bg-opacity-25 rounded-3 p-2 d-inline-flex mb-3">
+          <twig:ux:icon name="fluent-mdl2:group" class="text-primary" style="width:24px;height:24px;" />
+        </div>
+        <h3 class="text-uppercase text-white small mb-1 fw-semibold">Sessions</h3>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.sessions }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-secondary h-100">
+      <div class="card-body">
+        <div class="bg-primary bg-opacity-25 rounded-3 p-2 d-inline-flex mb-3">
+          <twig:ux:icon name="jam:pictures" class="text-primary" style="width:24px;height:24px;" />
+        </div>
+        <h3 class="text-uppercase text-white small mb-1 fw-semibold">Photos</h3>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.pictures }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-secondary h-100">
+      <div class="card-body">
+        <div class="bg-primary bg-opacity-25 rounded-3 p-2 d-inline-flex mb-3">
+          <twig:ux:icon name="lucide:folders" class="text-primary" style="width:24px;height:24px;" />
+        </div>
+        <h3 class="text-uppercase text-white small mb-1 fw-semibold">Fichiers</h3>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.nodes }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-secondary h-100">
+      <div class="card-body">
+        <div class="bg-primary bg-opacity-25 rounded-3 p-2 d-inline-flex mb-3">
+          <twig:ux:icon name="grommet-icons:send" class="text-primary" style="width:24px;height:24px;" />
+        </div>
+        <h3 class="text-uppercase text-white small mb-1 fw-semibold">Signalements</h3>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.reports }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-secondary h-100">
+      <div class="card-body">
+        <div class="bg-primary bg-opacity-25 rounded-3 p-2 d-inline-flex mb-3">
+          <twig:ux:icon name="uil:user-plus" class="text-primary" style="width:24px;height:24px;" />
+        </div>
+        <h3 class="text-uppercase text-white small mb-1 fw-semibold">Invitations</h3>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.invitations }}</h4>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-sm-6 col-md-4">
+    <div class="card border-secondary h-100">
+      <div class="card-body">
+        <div class="bg-primary bg-opacity-25 rounded-3 p-2 d-inline-flex mb-3">
+          <twig:ux:icon name="iconoir:page" class="text-primary" style="width:24px;height:24px;" />
+        </div>
+        <h3 class="text-uppercase text-white small mb-1 fw-semibold">Pages</h3>
+        <h4 class="fs-2 fw-bold text-white mb-0">{{ arrStats.pages }}</h4>
+      </div>
+    </div>
+  </div>
+  <twig:ux:icon name="openmoji:hacker-cat" class="text-primary" style="width:128px;height:128px;" />
+  <twig:ux:icon name="simple-icons:leagueoflegends" class="text-primary" style="width:128px;height:128px;" />
 </div>
 {% endblock %}
