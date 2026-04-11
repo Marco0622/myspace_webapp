@@ -99,7 +99,7 @@
 
                                     <a href="{{ path('app_user_roles', { id: user.id }) }}" class="btn btn-sm btn-outline-success">Rôle</a>
                                 {% else %}
-                                    <button type="button" class="btn btn-sm btn-outline-success"
+                                    <button type="button" class="btn btn-sm btn-outline-success w-75"
                                             data-bs-toggle="modal" data-bs-target="#modalUnban"
                                             data-fullname="{{ user.firstname }} {{ user.name }}"
                                             data-photo="{{ user.photo is not null ? user.photo : '' }}"

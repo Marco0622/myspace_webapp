@@ -18,10 +18,23 @@ class ReportRepository extends ServiceEntityRepository
 
     public function findReportOfUser($user){
         return $this->createQueryBuilder('r')
-           
             ->where('r.author = :user')
             ->setParameter('user', $user)
+            ->orderBy('r.send_at', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function allReportForAdmin(){
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.author', 'a')
+            ->addSelect('a')
+            ->andWhere('r.response IS NULL')
+            ->andWhere('a.deleted_at IS NULL')
+            ->andWhere('a.ban_at IS NULL')
             ->orderBy('r.send_at', 'ASC')
+            ->setMaxResults(5)
             ->getQuery()
             ->getResult();
     }

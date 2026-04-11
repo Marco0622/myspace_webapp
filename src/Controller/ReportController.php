@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/report', name: 'app_report_')]
 final class ReportController extends AbstractController
 {
@@ -81,12 +83,27 @@ final class ReportController extends AbstractController
         ]);
     }
 
-
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/responce/{id<\d+>}', name: 'responce')]
-    public function responce(): Response
+    public function responce(Request $request ,Report $report, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('report/index.html.twig', [
+        if (!$this->isCsrfTokenValid('responce_of_report', $request->request->get('crsf_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $reponce = $request->request->get('reponce');
+        if(!empty($reponce) && strlen($reponce) > 5) {
+
+            $report->setResponse($reponce);
             
-        ]);
+            $entityManager->persist($report);
+            $entityManager->flush();
+
+            $this->addFlash('success', "La réponse a bien été envoyée !");
+            return $this->redirectToRoute('app_dashboard_reports');
+        } else{
+            $this->addFlash('danger', "Vous devez donner une réponse conforme.");
+            return $this->redirectToRoute('app_dashboard_reports');
+        }
     }
 }

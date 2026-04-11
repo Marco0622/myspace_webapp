@@ -13,19 +13,19 @@ class FormatDiffRuntime implements RuntimeExtensionInterface
         $now = new \DateTime();
         $diff = $now->diff($date);
 
-        if ($diff->days === 0 && $diff->h === 0 && $diff->i === 0) {
+        if ($diff->days === 0 && $diff->h === 0 && $diff->i === 0 && $diff->m == 0 && $diff->y == 0) {
             return $diff->s == 1 ? "{$diff->s} seconde" : "{$diff->s} secondes";
         }
-        if ($diff->days === 0 && $diff->h === 0) {
+        if ($diff->days === 0 && $diff->h === 0 && $diff->m == 0 && $diff->y == 0) {
             return  $diff->i == 1 ? "{$diff->i} minute" : "{$diff->i} minutes" ;
         }
-        if ($diff->days === 0) {
+        if ($diff->days === 0 && $diff->m == 0 && $diff->y == 0) {
             return $diff->h == 1 ? "{$diff->h} heure" : "{$diff->h} heures";
         }
-        if ($diff->days < 30) {
+        if ($diff->days < 30 && $diff->m == 0) {
             return $diff->h == 1 ? "{$diff->days} jour" : "{$diff->days} jours";
         }
-        if ($diff->m < 12) {
+        if ($diff->m < 12 && $diff->y == 0) {
             return "{$diff->m} mois";
         }
 

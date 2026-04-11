@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,10 +51,13 @@ final class DashboardController extends AbstractController
     }
 
     #[Route('/reports', name: 'reports')]
-    public function reports(): Response
+    public function reports(ReportRepository $reportRepository): Response
     {
-        return $this->render('dashboard/index.html.twig', [
-            'controller_name' => 'DashboardController',
+
+        $arrReport = $reportRepository->allReportForAdmin();
+
+        return $this->render('dashboard/dashboard_reports.html.twig', [
+            'arrReport' => $arrReport,
         ]);
     }
 }
