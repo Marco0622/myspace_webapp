@@ -28,6 +28,9 @@ class Report
     #[ORM\JoinColumn(name: 'rep_author_id', referencedColumnName: 'usr_id', nullable: false)]
     private ?User $author = null;
 
+    #[ORM\Column(name: 'rep_response', type: Types::TEXT, nullable: true)]
+    private ?string $response = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -77,6 +80,18 @@ class Report
     public function setAuthor(?User $author): static
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function getResponse(): ?string
+    {
+        return $this->response;
+    }
+
+    public function setResponse(?string $response): static
+    {
+        $this->response = $response;
 
         return $this;
     }

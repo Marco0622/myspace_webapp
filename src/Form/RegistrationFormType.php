@@ -38,6 +38,8 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['placeholder' => 'Votre pseudo...'],
                 'label' => 'Pseudo',
                 'label_attr' => ['class' => 'text-white'],
+                'help' => 'Optionnel : sera utilisé comme nom d\'affichage public.',
+                'help_attr' => ['class' => 'text-white small'],
             ])
 
             ->add('birthdate', DateType::class, [

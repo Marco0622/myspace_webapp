@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserInfoFormType;
 use App\Repository\InvitationRepository;
+use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_home')]
-    public function index(InvitationRepository $invitationRepository, SessionRepository $sessionRepository): Response
+    public function index(InvitationRepository $invitationRepository, SessionRepository $sessionRepository, ReportRepository $reportRepository): Response
     {
 
         $objUser = $this->getUser();
@@ -28,14 +29,17 @@ final class UserController extends AbstractController
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+
         $arrSession = $sessionRepository->findSessionsForUser($objUser);
         $arrInvitation = $invitationRepository->findInvitationsForUser($objUser);
+        $arrReport = $reportRepository->findReportOfUser($objUser);
 
        
 
         return $this->render('user/index.html.twig', [
             'arrSession' => $arrSession,
             'arrInvitation' => $arrInvitation,
+            'arrReport' => $arrReport,
         ]); 
     }
 

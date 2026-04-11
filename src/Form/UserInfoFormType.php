@@ -5,7 +5,6 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -14,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
@@ -37,6 +35,8 @@ class UserInfoFormType extends AbstractType
                 'label' => 'Pseudo',
                 'attr' => ['placeholder' => 'jean_dupont'],
                 'required' => false,
+                'help' => 'Optionnel : sera utilisé comme nom d\'affichage public.',
+                'help_attr' => ['class' => 'text-white small'],
             ])
             ->add('birthdate', DateType::class, [
                 'label' => 'Date de naissance',
