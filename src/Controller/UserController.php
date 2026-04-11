@@ -110,21 +110,29 @@ final class UserController extends AbstractController
 
     #[Route('/user/delete/{id<\d+>}', name: 'app_user_delete')]
     #[IsGranted('USER_RIGHT', subject: 'user', message: "Droit insuffisant pour la suppression de ce compte !")]
-    public function delete(User $user, EntityManagerInterface $entityManager): Response
+    public function delete(User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('delete', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
         $user->setDeletedAt(new \DateTimeImmutable());
         $entityManager->flush();
 
         $this->addFlash('success', "L'utilisateur a été supprimé !");
 
-       return $this->redirectToRoute('app_dashboard_users');
+        return $this->redirectToRoute('app_dashboard_users');
     }
 
     #[Route('/user/ban/{id<\d+>}', name: 'app_user_ban')]
-    #[IsGranted('ROLE_ADMIN')] 
+    #[IsGranted('ROLE_ADMIN')]
     #[IsGranted('USER_BAN', subject: 'user', message: "Droit insuffisant pour le bannissement !")]
-    public function ban(User $user, EntityManagerInterface $entityManager): Response
+    public function ban(User $user, EntityManagerInterface $entityManager, Request $request): Response
     {
+        if (!$this->isCsrfTokenValid('ban', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
         if(is_null($user->getBanAt())){
             $user->setBanAt(new \DateTimeImmutable());
             $entityManager->flush();
@@ -136,7 +144,6 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a été débanni !");
         }
-
 
         return $this->redirectToRoute('app_dashboard_users');
     }

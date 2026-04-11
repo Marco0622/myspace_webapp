@@ -134,17 +134,23 @@
                         {% if report.response %}
                             <p class="mb-0 text-white small">{{ report.response }}</p>
                         {% else %}
-                            <span class="badge bg-secondary">En attente</span>
+                            <h6 class="text-white-50">En attente</h6>
                         {% endif %}
                     </div>
                 </div>
 
                 <div class="card-footer border-top d-flex py-2 px-3 gap-2">
                     {% if report.response %}
-                        <a href="" class="btn btn-sm btn-warning flex-fill">Supprimer</a> 
+                        <form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline w-100">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
+                            <button type="submit" id="deleteBtn" class="btn btn-sm btn-warning w-100">Supprimer</button>
+                        </form>
                     {% else %}
-                        <a href="" class="btn btn-sm btn-danger flex-fill">Annuler</a> 
-                        <a href="" class="btn btn-sm btn-primary flex-fill">Modifier</a> 
+                        <form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline w-50">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
+                            <button type="submit" id="deleteBtn" class="btn btn-sm btn-danger w-100">Supprimer</button>
+                        </form>
+                        <a href="{{ path('app_report_edit', { id: report.id }) }}" class="btn btn-sm btn-primary flex-fill">Modifier</a> 
                     {% endif %}
                 </div>
             </div>
