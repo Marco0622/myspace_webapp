@@ -22,7 +22,7 @@
                             <li><hr class="dropdown-divider"></li>
                             {% if 'ROLE_ADMIN' in app.user.roles %}
                                 <li>
-                                    <a class="dropdown-item d-flex align-items-center ps-3 py-2 pe-5 text-white" href="{{ path('app_user_dashboard') }}">
+                                    <a class="dropdown-item d-flex align-items-center ps-3 py-2 pe-5 text-white" href="{{ path('app_dashboard_home') }}">
                                         {{ ux_icon('bi:speedometer2', {class: 'me-2', width: '20px', height: '20px'}) }} Dashboard
                                     </a>
                                 </li>

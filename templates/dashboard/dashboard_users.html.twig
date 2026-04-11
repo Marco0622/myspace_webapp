@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block body %}
+<twig:NavDashboard />
 <div class="mt-4">
     <div class="d-flex flex-column  align-items-start mb-4">
         <h2 class="text-white">Gestion des Utilisateurs</h2>
@@ -127,13 +128,13 @@
                 <ul class="pagination justify-content-center mt-4">
                 
                     <li class="page-item {{ previous < 1 ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ previous >= 1 ? path('app_user_dashboard', { page: previous, query: query }) : '#' }}">Précédent</a>
+                        <a class="page-link" href="{{ previous >= 1 ? path('app_dashboard_users', { page: previous, query: query }) : '#' }}">Précédent</a>
                     </li>
 
                 
                     {% for p in 1..allPage %}
                         <li class="page-item {{ p == current_page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ path('app_user_dashboard', { page: p, query: query  }) }}">
+                            <a class="page-link" href="{{ path('app_dashboard_users', { page: p, query: query  }) }}">
                                 {{ p }}
                             </a>
                         </li>
@@ -141,7 +142,7 @@
 
                     
                     <li class="page-item {{ next > allPage ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ next <= allPage ? path('app_user_dashboard', { page: next, query: query  }) : '#' }}">Suivant</a>
+                        <a class="page-link" href="{{ next <= allPage ? path('app_dashboard_users', { page: next, query: query  }) : '#' }}">Suivant</a>
                     </li>
                 </ul>
             </nav>

@@ -7,7 +7,6 @@ use App\Form\UserInfoFormType;
 use App\Repository\InvitationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
-use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,29 +42,9 @@ final class UserController extends AbstractController
         ]); 
     }
 
-    #[Route('/user/dashboard', name: 'app_user_dashboard')]
-    #[IsGranted('ROLE_ADMIN')] 
-    public function dashboard(UserRepository $userRepository, Request $request): Response
-    {
-        $intPage = $request->query->get('page', 1);
-        $query = $request->query->get('query', '');
-
-        if(!empty($query)){
-          $arrUser =  $userRepository->findAllActiveWithSearch(10, $intPage, $query);
-        } else{
-            $arrUser = $userRepository->findAllActive(10, $intPage);
-        }
-
-        return $this->render('user/dashboard.html.twig', [
-            'arrUser' => $arrUser['items'],
-            'next'         => $intPage + 1,
-            'previous'     => $intPage - 1,
-            'allPage'      => $arrUser['pages'],
-            'current_page' => $intPage,
-            'query' => $query, 
-        ]);
+    
         
-    }
+    
 
 
     #[Route('/user/{id<\d+>}', name: 'app_user_update')]
@@ -113,9 +92,14 @@ final class UserController extends AbstractController
 
             $entityManager->flush();
 
-            $this->addFlash('success', "L'utilisateur a été modifié");
-
-            return $this->redirectToRoute('app_user_dashboard');
+            if($user !== $this->getUser()){
+                 $this->addFlash('success', "L'utilisateur a été modifié");
+                return $this->redirectToRoute('app_dashboard_users');
+            } else{
+               
+                $this->addFlash('success', "Votre profil a été modifié !");
+                return $this->redirectToRoute('app_user_home');
+            }
         }
 
         return $this->render('user/form.html.twig', [
@@ -133,7 +117,7 @@ final class UserController extends AbstractController
 
         $this->addFlash('success', "L'utilisateur a été supprimé !");
 
-       return $this->redirectToRoute('app_user_dashboard');
+       return $this->redirectToRoute('app_dashboard_users');
     }
 
     #[Route('/user/ban/{id<\d+>}', name: 'app_user_ban')]
@@ -154,7 +138,7 @@ final class UserController extends AbstractController
         }
 
 
-        return $this->redirectToRoute('app_user_dashboard');
+        return $this->redirectToRoute('app_dashboard_users');
     }
 
     #[Route('/user/create', name: 'app_user_create')]
@@ -186,7 +170,7 @@ final class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a été créé");
 
-            return $this->redirectToRoute('app_user_dashboard');
+            return $this->redirectToRoute('app_dashboard_users');
         }
 
         return $this->render('user/form.html.twig', [
@@ -223,7 +207,7 @@ final class UserController extends AbstractController
 
                     $this->addFlash('success', "Les rôles de l'utilisateur ont été modifiés");
 
-                    return $this->redirectToRoute('app_user_dashboard');
+                    return $this->redirectToRoute('app_dashboard_users');
                 }
 
                 

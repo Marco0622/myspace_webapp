@@ -45,7 +45,7 @@ security:
         #- { path: ^/login, allow_if: "!is_authenticated()" }
         #- { path: ^/register, allow_if: "!is_authenticated()" }
         - { path: ^/user, allow_if: "is_authenticated()" }
-        - { path: ^/user/dashboard, roles: ROLE_ADMIN }
+        - { path: ^/dashboard, roles: ROLE_ADMIN }
         - { path: ^/session, allow_if: "is_authenticated()" }
 
 when@test:
