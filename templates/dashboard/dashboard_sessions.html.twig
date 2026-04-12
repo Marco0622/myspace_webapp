@@ -39,11 +39,11 @@
         <div id="collapseSession{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionMain">
             <div class="accordion-body p-0 text-white">
                 <div class="mx-3 mt-2 border-bottom border-white">
-                    <h5>Les utilisateurs </h5>
+                    <h5><twig:ux:icon name="mdi:user" style="width:30px;height:30px;" /> Les utilisateurs </h5>
                 </div>
-                <div class="d-flex flex-column gap-2">
+                <div class="d-flex flex-column px-3 gap-2">
                     {% for access in session.sessionAccesses %}
-                        <div class="d-flex align-items-center gap-3 p-2 rounded">
+                        <div class="d-flex align-items-center gap-3 py-2 rounded">
                             <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
                                 {% if access.member.photo is null %}
                                     <img src="https://ui-avatars.com/api/?name={{ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
@@ -72,7 +72,7 @@
 
 
                 <div class="mx-3 mt-2 border-bottom border-white text-white">
-                    <h5>Stockage </h5>
+                    <h5><twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;" /> Stockage </h5>
                 </div>
                 <div class="px-3 py-3">
                     <div class="d-flex justify-content-between mb-1">
@@ -85,12 +85,26 @@
                 </div>
 
                 <div class="mx-3 mt-2 border-bottom border-white">
-                    <h5>Les Action </h5>
+                    <h5>Les Actions </h5>
                 </div>
                 <div class="d-flex align-items-center gap-2 mx-3 py-3 flex-wrap">
-                    <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1" type="button">
-                       <twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;" /> Bloquer la session
-                    </button>
+                {% if session.isblocked %}
+                    <form id="banForm" action="{{ path('app_session_blocked', { id: session.id})}}" method="post" class="d-inline" >
+                        <input type="hidden" name="_token" value="{{ csrf_token('session_blockage') }}">
+                        <button type="submit" id="banBtn" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" 
+                            onclick="return confirm('Vous allez bloquer la session : {{ session.name }}')">
+                            <twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;" /> Débloquer la session
+                        </button>
+                    </form>
+                {% else %}
+                    <form id="banForm" action="{{ path('app_session_blocked', { id: session.id})}}" method="post" class="d-inline" >
+                        <input type="hidden" name="_token" value="{{ csrf_token('session_blockage') }}">
+                        <button type="submit" id="banBtn" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1" 
+                            onclick="return confirm('Vous allez bloquer la session : {{ session.name }}')">
+                            <twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;" /> Bloquer la session
+                        </button>
+                    </form>
+                {% endif %}
                 </div>
             </div>
         </div>

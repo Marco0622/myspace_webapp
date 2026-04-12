@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Session;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 #[Route('/session', name: 'app_session_')]
 final class SessionController extends AbstractController
 {
@@ -54,5 +59,28 @@ final class SessionController extends AbstractController
         return $this->render('session/index.html.twig', [
             
         ]);
+    }
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/blocked/{id<\d+>}', name: 'blocked')]
+    public function blocked(Request $request, Session $session, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('session_blockage', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+
+        if($session->isBlocked()){
+            $session->setIsBlocked(false);
+            $entityManager->flush();
+
+            $this->addFlash('success', "La session est débloquée !");
+        } else{
+            $session->setIsBlocked(true);
+            $entityManager->flush();
+
+            $this->addFlash('success', "La session est bloquée !");
+        }
+
+        return $this->redirectToRoute('app_dashboard_sessions');
     }
 }

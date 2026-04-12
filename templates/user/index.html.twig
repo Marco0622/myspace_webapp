@@ -65,7 +65,11 @@
             <div class="card border h-100">
                 <div class="card-body d-flex flex-column gap-2">
                     <div class="d-flex align-items-start justify-content-between">
+                    {% if session.isblocked %}
+                        <span class="badge bg-danger">Session</span>
+                    {% else %}
                         <span class="badge bg-primary">Session</span>
+                    {% endif %}
                         <small class="text-white">{{ session.createdAt.date|format_datetime( 'long', 'none', locale='fr') }}</small>
                     </div>
                     <h6 class="mb-0 fw-medium text-white text-uppercase">{{ session.name }}</h6>
@@ -93,9 +97,15 @@
                         {{ ux_icon('tdesign:member-filled') }} {{ session.sessionAccesses|length }} membres
                     </div>
                 </div>
-                <div class="card-footer border-top d-flex gap-2 py-2 px-3">
-                    <a href="{{ path('app_session_home', {id: session.id}) }} " class="btn btn-sm btn-primary flex-fill">Rejoindre</a>
-                </div>
+                {% if session.isblocked %}
+                    <div class="card-footer border-top d-flex gap-2 py-2 px-3">
+                        <a href="" class="btn btn-sm btn-danger flex-fill">Session Bloquée</a>
+                    </div>
+                {% else %}
+                    <div class="card-footer border-top d-flex gap-2 py-2 px-3">
+                        <a href="{{ path('app_session_home', {id: session.id}) }}"  class="btn btn-sm btn-primary flex-fill">Rejoindre</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     {% else %}
