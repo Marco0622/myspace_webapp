@@ -60,6 +60,7 @@ final class SessionController extends AbstractController
             
         ]);
     }
+    
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/blocked/{id<\d+>}', name: 'blocked')]
     public function blocked(Request $request, Session $session, EntityManagerInterface $entityManager): Response

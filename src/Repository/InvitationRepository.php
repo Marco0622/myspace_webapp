@@ -20,7 +20,7 @@ class InvitationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('i')
             ->leftJoin('i.sender_id', 's') 
             ->addSelect('s')
-            ->where('i.receiver_id = :user')
+            ->where('i.receiver_id = :user AND i.responce IS NULL')
             ->setParameter('user', $user)
             ->orderBy('i.send_at', 'ASC')
             ->getQuery()
