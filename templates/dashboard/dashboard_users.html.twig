@@ -79,25 +79,27 @@
                                 <td class="py-3 text-center border-secondary">
                         
                                 {% if user.banAt is null %}
-                                    <a href="{{ path('app_user_update', { id: user.id }) }}" class="btn btn-sm btn-outline-info">Modifier</a>
+                                    {% if 'ROLE_ADMIN' not in user.roles %}
+                                        <a href="{{ path('app_user_update', { id: user.id }) }}" class="btn btn-sm btn-outline-info">Modifier</a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal" data-bs-target="#modalDelete"
+                                                data-fullname="{{ user.firstname }} {{ user.name }}"
+                                                data-photo="{{ user.photo is not null ? user.photo : '' }}"
+                                                data-id="{{ user.id }}">
+                                            Supprimer
+                                        </button>
 
-                                    <button type="button" class="btn btn-sm btn-outline-danger"
-                                            data-bs-toggle="modal" data-bs-target="#modalDelete"
-                                            data-fullname="{{ user.firstname }} {{ user.name }}"
-                                            data-photo="{{ user.photo is not null ? user.photo : '' }}"
-                                            data-id="{{ user.id }}">
-                                        Supprimer
-                                    </button>
-
-                                    <button type="button" class="btn btn-sm btn-outline-warning"
-                                            data-bs-toggle="modal" data-bs-target="#modalBan"
-                                            data-fullname="{{ user.firstname }} {{ user.name }}"
-                                            data-photo="{{ user.photo is not null ? user.photo : '' }}"
-                                            data-id="{{ user.id }}">
-                                        Bannir
-                                    </button>
-
-                                    <a href="{{ path('app_user_roles', { id: user.id }) }}" class="btn btn-sm btn-outline-success">Rôle</a>
+                                        <button type="button" class="btn btn-sm btn-outline-warning"
+                                                data-bs-toggle="modal" data-bs-target="#modalBan"
+                                                data-fullname="{{ user.firstname }} {{ user.name }}"
+                                                data-photo="{{ user.photo is not null ? user.photo : '' }}"
+                                                data-id="{{ user.id }}">
+                                            Bannir
+                                        </button>
+                                        <a href="{{ path('app_user_roles', { id: user.id }) }}" class="btn btn-sm btn-outline-success">Rôle</a>
+                                    {% else %}
+                                        <p class="text-white-50 "> Administrateur </p>
+                                    {% endif %}
                                 {% else %}
                                     <button type="button" class="btn btn-sm btn-outline-success w-75"
                                             data-bs-toggle="modal" data-bs-target="#modalUnban"
