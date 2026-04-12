@@ -15,15 +15,11 @@
                 Désolé, la page que vous recherchez n'est pas disponible ou a été déplacée. Veuillez vérifier l'adresse saisie ou retourner à la page d'accueil pour continuer votre navigation.
             </p>
 
-            {% if app.user.id is defined %}
-            <a href="{{ path('app_user_home') }}" class="btn btn-outline-light btn-lg px-5">
+            
+            <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg px-5">
                 Retour à l'accueil
             </a>
-            {% else %}
-                <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg px-5">
-                    Retour à l'accueil
-                </a>
-            {% endif %}
+            
 
         </div>
     </div>

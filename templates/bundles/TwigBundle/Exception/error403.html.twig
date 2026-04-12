@@ -15,15 +15,10 @@
             Vous n'avez pas les autorisations nécessaires pour accéder à cette ressource. Si vous pensez qu'il s'agit d'une erreur, nous vous invitons à contacter l'administrateur du site ou à vérifier vos identifiants de connexion.
         </p>
 
-        {% if app.user.id is defined %}
-        <a href="{{ path('app_user_home') }}" class="btn btn-outline-light btn-lg px-5">
+        <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg px-5">
             Retour à l'accueil
         </a>
-        {% else %}
-            <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-lg px-5">
-                Retour à l'accueil
-            </a>
-        {% endif %}
+        
     </div>
 </div>
    
