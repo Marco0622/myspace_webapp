@@ -2,6 +2,10 @@
 
 {% block title %}Informations utilisateur{% endblock %}
 
+{% block javascripts %}
+    {{ importmap(['app', 'copy']) }}
+{% endblock %}
+
 {% block body %}
 <div class="py-4" >
     {% if user is defined and user is not null %}
@@ -25,9 +29,25 @@
             </div>
         </div>
     {% endif %}
-    {{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
         <div class="card border mb-3">
             <div class="card-body">
+            <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 py-3 mb-3">
+                Code d'invitation
+            </p>
+            <span class="form-control font-monospace fw-bold col-12" id="code-display" style="letter-spacing: .1em;">
+                {{ user.code }}
+            </span>
+            <div class="py-3 text-center text-md-start">
+                <button type="button" class="btn btn-light btn-sm px-5 me-3" id="copyCode">
+                    Copier
+                </button>
+                <form action="{{ path('app_user_code', { id: user.id }) }}" method="post" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('new_code') }}">
+                    <button type="submit"  class="btn btn-success btn-sm px-5">Régénérer le code</button>
+                </form>
+            </div>
+            <small class="text-success" id="toast" style="opacity:0; transition: opacity .3s;">Code copié !</small>
+            {{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
                 <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
                     Informations personnelles
                 </p>
@@ -70,13 +90,8 @@
                         <a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
                     {% endif %}
                 {% endif %}
-                
-
-                
             </div>
         </div>
-
         {{ form_row(userForm.submit) }}
-
     {{ form_end(userForm) }}
 {% endblock %}

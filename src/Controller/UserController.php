@@ -7,6 +7,7 @@ use App\Form\UserInfoFormType;
 use App\Repository\InvitationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
+use App\Service\CodeInvitationGenerator;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -225,6 +226,30 @@ final class UserController extends AbstractController
             'user'      => $user,
             'formError' => $strFormError
         ]);
-
     }
+
+    #[Route('/user/new-code/{id<\d+>}', name: 'app_user_code', methods: ['POST'])]
+    public function codeInvitation(User $user, Request $request, CodeInvitationGenerator $codeInvitation, EntityManagerInterface $entityManager): Response
+    {
+
+        if (!$this->isCsrfTokenValid('new_code', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        if($user === $this->getUser()){
+
+            $code = $codeInvitation->newCode();
+
+            $user->setCode($code);
+            $entityManager->flush();
+            $this->addFlash('success', "Un nouveau code a été généré !");
+        } else{
+            $this->addFlash('danger', "Vous n'avez pas les droits !");
+        }
+    
+        return $this->redirectToRoute('app_user_update',[
+            'id' => $user->getId(),
+        ]);
+    }
+
 }

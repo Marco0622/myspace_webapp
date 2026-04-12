@@ -20,6 +20,10 @@ return [
         'path' => './assets/popPup.js',
         'entrypoint' => true,
     ],
+    'copy' => [ 
+        'path' => './assets/copy.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],

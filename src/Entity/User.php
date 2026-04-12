@@ -116,6 +116,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'usr_birthdate')]
     private ?\DateTimeImmutable $birthdate = null;
 
+    #[ORM\Column(name: 'usr_code', length: 64, unique: true)]
+    private ?string $code = null;
+
     public function __construct()
     {
         $this->sentInvitations = new ArrayCollection();
@@ -590,6 +593,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBirthdate(\DateTimeImmutable $birthdate): static
     {
         $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(string $code): static
+    {
+        $this->code = $code;
 
         return $this;
     }
