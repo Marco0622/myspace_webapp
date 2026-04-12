@@ -22,29 +22,38 @@
 
 <div class="row g-3 my-2">
     {% for invitation in arrInvitation %}
-        <div class="col-12 mb-2">
-            <div class="card border">
-                <div class="card-body py-2">
-                    <div class="row align-items-center g-3">
-                        <div class="col-12 col-sm-auto text-center">
-                            <span class="badge bg-success">Invitation</span>
-                        </div>
-                        <div class="col-12 col-md">
-                            <h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">{{ invitation.session.name }}</h6>
-                            <small class="text-white-50 d-block text-center text-md-start">De : {{ invitation.senderId.pseudo ?? invitation.senderId.name ~ " " ~ invitation.senderId.firstname}} • il y a {{ invitation.sendAt|date_diff }}</small>
-                        </div>
-                        <div class="col-12 col-md-auto d-flex flex-column flex-md-row gap-2 ms-md-auto">
-                            <a href="{{ path('app_invitation_accept', { id: invitation.id })}}" class="btn btn-sm btn-success d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
-                                {{ ux_icon('rivet-icons:check') }} Accepter
-                            </a>
-                            <a href="{{ path('app_invitation_decline', { id: invitation.id })}}" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
-                                {{ ux_icon('lucide:x') }} Refuser
-                            </a>
+        {% if invitation.responce is null %}
+            <div class="col-12 mb-2">
+                <div class="card border">
+                    <div class="card-body py-2">
+                        <div class="row align-items-center g-3">
+                            <div class="col-12 col-sm-auto text-center">
+                                <span class="badge bg-success">Invitation</span>
+                            </div>
+                            <div class="col-12 col-md">
+                                <h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">{{ invitation.session.name }}</h6>
+                                <small class="text-white-50 d-block text-center text-md-start">De : {{ invitation.senderId.pseudo ?? invitation.senderId.name ~ " " ~ invitation.senderId.firstname}} • il y a {{ invitation.sendAt|date_diff }}</small>
+                            </div>
+                            <div class="col-12 col-md-auto d-flex flex-column flex-md-row gap-2 ms-md-auto">
+                                <form action="{{ path('app_invitation_accept', { id: invitation.id })}}" method="post" class="d-inline w-50">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('accept_invitation') }}">
+                                    <button type="submit" id="deleteBtn" class="btn btn-sm btn-success d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
+                                        {{ ux_icon('rivet-icons:check') }} Accepter
+                                    </button>
+                                </form>
+                                <form action="{{ path('app_invitation_decline', { id: invitation.id })}}" method="post" class="d-inline w-50">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('decline_invitation') }}">
+                                    <button type="submit" id="deleteBtn" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto">
+                                        {{ ux_icon('lucide:x') }} Refuser
+                                    </button>
+                                </form>
+                            
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     {% else %}
         <h5 class="text-center text-white-50"> Aucune Invitation ! </h5>
     {% endfor %}
