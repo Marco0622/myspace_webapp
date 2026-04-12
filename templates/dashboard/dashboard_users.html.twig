@@ -21,8 +21,8 @@
     <div class="card shadow-sm border-secondary">
         <div class="card-body p-0">
             <form class="row mb-3 g-3" id="search-form">
-                <div class="col-md-8">
-                    <div class="input-group">
+                <div class="col-12">
+                    <div class="input-group py-3">
                         <button type="submit" class="input-group-text bg-dark border-secondary text-white">
                             {{ ux_icon('lucide:search') }}
                         </button>
@@ -30,7 +30,7 @@
                             class="form-control bg-dark border-secondary text-white placeholder-white" 
                             placeholder="Rechercher un utilisateur..." aria-label="Recherche">
                         {% if query %}
-                            <a href="{{ path(app.request.attributes.get('_route')) }}" 
+                            <a href="{{ path('app_dashboard_users') }}" 
                             class="input-group-text bg-dark border-secondary text-white text-decoration-none">
                                 {{ ux_icon('lucide:x') }}
                             </a>
@@ -106,16 +106,14 @@
                                             data-id="{{ user.id }}">
                                         Débannir
                                     </button>
-                                {% endif %}
-                                
-                                                                
+                                {% endif %}                         
                                 </td>
                             </tr>
                         {% endif %}
                     {% else %}
                         <tr>
                             <td colspan="4" class="text-center py-5 text-muted border-secondary">
-                                <p class="text-white">La base de données est vide.</p>
+                                <p class="text-white">Aucun utilisateur.</p>
                             </td>
                         </tr>
                     {% endfor %}

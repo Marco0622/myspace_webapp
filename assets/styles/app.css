@@ -82,7 +82,7 @@ h3{
 
 
 
-.card, .dropdown-menu {
+.card, .dropdown-menu, .accordion-item {
     background-color: rgba(255, 255, 255, 0.03); 
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -146,4 +146,34 @@ h3{
 .card {
   position: relative;
   z-index: 1 !important;
+}
+
+.accordion-button{
+    background-color: transparent !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: transparent !important;
+    background-image: none !important; 
+    box-shadow: none !important;      
+    color: inherit;                   
+}
+
+
+.accordion-button:focus {
+    box-shadow: none !important;
+    border-color: rgba(0,0,0,.125);
+}
+
+.accordion-button::after {
+    filter: invert(1) brightness(2) !important;
+}
+
+
+.accordion-button:not(.collapsed)::after {
+    filter: invert(1) brightness(2) !important;
+}
+
+.page-item .active{
+    background-color: var(--white1);
 }

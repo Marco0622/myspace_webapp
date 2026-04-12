@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ReportRepository;
+use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 use App\Service\StatsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,11 +30,9 @@ final class DashboardController extends AbstractController
         $intPage = $request->query->get('page', 1);
         $query = $request->query->get('query', '');
 
-        if(!empty($query)){
-          $arrUser =  $userRepository->findAllActiveWithSearch(10, $intPage, $query);
-        } else{
-            $arrUser = $userRepository->findAllActive(10, $intPage);
-        }
+        
+        $arrUser =  $userRepository->findAllActiveWithSearch(10, $intPage, $query);
+        
 
         return $this->render('dashboard/dashboard_users.html.twig', [
             'arrUser' => $arrUser['items'],
@@ -46,10 +45,20 @@ final class DashboardController extends AbstractController
     }
 
     #[Route('/sessions', name: 'sessions')]
-    public function sessions(): Response
+    public function sessions(Request $request ,SessionRepository $sessionRepository): Response
     {
-        return $this->render('dashboard/index.html.twig', [
-            'controller_name' => 'DashboardController',
+         $intPage = $request->query->get('page', 1);
+        $query = $request->query->get('query', '');
+
+        $arrSession = $sessionRepository->findSessionsForAdminWithSeach(10, $intPage, $query);
+
+        return $this->render('dashboard/dashboard_sessions.html.twig', [
+            'arrSession' => $arrSession['items'],
+            'next'         => $intPage + 1,
+            'previous'     => $intPage - 1,
+            'allPage'      => $arrSession['pages'],
+            'current_page' => $intPage,
+            'query' => $query, 
         ]);
     }
 

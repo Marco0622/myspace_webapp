@@ -34,34 +34,38 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findAllActive(int $number, int $page): array
-    {
-        $queryBuilder = $this->createQueryBuilder('u')
-            ->where('u.deleted_at IS NULL')
-            ->orderBy('u.created_at', 'DESC');
+    // public function findAllActive(int $number, int $page): array
+    // {
+    //     $queryBuilder = $this->createQueryBuilder('u')
+    //         ->where('u.deleted_at IS NULL')
+    //         ->orderBy('u.created_at', 'DESC');
             
 
-        $paginator = new Paginator($queryBuilder->getQuery());
+    //     $paginator = new Paginator($queryBuilder->getQuery());
 
-        $intItemCount = count($paginator);
+    //     $intItemCount = count($paginator);
 
-        $intPageCount = ceil($intItemCount / $number);
+    //     $intPageCount = ceil($intItemCount / $number);
 
-        $paginator->getQuery()
-            ->setFirstResult($number * $page - $number)
-            ->setMaxResults($number);
+    //     $paginator->getQuery()
+    //         ->setFirstResult($number * $page - $number)
+    //         ->setMaxResults($number);
         
-         return [
-            'count' => $intItemCount,
-            'pages' => $intPageCount,
-            'items' => $paginator
-        ];
-    }
+    //      return [
+    //         'count' => $intItemCount,
+    //         'pages' => $intPageCount,
+    //         'items' => $paginator
+    //     ];
+    // }
 
     public function findAllActiveWithSearch(int $number, int $page, string $query): array
     {
         $queryBuilder = $this->createQueryBuilder('u')
-            ->where('(LOWER(u.firstname) LIKE LOWER(:q) OR LOWER(u.name) LIKE LOWER(:q)) AND u.deleted_at IS NULL')
+            ->where('(LOWER(u.firstname) LIKE LOWER(:q) 
+                        OR LOWER(u.name) LIKE LOWER(:q)
+                        OR LOWER(CONCAT(u.firstname, \' \', u.name)) LIKE LOWER(:q)
+                        OR LOWER(CONCAT(u.name, \' \', u.firstname)) LIKE LOWER(:q)) 
+                        AND u.deleted_at IS NULL')
             ->setParameter('q', '%' . $query . '%')
             ->orderBy('u.created_at', 'DESC');
             
