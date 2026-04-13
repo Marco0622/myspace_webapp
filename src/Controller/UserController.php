@@ -34,43 +34,45 @@ final class UserController extends AbstractController
         $arrInvitation = $invitationRepository->findInvitationsForUser($objUser);
         $arrReport = $reportRepository->findReportOfUser($objUser);
 
-       
+
 
         return $this->render('user/index.html.twig', [
             'arrSession' => $arrSession,
             'arrInvitation' => $arrInvitation,
             'arrReport' => $arrReport,
-        ]); 
+        ]);
     }
 
-    
-        
-    
+
+
+
 
 
     #[Route('/user/{id<\d+>}', name: 'app_user_update')]
     #[IsGranted('USER_RIGHT', subject: 'user', message: "Droit insuffisant pour la modification de ce compte !")]
-    public function update(User $user, Request $request, 
-        UserPasswordHasherInterface $userPasswordHasher, 
-        EntityManagerInterface $entityManager): Response
-    {
+    public function update(
+        User $user,
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager
+    ): Response {
         $userForm = $this->createForm(UserInfoFormType::class, $user);
 
         $userForm->handleRequest($request);
-        
-        if($userForm->isSubmitted() && $userForm->isValid()) {
+
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
 
 
             $plainPassword = $userForm->get('plainPassword')->getData();
 
-            if($plainPassword) {
+            if ($plainPassword) {
                 $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
             }
 
             $photoFile = $userForm->get('photo')->getData();
 
             if ($photoFile) {
-                
+
                 if ($user->getPhoto()) {
                     $oldPhotoPath = $this->getParameter('photos_directory_user') . '/' . $user->getPhoto();
                     if (file_exists($oldPhotoPath)) {
@@ -78,25 +80,25 @@ final class UserController extends AbstractController
                     }
                 }
 
-                
+
                 $newFilename = uniqid() . '.' . $photoFile->guessExtension();
 
-                
+
                 $photoFile->move(
                     $this->getParameter('photos_directory_user'),
                     $newFilename
                 );
 
-               
+
                 $user->setPhoto($newFilename);
             }
             $user->setUpdatedAt(new DateTimeImmutable('now'));
             $entityManager->flush();
 
-            if($user !== $this->getUser()){
-                 $this->addFlash('success', "L'utilisateur a été modifié");
+            if ($user !== $this->getUser()) {
+                $this->addFlash('success', "L'utilisateur a été modifié");
                 return $this->redirectToRoute('app_dashboard_users');
-            } else{
+            } else {
                 $this->addFlash('success', "Votre profil a été modifié !");
                 return $this->redirectToRoute('app_user_home');
             }
@@ -133,12 +135,12 @@ final class UserController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        if(is_null($user->getBanAt())){
+        if (is_null($user->getBanAt())) {
             $user->setBanAt(new \DateTimeImmutable());
             $entityManager->flush();
 
             $this->addFlash('success', "L'utilisateur a été banni !");
-        } else{
+        } else {
             $user->setBanAt(null);
             $entityManager->flush();
             $this->addFlash('success', "L'utilisateur a été débanni !");
@@ -148,7 +150,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/user/create', name: 'app_user_create')]
-    #[IsGranted('ROLE_ADMIN')] 
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $objUser = new User();
@@ -156,21 +158,21 @@ final class UserController extends AbstractController
         $userForm = $this->createForm(UserInfoFormType::class, $objUser);
 
         $userForm->handleRequest($request);
-        
-        if($userForm->isSubmitted() && $userForm->isValid()) {
 
-         
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
+
+
             $plainPassword = $userForm->get('plainPassword')->getData();
 
-            if(!$plainPassword) {
+            if (!$plainPassword) {
                 $plainPassword = "default_password";
             }
-            
+
             $objUser->setPassword($userPasswordHasher->hashPassword($objUser, $plainPassword));
 
-            
+
             $objUser->setCreatedAt(new DateTimeImmutable('now'));
-            
+
             $entityManager->persist($objUser);
             $entityManager->flush();
 
@@ -186,38 +188,40 @@ final class UserController extends AbstractController
 
     #[Route('/user/role/{id<\d+>}', name: 'app_user_roles')]
     #[IsGranted('ROLE_ADMIN')]
-    #[IsGranted('USER_BAN', subject: 'user', message: "Droit insuffisant pour éditer votre role !")] 
-    public function role(User $user, Request $request,  
-        EntityManagerInterface $entityManager): Response
-        {
-            $strFormError = ""; 
+    #[IsGranted('USER_BAN', subject: 'user', message: "Droit insuffisant pour éditer votre role !")]
+    public function role(
+        User $user,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $strFormError = "";
 
-            if($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
 
-                
-                $submittedToken = $request->getPayload()->get('_csrf_token');
 
-                
-                if ($this->isCsrfTokenValid('user_role', $submittedToken)) {
+            $submittedToken = $request->getPayload()->get('_csrf_token');
 
-                    $arrRoles = []; 
 
-                    
-                    if($request->request->get('user-role-admin')) {
-                        $arrRoles[] = 'ROLE_ADMIN';
-                    }
+            if ($this->isCsrfTokenValid('user_role', $submittedToken)) {
 
-                    
-                    $user->setRoles($arrRoles);
-                    $entityManager->flush();
+                $arrRoles = [];
 
-                    $this->addFlash('success', "Les rôles de l'utilisateur ont été modifiés");
 
-                    return $this->redirectToRoute('app_dashboard_users');
+                if ($request->request->get('user-role-admin')) {
+                    $arrRoles[] = 'ROLE_ADMIN';
                 }
 
-                
-                $strFormError = "Le jeton de sécurité n'est pas valide. Réessayez ou actualisez la page";
+
+                $user->setRoles($arrRoles);
+                $entityManager->flush();
+
+                $this->addFlash('success', "Les rôles de l'utilisateur ont été modifiés");
+
+                return $this->redirectToRoute('app_dashboard_users');
+            }
+
+
+            $strFormError = "Le jeton de sécurité n'est pas valide. Réessayez ou actualisez la page";
         }
 
         return $this->render('user/roles.html.twig', [
@@ -234,20 +238,39 @@ final class UserController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        if($user === $this->getUser()){
+        if ($user === $this->getUser()) {
 
             $code = $codeInvitation->newCode();
 
             $user->setCode($code);
             $entityManager->flush();
             $this->addFlash('success', "Un nouveau code a été généré !");
-        } else{
+        } else {
             $this->addFlash('danger', "Vous n'avez pas les droits !");
         }
-    
-        return $this->redirectToRoute('app_user_update',[
+
+        return $this->redirectToRoute('app_user_update', [
             'id' => $user->getId(),
         ]);
     }
 
+    #[Route('/user/delete-picture/{id<\d+>}', name: 'app_user_picture', methods: ['POST'])]
+    #[IsGranted('USER_RIGHT', subject: 'user', message: "Droit insuffisant pour la suppression de la photo !")]
+    public function deletePicture(User $user, Request $request, CodeInvitationGenerator $codeInvitation, EntityManagerInterface $entityManager): Response
+    {
+
+        if (!$this->isCsrfTokenValid('delete_picture', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+
+        $user->setPhoto(null);
+        $entityManager->flush();
+        $this->addFlash('success', "La photo a été supprimée !");
+
+
+        return $this->redirectToRoute('app_user_update', [
+            'id' => $user->getId(),
+        ]);
+    }
 }

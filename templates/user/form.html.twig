@@ -1,70 +1,85 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Informations utilisateur{% endblock %}
+{% block title %}Informations utilisateur
+{% endblock %}
 
 {% block javascripts %}
-    {{ importmap(['app', 'copy']) }}
+	{{ importmap(['app', 'copy']) }}
 {% endblock %}
 
 {% block body %}
-<div class="py-4" >
-    {% if user is defined and user is not null %}
-        <div class="d-flex align-items-center gap-3 mb-4">
-            <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
-                {% if user.photo is null %}
-                    <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
-                {% else %}
-                    <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-                {% endif %}
-            </div>
-            <div>
-                <h1 class="h5 mb-1 fw-500">{{ user.firstname }} {{ user.name }}</h1>
-                {% for role in user.roles %}
-                    {% if role != 'ROLE_USER' %}
-                        <span class="badge bg-white text-dark">
-                            {{ role == 'ROLE_ADMIN' ? 'Administrateur' : role }}
-                        </span>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-        <div class="card border mb-3">
-            <div class="card-body">
-            <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 py-3 mb-3">
-                Code d'invitation
-            </p>
-            <span class="form-control font-monospace fw-bold col-12" id="code-display" style="letter-spacing: .1em;">
-                {{ user.code }}
-            </span>
-            <div class="py-3 text-center text-md-start">
-                <button type="button" class="btn btn-light btn-sm px-5 me-3" id="copyCode">
-                    Copier
-                </button>
-                <form action="{{ path('app_user_code', { id: user.id }) }}" method="post" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('new_code') }}">
-                    <button type="submit"  class="btn btn-success btn-sm px-5">Régénérer le code</button>
-                </form>
-            </div>
-            <small class="text-success" id="toast" style="opacity:0; transition: opacity .3s;">Code copié !</small>
-            {{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
-                <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
-                    Informations personnelles
-                </p>
-                <div class="row g-3">
-                    <div class="col-md-6">{{ form_row(userForm.name) }}</div>
-                    <div class="col-md-6">{{ form_row(userForm.firstname) }}</div>
-                    <div class="col-md-6">{{ form_row(userForm.pseudo) }}</div>
-                    <div class="col-md-6">{{ form_row(userForm.birthdate) }}</div>
-                    <div class="col-12">{{ form_row(userForm.email) }}</div>
-                    <div class="col-12">
+	<div class="py-4">
+		{% if user is defined and user is not null %}
+			<div class="d-flex align-items-center gap-3 mb-4">
+				<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
+					{% if user.photo is null %}
+						<img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
+					{% else %}
+						<img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+					{% endif %}
+				</div>
+				<div>
+					<h1 class="h5 mb-1 fw-500">{{ user.firstname }}
+						{{ user.name }}</h1>
+					{% for role in user.roles %}
+						{% if role != 'ROLE_USER' %}
+							<span class="badge bg-white text-dark">
+								{{ role == 'ROLE_ADMIN' ? 'Administrateur' : role }}
+							</span>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+		<div class="card border mb-3">
+			<div class="card-body">
+				{% if user == app.user %}
+					<p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 py-3 mb-3">
+						Code d'invitation
+					</p>
+					<span class="form-control font-monospace fw-bold col-12" id="code-display" style="letter-spacing: .1em;">
+						{{ user.code }}
+					</span>
+					<div class="py-3 text-center text-md-start">
+						<button type="button" class="btn btn-light btn-sm px-5 me-3" id="copyCode">
+							Copier
+						</button>
+						<form action="{{ path('app_user_code', { id: user.id }) }}" method="post" class="d-inline">
+							<input type="hidden" name="_token" value="{{ csrf_token('new_code') }}">
+							<button type="submit" class="btn btn-success btn-sm px-5">Régénérer le code</button>
+						</form>
+					</div>
+				{% endif %}
+				<small class="text-success" id="toast" style="opacity:0; transition: opacity .3s;">Code copié !</small>
+				{{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+				<p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
+					Informations personnelles
+				</p>
+				<div class="row g-3">
+					<div class="col-md-6">{{ form_row(userForm.name) }}</div>
+					<div class="col-md-6">{{ form_row(userForm.firstname) }}</div>
+					<div class="col-md-6">{{ form_row(userForm.pseudo) }}</div>
+					<div class="col-md-6">{{ form_row(userForm.birthdate) }}</div>
+					<div class="col-12">{{ form_row(userForm.email) }}</div>
+					<div class="col-12">
                         <div class="d-flex align-items-center gap-3">
-                            {% if user is defined and user %}  
-                                <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
-                                    {% if user.photo is null %}
-                                        <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
-                                    {% else %}
-                                        <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                            {% if user is defined and user %}
+                                <div class="position-relative flex-shrink-0">
+                                    <div class="rounded-circle overflow-hidden border border-2 border-white" style="width: 64px; height: 64px;">
+                                        {% if user.photo is null %}
+                                            <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
+                                        {% else %}
+                                            <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                        {% endif %}
+                                    </div>
+                                    {% if user.photo is not null %}
+                                        <button type="button"
+                                                class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0 p-1 d-flex align-items-center justify-content-center"
+                                                style="width: 30px; height: 30px;"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deletePhotoModal">
+                                            <twig:ux:icon name="mynaui:trash" class="w-100 h-100"/>
+                                        </button>
                                     {% endif %}
                                 </div>
                             {% endif %}
@@ -73,25 +88,47 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
-                    Mot de passe
-                </p>
-                <div class="row g-3">
-                    <div class="col-md-6">{{ form_row(userForm.plainPassword.first) }}</div>
-                    <div class="col-md-6">{{ form_row(userForm.plainPassword.second) }}</div>
-                </div>
-                <small class="text-muted d-flex align-items-center gap-1 mt-1">
-                    {{ ux_icon('lucide:info', {width: 12, height: 12}) }}
-                    12 caractères minimum — laisser vide pour ne pas modifier
-                </small>
-                {% if user is defined and user is not null %}
-                    {% if app.user.id == user.id %}
-                        <a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
-                    {% endif %}
-                {% endif %}
+
+				</div>
+				<p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
+					Mot de passe
+				</p>
+				<div class="row g-3">
+					<div class="col-md-6">{{ form_row(userForm.plainPassword.first) }}</div>
+					<div class="col-md-6">{{ form_row(userForm.plainPassword.second) }}</div>
+				</div>
+				<small class="text-muted d-flex align-items-center gap-1 mt-1">
+					{{ ux_icon('lucide:info', {width: 12, height: 12}) }}
+					12 caractères minimum — laisser vide pour ne pas modifier
+				</small>
+				{% if user is defined and user is not null %}
+					{% if app.user.id == user.id %}
+						<a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
+					{% endif %}
+				{% endif %}
+			</div>
+		</div>
+		{{ form_row(userForm.submit) }}
+		{{ form_end(userForm) }}
+
+<div class="modal fade" id="deletePhotoModal" tabindex="-1" aria-labelledby="deletePhotoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deletePhotoModalLabel">Supprimer la photo de profil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir supprimer la photo ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form id="deleteForm" action="{{ path('app_user_picture', { id: user.id }) }}" method="post" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_picture') }}">
+                    <button type="submit" id="deleteBtn" class="btn btn-danger">Supprimer</button>
+                </form>
             </div>
         </div>
-        {{ form_row(userForm.submit) }}
-    {{ form_end(userForm) }}
-{% endblock %}
+    </div>
+</div>
+	{% endblock %}
