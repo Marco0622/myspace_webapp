@@ -253,23 +253,91 @@
 
 					<div class="card-footer border-top d-flex py-2 px-3 gap-2">
 						{% if report.response %}
-							<form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline w-100">
-								<input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
-								<button type="submit" id="deleteBtn" class="btn btn-sm btn-warning w-100">Supprimer</button>
-							</form>
+							<button type="button" class="btn btn-sm btn-warning w-100" data-bs-toggle="modal" data-bs-target="#deleteReportModal{{ report.id }}">
+								Effacer
+							</button>
 						{% else %}
-							<form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline w-50">
-								<input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
-								<button type="submit" id="deleteBtn" class="btn btn-sm btn-danger w-100">Annuler</button>
-							</form>
+							<button type="button" class="btn btn-sm btn-danger w-50" data-bs-toggle="modal" data-bs-target="#cancelReportModal{{ report.id }}">
+								Annuler
+							</button>
 							<a href="{{ path('app_report_edit', { id: report.id }) }}" class="btn btn-sm btn-primary flex-fill">Modifier</a>
 						{% endif %}
 					</div>
 				</div>
 			</div>
+
+			
+			{% if report.response %}
+				<div class="modal fade" id="deleteReportModal{{ report.id }}" tabindex="-1" aria-labelledby="deleteReportModalLabel{{ report.id }}" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="deleteReportModalLabel{{ report.id }}">Effacer le signalement</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+							</div>
+							<div class="modal-body">
+								<div class="d-flex flex-column gap-2 mb-3">
+									<div>
+										<h6 class="fw-semibold mb-1">Sujet</h6>
+										<p class="mb-0 small text-muted">{{ report.subject }}</p>
+									</div>
+									<div>
+										<h6 class="fw-semibold mb-1">Réponse reçue</h6>
+										<p class="mb-0 small text-muted">{{ report.response }}</p>
+									</div>
+								</div>
+								Voulez-vous vraiment effacer ce signalement ? Il sera définitivement supprimé.
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+								<form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
+									<button type="submit" class="btn btn-warning">Effacer</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				
+			{% else %}
+				<div class="modal fade" id="cancelReportModal{{ report.id }}" tabindex="-1" aria-labelledby="cancelReportModalLabel{{ report.id }}" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="cancelReportModalLabel{{ report.id }}">Annuler le signalement</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+							</div>
+							<div class="modal-body">
+								<div class="d-flex flex-column gap-2 mb-3">
+									<div>
+										<h6 class="fw-semibold mb-1">Sujet</h6>
+										<p class="mb-0 small text-muted">{{ report.subject }}</p>
+									</div>
+									<div>
+										<h6 class="fw-semibold mb-1">Message</h6>
+										<p class="mb-0 small text-muted">{{ report.content }}</p>
+									</div>
+									<div>
+										<span class="badge bg-warning text-dark">En attente de réponse</span>
+									</div>
+								</div>
+								Voulez-vous vraiment annuler ce signalement ? Il sera définitivement supprimé.
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
+								<form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
+									<button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif %}
+
 		{% else %}
-			<h5 class="text-center text-white-50">
-				Aucun Signalement.</h5>
+			<h5 class="text-center text-white-50">Aucun Signalement.</h5>
 		{% endfor %}
 	</div>
 
