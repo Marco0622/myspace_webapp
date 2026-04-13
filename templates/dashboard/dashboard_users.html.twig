@@ -48,7 +48,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {% for user in arrUser %}
+                    {% for user in pagination.items %}
                         {% if user.id != app.user.id %}
                             <tr>
                                 <td class="ps-4 py-3 border-secondary">
@@ -122,30 +122,9 @@
                 </table>
             </div>
         </div>
-        {% if allPage > 1 %}
-            <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center mt-4">
-                
-                    <li class="page-item {{ previous < 1 ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ previous >= 1 ? path('app_dashboard_users', { page: previous, query: query }) : '#' }}">Précédent</a>
-                    </li>
-
-                
-                    {% for p in 1..allPage %}
-                        <li class="page-item {{ p == current_page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ path('app_dashboard_users', { page: p, query: query  }) }}">
-                                {{ p }}
-                            </a>
-                        </li>
-                    {% endfor %}
-
-                    
-                    <li class="page-item {{ next > allPage ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ next <= allPage ? path('app_dashboard_users', { page: next, query: query  }) : '#' }}">Suivant</a>
-                    </li>
-                </ul>
-            </nav>
-        {% endif %}
+        <div class="d-flex justify-content-center py-3">
+			{{ knp_pagination_render(pagination) }}
+		</div>
     </div>
 </div>
 {# Modal Ban #}

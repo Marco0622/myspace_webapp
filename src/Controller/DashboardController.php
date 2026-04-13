@@ -26,38 +26,38 @@ final class DashboardController extends AbstractController
 
 
     #[Route('/users', name: 'users')]
-    public function users(UserRepository $userRepository, Request $request): Response
+    public function users(UserRepository $userRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $intPage = $request->query->get('page', 1);
-        $query = $request->query->get('query', '');
+        $search = $request->query->get('query', '');
 
         
-        $arrUser =  $userRepository->findAllActiveWithSearch(10, $intPage, $query);
+        $query =  $userRepository->userCreateQueryBuilderPaginator($search);
         
+        $pagination = $paginator->paginate(
+            $query, 
+            $request->query->getInt('page', 1),
+            $request->query->getInt('perPage', 10) 
+        );
+
 
         return $this->render('dashboard/dashboard_users.html.twig', [
-            'arrUser' => $arrUser['items'],
-            'next'         => $intPage + 1,
-            'previous'     => $intPage - 1,
-            'allPage'      => $arrUser['pages'],
-            'current_page' => $intPage,
-            'query' => $query, 
+            'pagination' => $pagination,
+            'query' => $search, 
         ]);
     }
 
     #[Route('/sessions', name: 'sessions')]
     public function sessions(Request $request ,SessionRepository $sessionRepository, PaginatorInterface $paginator): Response
     {
-        $intPage = $request->query->get('page', 1);
         $search = $request->query->get('query', '');
 
-        $query = $sessionRepository->sessionQuerybuilderForPaginator(10, $intPage, $search);
+        $query = $sessionRepository->sessionQuerybuilderForPaginator($search);
 
 
         $pagination = $paginator->paginate(
-            $query, /* query NOT result */
-            $request->query->getInt('page', 1), /* page number */
-            10 /* limit per page */
+            $query, 
+            $request->query->getInt('page', 1),
+            $request->query->getInt('perPage', 10) 
         );
 
 

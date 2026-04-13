@@ -33,7 +33,7 @@ class SessionRepository extends ServiceEntityRepository
     }
 
 
-    public function sessionQuerybuilderForPaginator(int $number, int $page, $query): QueryBuilder
+    public function sessionQuerybuilderForPaginator(string $query): QueryBuilder
     {
         return $this->createQueryBuilder('s')
             ->leftJoin('s.sessionAccesses', 'all_accesses')
