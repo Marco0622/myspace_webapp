@@ -11,6 +11,11 @@
 	<div class="py-4">
 		{% if user is defined and user is not null %}
 			<div class="d-flex align-items-center gap-3 mb-4">
+				<div class="">
+					<a href="{{ app.request.headers.get('referer') ?? path('app_user_home') }}" class="text-white text-decoration-none">
+						{{ ux_icon('lucide:arrow-left', {width: 64, height: 48}) }}
+					</a>
+				</div>
 				<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 64px; height: 64px;">
 					{% if user.photo is null %}
 						<img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">

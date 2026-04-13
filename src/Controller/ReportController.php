@@ -18,7 +18,6 @@ final class ReportController extends AbstractController
     #[Route('/create', name: 'create')]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-
         $objReport = new Report();
 
         $reportForm = $this->createForm(ReportFormType::class, $objReport);

@@ -5,7 +5,10 @@
 {% block body %}
 <section class="py-5">
     <div class="row justify-content-center">
-        <div class="card col-lg-8 p-3 p-lg-5">
+        <div class="card p-3 p-lg-5">
+            <a href="{{ app.request.headers.get('referer') ?? path('app_user_home') }}" class="text-white text-decoration-none pb-3">
+                {{ ux_icon('lucide:arrow-left', {width: 64, height: 48}) }}
+            </a>
             <h1 class="display-5 mb-4 text-white text-uppercase fw-bold">Contact</h1>
             <p class="text-white-50 mb-5">Une question ou un projet ? Envoyez-moi un message via le formulaire ci-dessous.</p>
             {% if strFormError %}
@@ -30,7 +33,7 @@
 
                     <div class="col-12">
                         <label for="message" class="form-label text-white small text-uppercase">Message*</label>
-                        <textarea class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="message" name="message" rows="5" placeholder="Votre message ici..." required>{{ message }}</textarea>
+                        <textarea class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="message" name="message" row="4" placeholder="Votre message ici..." required>{{ message }}</textarea>
                     </div>
                     <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('contact_form') }}">
                     <div class="col-12 mt-4">

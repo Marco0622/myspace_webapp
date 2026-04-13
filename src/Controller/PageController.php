@@ -31,7 +31,6 @@ final class PageController extends AbstractController
     #[Route('/contact', name: 'contact')]
     public function contact(Request $request, MailerInterface $mailer): Response
     {
-
         $strFormError = ""; 
 
         $fullName = $request->getPayload()->get('fullName','');
