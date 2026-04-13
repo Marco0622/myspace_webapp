@@ -90,14 +90,13 @@ final class UserController extends AbstractController
                
                 $user->setPhoto($newFilename);
             }
-
+            $user->setUpdatedAt(new DateTimeImmutable('now'));
             $entityManager->flush();
 
             if($user !== $this->getUser()){
                  $this->addFlash('success', "L'utilisateur a été modifié");
                 return $this->redirectToRoute('app_dashboard_users');
             } else{
-               
                 $this->addFlash('success', "Votre profil a été modifié !");
                 return $this->redirectToRoute('app_user_home');
             }
@@ -142,7 +141,6 @@ final class UserController extends AbstractController
         } else{
             $user->setBanAt(null);
             $entityManager->flush();
-
             $this->addFlash('success', "L'utilisateur a été débanni !");
         }
 
