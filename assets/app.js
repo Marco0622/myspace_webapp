@@ -9,3 +9,8 @@ import '@popperjs/core';
 import './styles/app.css';
 
 
+document.addEventListener('turbo:load', function () {
+    document.querySelectorAll('.modal').forEach(function (modal) {
+        document.body.appendChild(modal);
+    });
+});

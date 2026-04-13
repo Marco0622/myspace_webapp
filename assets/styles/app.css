@@ -177,3 +177,10 @@ h3{
 .page-item .active{
     background-color: var(--white1);
 }
+
+.modal-backdrop {
+    z-index: 1040 !important;
+}
+.modal {
+    z-index: 1050 !important;
+}

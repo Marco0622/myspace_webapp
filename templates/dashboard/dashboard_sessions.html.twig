@@ -1,143 +1,184 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}Hello DashboardController!
+{% endblock %}
+
+{% block stylesheets %}
+	{{ knp_pagination_rel_links(pagination) }}
+{% endblock %}
+
 
 {% block body %}
-<div class="py-3">
-    <twig:NavDashboard />
-</div>
-<h1 class="h2"> GESTION DES Sessions</h1>
-<div class="accordion accordion-flush" id="accordionMain">
-<form class="row mb-3 g-3" id="search-form">
-    <div class="col-12">
-        <div class="input-group py-3">
-            <button type="submit" class="input-group-text bg-dark border-secondary text-white">
-                {{ ux_icon('lucide:search') }}
-            </button>
-            <input type="text" name="query" id="search-input" value="{{ query }}" 
-                class="form-control bg-dark border-secondary text-white placeholder-white" 
-                placeholder="Rechercher un utilisateur..." aria-label="Recherche">
-            {% if query %}
-                <a href="{{ path('app_dashboard_sessions') }}" 
-                class="input-group-text bg-dark border-secondary text-white text-decoration-none">
-                    {{ ux_icon('lucide:x') }}
-                </a>
-            {% endif %}
-        </div>
-    </div>
-</form>
-{% for session in arrSession %}
-    <div class="accordion-item my-3 rounded">
-        <h2 class="accordion-header bg-transparent">
-            <button class="accordion-button text-white collapsed" type="button"
-                data-bs-toggle="collapse" data-bs-target="#collapseSession{{ session.id }}"
-                aria-expanded="false"
-                aria-controls="collapseSession{{ session.id }}">
-                <twig:ux:icon name="fluent-mdl2:group" class="text-white me-3" style="width:32px;height:32px;" /> {{ session.name }} <span class="text-white-50 small"> • Créer le {{ session.createdAt.date|format_datetime( 'long', 'none', locale='fr') }}. </span>
-            </button>
-        </h2>
-        <div id="collapseSession{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionMain">
-            <div class="accordion-body p-0 text-white">
-                <div class="mx-3 mt-2 border-bottom border-white">
-                    <h5><twig:ux:icon name="mdi:user" style="width:30px;height:30px;" /> Les utilisateurs </h5>
-                </div>
-                <div class="d-flex flex-column px-3 gap-2">
-                    {% for access in session.sessionAccesses %}
-                        <div class="d-flex align-items-center gap-3 py-2 rounded">
-                            <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
-                                {% if access.member.photo is null %}
-                                    <img src="https://ui-avatars.com/api/?name={{ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
-                                {% else %}
-                                    <img src="{{ asset('assets/uploads/user/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-                                {% endif %}
-                            </div>
+	<div class="py-3">
+		<twig:NavDashboard/>
+	</div>
+	<h1 class="h2">
+		GESTION DES Sessions</h1>
+	<div class="accordion accordion-flush" id="accordionMain">
+		<form class="row mb-3 g-3" id="search-form">
+			<div class="col-12">
+				<div class="input-group py-3">
+					<button type="submit" class="input-group-text bg-dark border-secondary text-white">
+						{{ ux_icon('lucide:search') }}
+					</button>
+					<input type="text" name="query" id="search-input" value="{{ query }}" class="form-control bg-dark border-secondary text-white placeholder-white" placeholder="Rechercher un utilisateur..." aria-label="Recherche">
+					{% if query %}
+						<a href="{{ path('app_dashboard_sessions') }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
+							{{ ux_icon('lucide:x') }}
+						</a>
+					{% endif %}
+				</div>
+			</div>
+		</form>
+		<div class="d-flex justify-content-center">
+			{{ knp_pagination_render(pagination) }}
+		</div>
+		{% for session in pagination.items %}
+			<div class="accordion-item my-3 rounded">
+				<h2 class="accordion-header bg-transparent">
+					<button class="accordion-button text-white collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSession{{ session.id }}" aria-expanded="false" aria-controls="collapseSession{{ session.id }}">
+						<twig:ux:icon name="fluent-mdl2:group" class="text-white me-3" style="width:32px;height:32px;"/>
+						{{ session.name }}
+						<span class="text-white-50 small">
+							• Créer le
+							{{ session.createdAt.date|format_datetime( 'long', 'none', locale='fr') }}.
+						</span>
+					</button>
+				</h2>
+				<div id="collapseSession{{ session.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionMain">
+					<div class="accordion-body p-0 text-white">
+						<div class="mx-3 mt-2 border-bottom border-white">
+							<h5><twig:ux:icon name="mdi:user" style="width:30px;height:30px;"/>
+								Les utilisateurs
+							</h5>
+						</div>
+						<div class="d-flex flex-column px-3 gap-2">
+							{% for access in session.sessionAccesses %}
+								<div class="d-flex align-items-center gap-3 py-2 rounded">
+									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+										{% if access.member.photo is null %}
+											<img src="https://ui-avatars.com/api/?name={{ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
+										{% else %}
+											<img src="{{ asset('assets/uploads/user/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+										{% endif %}
+									</div>
 
-                            <div class="flex-grow-1 min-width-0 ">
-                                <p class="fw-bold text-white m-0 text-truncate">{{ access.member.firstname }} {{ access.member.name }}</p>
-                                {% if access.role == 'ROLE_OWNER' %}
-                                    <p class="badge bg-warning small text-dark text-capitalize m-0">Propriétaire</p>
-                                {% elseif access.role == 'ROLE_VISITOR' %}
-                                    <p class="badge bg-primary small text-white text-capitalize m-0">Visiteur</p>
-                                {% else %}
-                                    <p class="badge bg-success small text-white text-capitalize m-0">éditeur</p>
-                                {% endif %}       
-                            </div>
+									<div class="flex-grow-1 min-width-0 ">
+										<p class="fw-bold text-white m-0 text-truncate">{{ access.member.firstname }}
+											{{ access.member.name }}</p>
+										{% if access.role == 'ROLE_OWNER' %}
+											<p class="badge bg-warning small text-dark text-capitalize m-0">Propriétaire</p>
+										{% elseif access.role == 'ROLE_VISITOR' %}
+											<p class="badge bg-primary small text-white text-capitalize m-0">Visiteur</p>
+										{% else %}
+											<p class="badge bg-success small text-white text-capitalize m-0">éditeur</p>
+										{% endif %}
+									</div>
 
-                            <a href="{{ path('app_dashboard_users', {query: access.member.firstname ~" "~ access.member.name}) }}" class="btn btn-sm btn-outline-light flex-shrink-0">
-                              <twig:ux:icon name='pepicons-pencil:loop'  style="width:24px;height:24px;" />  Trouver
-                            </a>
-                        </div>
-                    {% endfor %}
-                </div>
+									<a href="{{ path('app_dashboard_users', {query: access.member.firstname ~" "~ access.member.name}) }}" class="btn btn-sm btn-outline-light flex-shrink-0">
+										<twig:ux:icon name='pepicons-pencil:loop' style="width:24px;height:24px;"/>
+										Trouver
+									</a>
+								</div>
+							{% endfor %}
+						</div>
 
 
-                <div class="mx-3 mt-2 border-bottom border-white text-white">
-                    <h5><twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;" /> Stockage </h5>
-                </div>
-                <div class="px-3 py-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span class="text-secondary" style="font-size:12px;">187 Ko utilisés</span>
-                        <span class="text-secondary" style="font-size:12px;">512 Ko max</span>
-                    </div>
-                    <div class="progress mb-2">
-                        <div class="progress-bar bg-info" style="width:37%"></div>
-                    </div>
-                </div>
+						<div class="mx-3 mt-2 border-bottom border-white text-white">
+							<h5><twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
+								Stockage
+							</h5>
+						</div>
+						<div class="px-3 py-3">
+							<div class="d-flex justify-content-between mb-1">
+								<span class="text-secondary" style="font-size:12px;">187 Ko utilisés</span>
+								<span class="text-secondary" style="font-size:12px;">512 Ko max</span>
+							</div>
+							<div class="progress mb-2">
+								<div class="progress-bar bg-info" style="width:37%"></div>
+							</div>
+						</div>
 
-                <div class="mx-3 mt-2 border-bottom border-white">
-                    <h5>Les Actions </h5>
-                </div>
-                <div class="d-flex align-items-center gap-2 mx-3 py-3 flex-wrap">
-                {% if session.isblocked %}
-                    <form id="banForm" action="{{ path('app_session_blocked', { id: session.id})}}" method="post" class="d-inline" >
-                        <input type="hidden" name="_token" value="{{ csrf_token('session_blockage') }}">
-                        <button type="submit" id="banBtn" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" 
-                            onclick="return confirm('Vous allez bloquer la session : {{ session.name }}')">
-                            <twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;" /> Débloquer la session
-                        </button>
-                    </form>
-                {% else %}
-                    <form id="banForm" action="{{ path('app_session_blocked', { id: session.id})}}" method="post" class="d-inline" >
-                        <input type="hidden" name="_token" value="{{ csrf_token('session_blockage') }}">
-                        <button type="submit" id="banBtn" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1" 
-                            onclick="return confirm('Vous allez bloquer la session : {{ session.name }}')">
-                            <twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;" /> Bloquer la session
-                        </button>
-                    </form>
-                {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    
-{% else %}
-    <div class="text-center py-5 text-muted border-secondary">
-        <p class="text-white">Aucune session.</p>
-    </div>
-{% endfor %}
-{% if allPage > 1 %}
-            <nav aria-label="Pagination">
-                <ul class="pagination justify-content-center mt-4">
-                
-                    <li class="page-item {{ previous < 1 ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ previous >= 1 ? path('app_dashboard_sessions', { page: previous, query: query }) : '#' }}">Précédent</a>
-                    </li>
+						<div class="mx-3 mt-2 border-bottom border-white">
+							<h5>Les Actions
+							</h5>
+						</div>
+						<div class="d-flex align-items-center gap-2 mx-3 py-3 flex-wrap">
+							{% if session.isblocked %}
+								<button type="button" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#blockSessionModal{{ session.id }}">
+									<twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;"/>
+									Débloquer la session
+								</button>
 
-                
-                    {% for p in 1..allPage %}
-                        <li class="page-item {{ p == current_page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ path('app_dashboard_sessions', { page: p, query: query  }) }}">
-                                {{ p }}
-                            </a>
-                        </li>
-                    {% endfor %}
+								<div class="modal fade" data-bs-container="body" id="blockSessionModal{{ session.id }}" tabindex="-1" aria-labelledby="blockSessionModalLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="blockSessionModalLabel">Confirmation de blocage</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												Êtes-vous sûr de vouloir bloquer la session :
+												<strong>{{ session.name }}</strong>
+												?
+												<p class="text-muted small mt-2">Cette action peut être annulée ultérieurement.</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
 
-                    
-                    <li class="page-item {{ next > allPage ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ next <= allPage ? path('app_dashboard_sessions', { page: next, query: query  }) : '#' }}">Suivant</a>
-                    </li>
-                </ul>
-            </nav>
-        {% endif %}
-</div>
+												<form action="{{ path('app_session_blocked', { id: session.id})}}" method="post" class="d-inline">
+													<input type="hidden" name="_token" value="{{ csrf_token('session_blockage') }}">
+													<button type="submit" class="btn btn-warning">
+														Débloquer la session
+													</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% else %}
+								<button type="button" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#blockSessionModal{{ session.id }}">
+									<twig:ux:icon name="akar-icons:stop" class="me-2" style="width:20px;height:20px;"/>
+									Bloquer la session
+								</button>
+
+								<div class="modal fade" data-bs-container="body" id="blockSessionModal{{ session.id }}" tabindex="-1" aria-labelledby="blockSessionModalLabel" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="blockSessionModalLabel">Confirmation de blocage</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												Êtes-vous sûr de vouloir débloquer la session :
+												<strong>{{ session.name }}</strong>
+												?
+												<p class="text-muted small mt-2">Cette action peut être annulée ultérieurement.</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+
+												<form action="{{ path('app_session_blocked', { id: session.id})}}" method="post" class="d-inline">
+													<input type="hidden" name="_token" value="{{ csrf_token('session_blockage') }}">
+													<button type="submit" class="btn btn-danger">
+														Bloquer la session
+													</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		{% else %}
+			<div class="text-center py-5 text-muted border-secondary">
+				<p class="text-white">Aucune session.</p>
+			</div>
+		{% endfor %}
+
+	</div>
 {% endblock %}

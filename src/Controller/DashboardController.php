@@ -6,6 +6,7 @@ use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 use App\Service\StatsService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,20 +46,24 @@ final class DashboardController extends AbstractController
     }
 
     #[Route('/sessions', name: 'sessions')]
-    public function sessions(Request $request ,SessionRepository $sessionRepository): Response
+    public function sessions(Request $request ,SessionRepository $sessionRepository, PaginatorInterface $paginator): Response
     {
-         $intPage = $request->query->get('page', 1);
-        $query = $request->query->get('query', '');
+        $intPage = $request->query->get('page', 1);
+        $search = $request->query->get('query', '');
 
-        $arrSession = $sessionRepository->findSessionsForAdminWithSeach(10, $intPage, $query);
+        $query = $sessionRepository->sessionQuerybuilderForPaginator(10, $intPage, $search);
+
+
+        $pagination = $paginator->paginate(
+            $query, /* query NOT result */
+            $request->query->getInt('page', 1), /* page number */
+            10 /* limit per page */
+        );
+
 
         return $this->render('dashboard/dashboard_sessions.html.twig', [
-            'arrSession' => $arrSession['items'],
-            'next'         => $intPage + 1,
-            'previous'     => $intPage - 1,
-            'allPage'      => $arrSession['pages'],
-            'current_page' => $intPage,
-            'query' => $query, 
+            'pagination' => $pagination,
+            'query' => $search, 
         ]);
     }
 

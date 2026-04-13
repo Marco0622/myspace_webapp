@@ -18,4 +18,5 @@ return [
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
     Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
+    Knp\Bundle\PaginatorBundle\KnpPaginatorBundle::class => ['all' => true],
 ];

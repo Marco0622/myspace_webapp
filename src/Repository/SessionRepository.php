@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -33,9 +33,9 @@ class SessionRepository extends ServiceEntityRepository
     }
 
 
-    public function findSessionsForAdminWithSeach(int $number, int $page, $query): array
+    public function sessionQuerybuilderForPaginator(int $number, int $page, $query): QueryBuilder
     {
-        $queryBuilder = $this->createQueryBuilder('s')
+        return $this->createQueryBuilder('s')
             ->leftJoin('s.sessionAccesses', 'all_accesses')
             ->addSelect('all_accesses')
             ->leftJoin('all_accesses.member', 'members')
@@ -44,21 +44,7 @@ class SessionRepository extends ServiceEntityRepository
             ->setParameter('q', '%' . $query . '%')
             ->orderBy('s.created_at', 'DESC');
 
-        $paginator = new Paginator($queryBuilder->getQuery());
-
-        $intItemCount = count($paginator);
-
-        $intPageCount = ceil($intItemCount / $number);
-
-        $paginator->getQuery()
-            ->setFirstResult($number * $page - $number)
-            ->setMaxResults($number);
         
-         return [
-            'count' => $intItemCount,
-            'pages' => $intPageCount,
-            'items' => $paginator
-        ];
             
     }
 }
