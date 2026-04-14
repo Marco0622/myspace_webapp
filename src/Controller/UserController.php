@@ -7,6 +7,7 @@ use App\Form\UserInfoFormType;
 use App\Repository\InvitationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
+use App\Repository\StorageRepository;
 use App\Service\CodeInvitationGenerator;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,10 +21,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_home')]
-    public function index(InvitationRepository $invitationRepository, SessionRepository $sessionRepository, ReportRepository $reportRepository): Response
+    public function index(InvitationRepository $invitationRepository, 
+    SessionRepository $sessionRepository, ReportRepository $reportRepository,
+    StorageRepository $storageRepository): Response
     {
 
         $objUser = $this->getUser();
+        $arrStorage = $storageRepository->findAll();
 
         //Si l'utilisateur n'est pas cconnecter redirection vers la page de connection
         if (!$this->getUser()) {
@@ -40,6 +44,7 @@ final class UserController extends AbstractController
             'arrSession' => $arrSession,
             'arrInvitation' => $arrInvitation,
             'arrReport' => $arrReport,
+            'arrStorage' => $arrStorage,
         ]);
     }
 

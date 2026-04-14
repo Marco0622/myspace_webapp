@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
@@ -47,11 +48,16 @@ class UserInfoFormType extends AbstractType
                 'attr' => ['placeholder' => 'jean.dupont@exemple.com'],
             ])
             ->add('photo', FileType::class, [
-                'label' => 'Photo de profil',
-                'required' => false,
-                'mapped' => false,
-                'data' => null,
-               
+                'label'       => 'Photo de profil',
+                'required'    => false,
+                'mapped'      => false,
+                'data'        => null,
+                'constraints' => [
+                    new Image(
+                        maxSize: '1024k',
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                    ),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 

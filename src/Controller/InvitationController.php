@@ -54,12 +54,10 @@ final class InvitationController extends AbstractController
         ]);
     }
 
-    #[Route('/create/{id<\d+>}', name: 'create')]
+    /*#[Route('/create/{id<\d+>}', name: 'create')]
     public function create(): Response
     {
-        return $this->render('invitation/index.html.twig', [
-            
-        ]);
-    }
+        
+    }*/
 
 }

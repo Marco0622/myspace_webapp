@@ -147,12 +147,11 @@
 		<h3 class="fw-medium mb-0">
 			Vos sessions
 		</h3>
-		<a href="" class="btn btn-light d-flex align-items-center gap-2">
+		<button type="button" class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
 			{{ ux_icon('fa7-solid:plus') }}
 			Créer une session
-		</a>
+		</button> 
 	</div>
-
 	<div class="row g-3 py-3">
 		{% for session in arrSession %}
 			<div class="col-12 col-md-6 col-xl-4">
@@ -340,5 +339,44 @@
 			<h5 class="text-center text-white-50">Aucun Signalement.</h5>
 		{% endfor %}
 	</div>
+
+
+{# creation de session #}
+<div class="modal fade" id="createSessionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Créer une session</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ path('app_session_create') }}" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="_token" value="{{ csrf_token('session_create') }}">
+                    <div class="mb-3">
+                        <label for="sessionName" class="form-label">Nom de la session</label>
+                        <input type="text" class="form-control" id="sessionName" name="name" placeholder="Ex: Session 2025..." required autofocus>
+						<small class="text-danger"> Le nom de la session est obligatoire au minimum 2 caractères ! </small>
+                    </div>
+					<div class="mb-3">
+						<label for="sessionStorage" class="form-label">Niveau de stockage</label>
+						<select class="form-select" id="sessionStorage" name="storage_id" required>
+							<option value="" disabled selected>-- Choisir un niveau --</option>
+							{% for storage in arrStorage %}
+								<option value="{{ storage.id }}">{{ storage.size }} MB</option>
+							{% endfor %}
+						</select>
+					</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-success d-flex align-items-center gap-2">
+                        {{ ux_icon('fa7-solid:plus') }}
+                        Créer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
