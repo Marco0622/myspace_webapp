@@ -263,6 +263,11 @@ final class UserController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
+        $oldPhotoPath = $this->getParameter('photos_directory_user') . '/' . $user->getPhoto();
+        if (file_exists($oldPhotoPath)) {
+            unlink($oldPhotoPath);
+        }
+
 
         $user->setPhoto(null);
         $entityManager->flush();

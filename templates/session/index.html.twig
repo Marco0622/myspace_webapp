@@ -1,9 +1,157 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session - {% endblock %}
+{% block title %}Session -
+{% endblock %}
 
 {% block body %}
 
+    <h1>{{ session.name }}</h1>
+	<div class="row g-4 mt-3">
+		<div class="col-lg-8">
+			<div class="card card-section mb-4 text-white">
+				<div class="card-header">
+					Inviter un participant
+					<twig:ux:icon name="mynaui:send" style="height:32px;width:32px;"/>
+				</div>
+				<div class="card-body">
+					<p class="text-muted small mb-3 text-white">
+						Entrez le code d'invitation de la personne à inviter dans cette session.
+					</p>
+					<div class="input-group invite-input-group">
+						<input type="email" class="form-control" placeholder="Code d'invitation...">
+						<button type="button" class="btn btn-outline-light">
+							Envoyer
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="card card-section text-white">
+				<div class="card-header d-flex justify-content-between align-items-center">
+					<span class="d-flex align-items-center gap-2">
 
+						Invitations en attente
+					</span>
+					<span class="badge bg-warning text-dark">3</span>
+				</div>
+				<div class="card-body p-0 px-3">
+					<ul class="invite-list">
+						<li>
+							<div class="invite-avatar" style="background:#6366f1">MA</div>
+							<div class="flex-grow-1">
+								<div class="invite-email">marie.dupont@example.com</div>
+								<div class="invite-date">Envoyée le 10/04/2025 à 14:32</div>
+							</div>
+							<span class="badge bg-warning text-dark d-flex align-items-center gap-1">
+								<i class="ph ph-clock" style="font-size:11px"></i>En attente
+							</span>
+							<button type="button" class="btn btn-sm btn-outline-danger border-0" title="Annuler">
+								<i class="ph ph-trash" style="font-size:15px"></i>
+							</button>
+						</li>
+						<li>
+							<div class="invite-avatar" style="background:#10b981">PL</div>
+							<div class="flex-grow-1">
+								<div class="invite-email">paul.lemaire@example.com</div>
+								<div class="invite-date">Envoyée le 09/04/2025 à 09:15</div>
+							</div>
+							<span class="badge bg-success d-flex align-items-center gap-1">
+								<i class="ph ph-check" style="font-size:11px"></i>Acceptée
+							</span>
+							<button type="button" class="btn btn-sm btn-outline-danger border-0" title="Annuler">
+								<i class="ph ph-trash" style="font-size:15px"></i>
+							</button>
+						</li>
+						<li>
+							<div class="invite-avatar" style="background:#ef4444">SB</div>
+							<div class="flex-grow-1">
+								<div class="invite-email">sophie.bernard@example.com</div>
+								<div class="invite-date">Envoyée le 08/04/2025 à 17:50</div>
+							</div>
+							<span class="badge bg-danger d-flex align-items-center gap-1">
+								<i class="ph ph-x" style="font-size:11px"></i>Refusée
+							</span>
+							<button type="button" class="btn btn-sm btn-outline-danger border-0" title="Annuler">
+								<i class="ph ph-trash" style="font-size:15px"></i>
+							</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-4 ">
+			<div class="card card-section mb-4 text-white">
+				<div class="card-header">
+					<i class="ph ph-info text-info" style="font-size:18px"></i>
+					Informations
+				</div>
+				<div class="card-body">
+					<dl class="row mb-0 small">
+						<dt class="col-5 text-white">Propriétaire</dt>
+						<dd class="col-7 fw-semibold mb-2 text-white">Jean Martin</dd>
+
+						<dt class="col-5 text-white">Visibilité</dt>
+						<dd class="col-7 mb-2">
+							<span class="badge bg-success text-white d-inline-flex align-items-center gap-1">
+								Publique
+							</span>
+						</dd>
+
+						<dt class="col-5 text-white">Expiration</dt>
+						<dd class="col-7 mb-0 text-white">30/06/2025</dd>
+					</dl>
+				</div>
+			</div>
+			<div class="card card-section text-white  mb-4">
+				<div class="card-header">
+					Stockage de la session
+				</div>
+				<div class="card-body">
+
+					<div class="d-flex justify-content-between align-items-end mb-2">
+						<div>
+							<div class="storage-pct">62%</div>
+							<div class="storage-label">utilisé</div>
+						</div>
+						<div class="text-end">
+							<div class="fw-semibold small">635 Mo</div>
+							<div class="storage-label">/ 1.0 Go</div>
+						</div>
+					</div>
+
+					<div class="progress storage-bar mb-3" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
+						<div class="progress-bar bg-warning" style="width: 62%"></div>
+					</div>
+				</div>
+			</div>
+			<div class="card card-section text-white">
+				<div class="card-header">
+					Session
+				</div>
+				<div class="card-body">
+					<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						<twig:ux:icon name="fluent-mdl2:leave" style="height:20px;width:20px;"/>
+						Quitter la Session
+					</button>
+					<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									...
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-primary">Save changes</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}

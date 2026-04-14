@@ -14,10 +14,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class SessionController extends AbstractController
 {
     #[Route('/{id<\d+>}', name: 'home')]
-    public function index(): Response
+    public function index(Session $session): Response
     {
         return $this->render('session/index.html.twig', [
-            
+            'session' => $session,
         ]);
     }
 

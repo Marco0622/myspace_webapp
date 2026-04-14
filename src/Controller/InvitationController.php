@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @todo faire un voter pour la gestion des invitation
+ */
+
 #[Route('/invitation', name: 'app_invitation_')]
 final class InvitationController extends AbstractController
 {
