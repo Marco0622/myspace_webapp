@@ -24,7 +24,7 @@
 											{% if access.member.photo is null %}
 												<img src="https://ui-avatars.com/api/?name={{ access.member.firstname ~" "~ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
 											{% else %}
-												<img src="{{ asset('assets/uploads/user/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+												<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 											{% endif %}
 										</div>
 
@@ -164,7 +164,7 @@
 										{% if invitation.receiver.photo is null %}
 											<img src="https://ui-avatars.com/api/?name={{ invitation.receiver.firstname ~" "~ invitation.receiver.name }}&background=random" alt="Profil" class="w-100 h-100">
 										{% else %}
-											<img src="{{ asset('assets/uploads/user/' ~ invitation.receiver.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+											<img src="{{ asset('assets/uploads/pictures/' ~ invitation.receiver.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 										{% endif %}
 									</div>
 									<span class="fw-semibold text-white">{{ invitation.receiver.firstname ~" "~ invitation.receiver.name }}</span>

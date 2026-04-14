@@ -9,7 +9,7 @@ use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
 use App\Repository\StorageRepository;
 use App\Service\CodeInvitationGenerator;
-use App\Service\ResizePicture;
+use App\Service\PictureManager;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,7 +61,7 @@ final class UserController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
-        ResizePicture $resizePicture
+        PictureManager $pictureManager
     ): Response {
         $userForm = $this->createForm(UserInfoFormType::class, $user);
 
@@ -79,28 +79,11 @@ final class UserController extends AbstractController
             $photoFile = $userForm->get('photo')->getData();
 
             if ($photoFile) {
-
-                if ($user->getPhoto()) {
-                    $oldPhotoPath = $this->getParameter('photos_directory_user') . '/' . $user->getPhoto();
-                    if (file_exists($oldPhotoPath)) {
-                        unlink($oldPhotoPath);
-                    }
-                }
-
-
-                $newFilename = uniqid() . '.' . $photoFile->guessExtension();
-
-
-                $photoFile->move(
-                    $this->getParameter('photos_directory_user'),
-                    $newFilename
-                );
-
-                $resizePicture->resize($this->getParameter('photos_directory_user'). '/' .$newFilename, 250, 250);
-
-
+                $newFilename = $pictureManager->upload($photoFile, $user->getPhoto());
+                $pictureManager->resize($newFilename, 250, 250);
                 $user->setPhoto($newFilename);
             }
+
             $user->setUpdatedAt(new DateTimeImmutable('now'));
             $entityManager->flush();
 
@@ -265,23 +248,18 @@ final class UserController extends AbstractController
 
     #[Route('/user/delete-picture/{id<\d+>}', name: 'app_user_picture', methods: ['POST'])]
     #[IsGranted('USER_RIGHT', subject: 'user', message: "Droit insuffisant pour la suppression de la photo !")]
-    public function deletePicture(User $user, Request $request, CodeInvitationGenerator $codeInvitation, EntityManagerInterface $entityManager): Response
+    public function deletePicture(User $user, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager): Response
     {
 
         if (!$this->isCsrfTokenValid('delete_picture', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $oldPhotoPath = $this->getParameter('photos_directory_user') . '/' . $user->getPhoto();
-        if (file_exists($oldPhotoPath)) {
-            unlink($oldPhotoPath);
-        }
-
+        $pictureManager->delete($user->getPhoto());
 
         $user->setPhoto(null);
         $entityManager->flush();
         $this->addFlash('success', "La photo a été supprimée !");
-
 
         return $this->redirectToRoute('app_user_update', [
             'id' => $user->getId(),

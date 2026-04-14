@@ -20,7 +20,7 @@
 					{% if user.photo is null %}
 						<img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
 					{% else %}
-						<img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+						<img src="{{ asset('assets/uploads/pictures/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 					{% endif %}
 				</div>
 				<div>
@@ -74,7 +74,7 @@
                                         {% if user.photo is null %}
                                             <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
                                         {% else %}
-                                            <img src="{{ asset('assets/uploads/user/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                            <img src="{{ asset('assets/uploads/pictures/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
                                         {% endif %}
                                     </div>
                                     {% if user.photo is not null %}

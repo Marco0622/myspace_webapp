@@ -2,12 +2,17 @@
 
 namespace App\Service;
 
-class ResizePicture
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+class PictureManager
 {
+     public function __construct(
+        private string $userPhotosDirectory  
+    ) {}
 
     public function resize($img, $intX = 400, $intY = 400, $keepRatio = false)
     {
-        $filename = $img;
+        $filename = $this->userPhotosDirectory . '/' .$img;
 
         list($width_orig, $height_orig) = getimagesize($filename);
 
@@ -55,6 +60,29 @@ class ResizePicture
             imagepng($image_p, $img, 8);
         } elseif ($extension == 'webp') {
             imagewebp($image_p, $img, 85);
+        }
+    }
+
+    public function upload(UploadedFile $file, ?string $oldFilename = null): string
+    {
+
+        $this->delete($oldFilename);
+
+        $newFilename = uniqid() . '.' . $file->guessExtension();
+
+        $file->move($this->userPhotosDirectory, $newFilename);
+
+        return $newFilename;
+    }
+
+    public function delete(?string $filename): void
+    {
+        if (!$filename) return;
+
+        $path = $this->userPhotosDirectory . '/' . $filename;
+
+        if (file_exists($path)) {
+            unlink($path);
         }
     }
 }

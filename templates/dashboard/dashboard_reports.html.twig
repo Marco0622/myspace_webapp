@@ -19,7 +19,7 @@
 							{% if report.author.photo is null %}
 								<img src="https://ui-avatars.com/api/?name={{ report.author.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
 							{% else %}
-								<img src="{{ asset('assets/uploads/user/' ~ report.author.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+								<img src="{{ asset('assets/uploads/pictures/' ~ report.author.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 							{% endif %}
 						</div>
 						<div>
