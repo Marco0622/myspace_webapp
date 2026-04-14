@@ -9,6 +9,7 @@ use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
 use App\Repository\StorageRepository;
 use App\Service\CodeInvitationGenerator;
+use App\Service\ResizePicture;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -59,7 +60,8 @@ final class UserController extends AbstractController
         User $user,
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ResizePicture $resizePicture
     ): Response {
         $userForm = $this->createForm(UserInfoFormType::class, $user);
 
@@ -93,6 +95,8 @@ final class UserController extends AbstractController
                     $this->getParameter('photos_directory_user'),
                     $newFilename
                 );
+
+                $resizePicture->resize($this->getParameter('photos_directory_user'). '/' .$newFilename, 250, 250);
 
 
                 $user->setPhoto($newFilename);
