@@ -42,9 +42,21 @@ class SessionRepository extends ServiceEntityRepository
             ->addSelect('members')
             ->where('LOWER(s.name) LIKE LOWER(:q)')
             ->setParameter('q', '%' . $query . '%')
-            ->orderBy('s.created_at', 'DESC');
+            ->orderBy('s.created_at', 'DESC');      
+    }
 
-        
-            
+    public function findSessionWithRelations(int $id): ?Session
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.sessionAccesses', 'all_accesses')
+            ->addSelect('all_accesses')
+            ->leftJoin('s.sessionInvitations', 'all_invitation')
+            ->addSelect('all_invitation')
+            ->leftJoin('all_accesses.member', 'members')
+            ->addSelect('members')
+            ->where('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

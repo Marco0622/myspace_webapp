@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Access;
 use App\Entity\Session;
 use App\Entity\Storage;
-use App\Repository\InvitationRepository;
+use App\Repository\SessionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -23,10 +23,10 @@ final class SessionController extends AbstractController
     ) {}
 
     #[Route('/{id<\d+>}', name: 'home')]
-    public function index(Session $session, InvitationRepository $invitationRepository): Response
+    public function index(int $id, SessionRepository $sessionRepository): Response
     {
        
-
+        $session = $sessionRepository->findSessionWithRelations($id);
         
         return $this->render('session/index.html.twig', [
             'session' => $session,
