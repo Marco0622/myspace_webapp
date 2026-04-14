@@ -1,36 +1,158 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session - {{ session.name }}
+{% block title %}Session -
+	{{ session.name }}
 {% endblock %}
 
 {% block body %}
-	{{ dump(session) }}
-    <h1 class="h2">{{ session.name }}</h1>
+	<h1 class="h2">{{ session.name }}</h1>
 	<div class="row g-4 mt-3">
-		<div class="col-lg-8">
-			<div class="card card-section mb-4 text-white">
-				<div class="card-header border-white">
-					Inviter un participant
-					<twig:ux:icon name="mynaui:send" style="height:32px;width:32px;"/>
-				</div>
-				<form class="card-body" action="{{ path('app_invitation_create', { id: session.id }) }}" method="POST">
-					<p class="text-muted small mb-3 text-white">
-						Entrez le code d'invitation de la personne à inviter dans cette session.
-					</p>
-					<div class="input-group invite-input-group">
-						<input type="hidden" name="_token" value="{{ csrf_token('create_invitation') }}">
-						<input type="text" name="code" class="form-control rounded-start" placeholder="Code d'invitation...">
-						<button type="submit" class="btn btn-outline-light">
-							Envoyer
+		{% if app.user == owner %}
+			<div class="accordion" id="accordionExample">
+				<div class="accordion-item">
+					<h2 class="accordion-header border-bottom border-white" id="headingOne">
+						<button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							Gestion des utilisateurs <twig:ux:icon name="lucide:users" class="ms-2" style="width:32px;height:32px;" />
 						</button>
+					</h2>
+					<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+						<div class="accordion-body">
+							{% for access in session.sessionAccesses %}
+								{% if access.member != app.user %}
+									<div class="d-flex align-items-center gap-2 py-2">
+										<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+											{% if access.member.photo is null %}
+												<img src="https://ui-avatars.com/api/?name={{ access.member.firstname ~" "~ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
+											{% else %}
+												<img src="{{ asset('assets/uploads/user/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+											{% endif %}
+										</div>
+
+										<span class="fw-semibold text-white">{{ access.member.firstname ~" "~ access.member.name }}</span>
+
+										{% if 'ROLE_EDITOR' in access.role %}
+											<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
+										{% else %}
+											<span class="badge rounded-pill text-bg-success text-capitalize">Visiteur</span>
+										{% endif %}
+
+										<button class="btn btn-sm btn-outline-warning ms-auto" data-bs-toggle="modal" data-bs-target="#manageModal-{{ access.id }}">
+											Gérer
+											<twig:ux:icon name="mingcute:edit-line" style="width:20px;height:20px;"/>
+										</button>
+									</div>
+
+									<div class="modal fade" id="manageModal-{{ access.id }}" tabindex="-1" aria-labelledby="manageModalLabel-{{ access.id }}" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="manageModalLabel-{{ access.id }}">
+														Gérer
+														{{ access.member.firstname ~" "~ access.member.name }}
+													</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+												</div>
+												<div class="modal-body d-flex flex-column gap-3">
+													<button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#roleModal-{{ access.id }}">
+														<i class="bi bi-shield-fill me-1"></i>
+														Modifier le rôle
+													</button>
+													<button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#excludeModal-{{ access.id }}">
+														<i class="bi bi-person-x-fill me-1"></i>
+														Exclure ce membre
+													</button>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="modal fade" id="roleModal-{{ access.id }}" tabindex="-1" aria-labelledby="roleModalLabel-{{ access.id }}" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="roleModalLabel-{{ access.id }}">
+														Modifier le rôle de
+														{{ access.member.firstname ~" "~ access.member.name }}
+													</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+												</div>
+												<form action="#" method="post">
+													<div class="modal-body">
+														<label class="form-label fw-semibold">Rôle</label>
+														<select name="role" class="form-select">
+															<option value="ROLE_EDITOR" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
+															<option value="ROLE_VISITOR" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
+														</select>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														<button type="submit" class="btn btn-primary">Enregistrer</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+									<div class="modal fade" id="excludeModal-{{ access.id }}" tabindex="-1" aria-labelledby="excludeModalLabel-{{ access.id }}" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title text-danger" id="excludeModalLabel-{{ access.id }}">
+														Exclure
+														{{ access.member.firstname ~" "~ access.member.name }}
+													</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+												</div>
+												<form action="#" method="post">
+													<div class="modal-body">
+														<p class="mb-0">Êtes-vous sûr de vouloir exclure
+															<strong>{{ access.member.firstname ~" "~ access.member.name }}</strong>
+															? Cette action lui retirera l'accès à la session.</p>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+														<button type="submit" class="btn btn-danger">Confirmer l'exclusion</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+
+								{% endif %}
+							{% else %}
+								<div class="text-center py-5 text-muted border-secondary">
+									<p class="text-white">Aucun utilisateur.</p>
+								</div>
+							{% endfor %}
+						</div>
 					</div>
-				</form>
+				</div>
 			</div>
+		{% endif %}
+		<div class="col-lg-8">
+			{% if app.user == owner %}
+				<div class="card card-section mb-4 text-white">
+					<div class="card-header border-white">
+						Inviter un participant
+						<twig:ux:icon name="mynaui:send" style="height:32px;width:32px;"/>
+					</div>
+					<form class="card-body" action="{{ path('app_invitation_create', { id: session.id }) }}" method="POST">
+						<p class="text-muted small mb-3 text-white">
+							Entrez le code d'invitation de la personne à inviter dans cette session.
+						</p>
+						<div class="input-group invite-input-group">
+							<input type="hidden" name="_token" value="{{ csrf_token('create_invitation') }}">
+							<input type="text" name="code" class="form-control rounded-start" placeholder="Code d'invitation...">
+							<button type="submit" class="btn btn-outline-light">
+								Envoyer
+							</button>
+						</div>
+					</form>
+				</div>
+			{% endif %}
 			<div class="card card-section text-white">
 				<div class="card-header border-white d-flex justify-content-between align-items-center">
 					<span class="d-flex align-items-center gap-2">
-
-						Invitations en attente
+						Invitations en attente <twig:ux:icon name="mingcute:time-line" style="height:32px;width:32px;"/>
 					</span>
 					<span class="badge bg-light text-dark rounded-circle">{{ session.sessionInvitations|length }}</span>
 				</div>
@@ -54,16 +176,57 @@
 									{% else %}
 										<span class="badge rounded-pill text-bg-danger" style="font-size:11px;">Refuser</span>
 									{% endif %}
-
-									{% if user.responce is null %}
-										<a href="#" class="btn btn-outline-danger btn-sm ms-auto"> Annuler </a>
-									{% else %}
-										<a href="#" class="btn btn-outline-warning btn-sm ms-auto"> Effacer </a>
+									{% if app.user == owner %}
+										{% if user.responce is null %}
+											<button type="button" class="btn btn-outline-danger btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modalAnnuler{{ user.receiverId.id }}">
+												Annuler
+											</button>
+										{% else %}
+											<button type="button" class="btn btn-outline-warning btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modalEffacer{{ user.receiverId.id }}">
+												Effacer
+											</button>
+										{% endif %}
 									{% endif %}
+									<div class="modal fade" id="modalAnnuler{{ user.receiverId.id }}" tabindex="-1" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content text-dark">
+												<div class="modal-header">
+													<h5 class="modal-title">Annuler l'invitation</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													Voulez-vous vraiment annuler l'invitation pour
+													<strong>{{ user.receiverId.firstname }}</strong>
+													?
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+													<a href="#" class="btn btn-danger">Oui, annuler</a>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="modal fade" id="modalEffacer{{ user.receiverId.id }}" tabindex="-1" aria-hidden="true">
+										<div class="modal-dialog modal-dialog-centered">
+											<div class="modal-content text-dark">
+												<div class="modal-header">
+													<h5 class="modal-title">Supprimer la notification</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													Retirer cette ligne de votre historique ?
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+													<a href="#" class="btn btn-warning">Confirmer</a>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
-								
+
 							</li>
-							
+
 						{% endfor %}
 					</ul>
 				</div>
@@ -72,21 +235,20 @@
 		<div class="col-lg-4 ">
 			<div class="card card-section mb-4 text-white">
 				<div class="card-header border-white">
-					<i class="ph ph-info text-info" style="font-size:18px"></i>
-					Informations
+					Informations <twig:ux:icon name="material-symbols:info-outline" style="width:32px;height:32px;"/>
 				</div>
 				<div class="card-body">
 					<dl class="row mb-0 small">
 						<dt class="col-5 text-white">Propriétaire</dt>
-						<dd class="col-7 fw-semibold mb-2 text-white">Jean Martin</dd>
-						<dt class="col-5 text-white">Expiration</dt>
+						<dd class="col-7 fw-semibold mb-2 text-white">{{ owner.name ~" "~ owner.firstname}}</dd>
+						<dt class="col-5 text-white">Créer le</dt>
 						<dd class="col-7 mb-0 text-white">{{ session.createdAt|format_datetime( 'long', 'none', locale='fr') }}</dd>
 					</dl>
 				</div>
 			</div>
 			<div class="card card-section text-white  mb-4">
 				<div class="card-header border-white">
-					Stockage de la session
+					Stockage de la session <twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
 				</div>
 				<div class="card-body">
 
@@ -108,51 +270,62 @@
 			</div>
 			<div class="card card-section text-white">
 				<div class="card-header border-white">
-					Session
+					Session <twig:ux:icon name="fluent-mdl2:group" class="text-white me-3" style="width:32px;height:32px;"/>
 				</div>
 				<div class="card-body">
-					<button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#leaveSession">
-						<twig:ux:icon name="fluent-mdl2:leave" style="height:20px;width:20px;"/>
-						Quitter la Session
-					</button>
-					<div class="modal fade" id="leaveSession" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div class="modal-body">
-									...
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-primary">Save changes</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteSession">
-						
-						Supprimer la Session
-					</button>
-					<div class="modal fade" id="deleteSession" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-								</div>
-								<div class="modal-body">
-									...
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-primary">Save changes</button>
+					{% if app.user !== owner %}
+						<button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#leaveSession">
+							<twig:ux:icon name="fluent-mdl2:leave" style="height:20px;width:20px;"/>
+							Quitter la Session
+						</button>
+						<div class="modal fade" id="leaveSession" tabindex="-1" aria-labelledby="leaveSessionLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="leaveSessionLabel">Quitter la session</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+									</div>
+									<div class="modal-body">
+										<p class="mb-0">Êtes-vous sûr de vouloir quitter cette session ? Vous perdrez votre accès.</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+										<button type="submit" class="btn btn-warning">Quitter la session</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					{% else %}
+						<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteSession">
+							Supprimer la Session
+						</button>
+
+						<div class="modal fade" id="deleteSession" tabindex="-1" aria-labelledby="deleteSessionLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="deleteSessionLabel">Supprimer la session</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+									</div>
+									<form action="#" method="post">
+										<div class="modal-body d-flex flex-column gap-3">
+											<p class="mb-0">Cette action est irréversible. La session et toutes ses données seront définitivement supprimées.</p>
+											<div>
+												<label class="form-label fw-semibold">Tapez
+																									"<span class="text-danger">Je confirme</span>"
+																									pour continuer</label>
+												<input type="text" class="form-control" name="confirmation" placeholder="Je confirme" autocomplete="off" required pattern="Je confirme" title="Veuillez écrire exactement : je confirme">
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+											<button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					{% endif %}
 				</div>
 			</div>
 		</div>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Access;
 use App\Entity\Session;
 use App\Entity\Storage;
+use App\Repository\AccessRepository;
 use App\Repository\SessionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,13 +24,20 @@ final class SessionController extends AbstractController
     ) {}
 
     #[Route('/{id<\d+>}', name: 'home')]
-    public function index(int $id, SessionRepository $sessionRepository): Response
+    public function index(int $id, SessionRepository $sessionRepository, AccessRepository $accessRepository): Response
     {
        
         $session = $sessionRepository->findSessionWithRelations($id);
+
+        $objOwner = $accessRepository->findOneBy([
+            'role' => 'ROLE_OWNER',
+            'session' => $session
+        ]);
+        // dd($objOwner);
         
         return $this->render('session/index.html.twig', [
             'session' => $session,
+            'owner' => $objOwner->getMember(),
         ]);
     }
 
