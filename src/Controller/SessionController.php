@@ -33,7 +33,6 @@ final class SessionController extends AbstractController
             'role' => 'ROLE_OWNER',
             'session' => $session
         ]);
-        // dd($objOwner);
         
         return $this->render('session/index.html.twig', [
             'session' => $session,

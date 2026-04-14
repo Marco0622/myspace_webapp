@@ -16,11 +16,11 @@ class Invitation
 
     #[ORM\ManyToOne(inversedBy: 'sentInvitations')]
     #[ORM\JoinColumn(name: "inv_sender_id", referencedColumnName: 'usr_id', nullable: false)]
-    private ?User $sender_id = null;
+    private ?User $sender = null;
 
     #[ORM\ManyToOne(inversedBy: 'receivedInvitations')]
     #[ORM\JoinColumn(name: "inv_receiver_id", referencedColumnName: 'usr_id', nullable: false)]
-    private ?User $receiver_id = null;
+    private ?User $receiver = null;
 
     #[ORM\Column(name: 'inv_responce', nullable: true)]
     private ?bool $responce = null;
@@ -37,26 +37,26 @@ class Invitation
         return $this->id;
     }
 
-    public function getSenderId(): ?User
+    public function getSender(): ?User
     {
-        return $this->sender_id;
+        return $this->sender;
     }
 
-    public function setSenderId(?User $sender_id): static
+    public function setSender(?User $sender): static
     {
-        $this->sender_id = $sender_id;
+        $this->sender = $sender;
 
         return $this;
     }
 
-    public function getReceiverId(): ?User
+    public function getReceiver(): ?User
     {
-        return $this->receiver_id;
+        return $this->receiver;
     }
 
-    public function setReceiverId(?User $receiver_id): static
+    public function setReceiver(?User $receiver): static
     {
-        $this->receiver_id = $receiver_id;
+        $this->receiver = $receiver;
 
         return $this;
     }

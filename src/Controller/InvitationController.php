@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @todo faire un voter pour la gestion des invitation
@@ -27,7 +28,8 @@ final class InvitationController extends AbstractController
         private LoggerInterface $logger
     ) {}
 
-    #[Route('/decline/{id<\d+>}', name: 'decline')]
+    #[Route('/decline/{id<\d+>}', name: 'decline', methods: ['POST'])]
+    #[IsGranted('INVITATION_RESPONCE', subject: 'invitation', message: "Droit insuffisant pour refuser l'invitation !")]
     public function decline(Invitation $invitation, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('decline_invitation', $request->request->get('_token'))) {
@@ -42,7 +44,8 @@ final class InvitationController extends AbstractController
         return $this->redirectToRoute('app_user_home');
     }
 
-    #[Route('/accept/{id<\d+>}', name: 'accept')]
+    #[Route('/accept/{id<\d+>}', name: 'accept', methods: ['POST'])]
+    #[IsGranted('INVITATION_RESPONCE', subject: 'invitation', message: "Droit insuffisant pour accepter l'invitation !")]
     public function accept(Invitation $invitation, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('accept_invitation', $request->request->get('_token'))) {
@@ -57,13 +60,46 @@ final class InvitationController extends AbstractController
         ]);
     }
 
-    #[Route('/cancel/{id<\d+>}', name: 'cancel')]
-    public function cancel(): Response
-    {
+    #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
+    #[IsGranted('INVITATION_CANCEL', subject: 'invitation', message: "Droit insuffisant pour supprimer l'invitation !")]
+    public function cancel(Invitation $invitation, Request $request, EntityManagerInterface $entityManager): Response
+    {   
+        if (!$this->isCsrfTokenValid('delete_invitation', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $id = $request->request->get('sessionId');
+
+        try {
+            $entityManager->remove($invitation);
+            $entityManager->flush();
+
+            $this->addFlash('success', "L'invitation a été supprimé !");
+
+            return $this->redirectToRoute('app_session_home', [
+               'id' => $id,
+            ]);
+            
+        } catch (\Exception $e) {
+
+            $this->logger->error("Erreur lors de la création d'une invitation", [
+                'id' => $this->getUser(),
+                'msg' => $e->getMessage()
+            ]);
+
+
+            $this->addFlash('danger', "L'action n'a pas pu être effectuée.");
+
+            return $this->redirectToRoute('app_session_home', [
+               'id' => $id,
+            ]);
+        }
+
         return $this->render('invitation/index.html.twig', []);
     }
 
-    #[Route('/create/{id<\d+>}', name: 'create')]
+    #[Route('/create/{id<\d+>}', name: 'create', methods: ['POST'])]
+    #[IsGranted('INVITATION_SEND', subject: 'session', message: "Droit insuffisant pour inviter un utilisateur !")]
     public function create(
         Session $session,
         EntityManagerInterface $entityManager,
@@ -80,11 +116,19 @@ final class InvitationController extends AbstractController
                 'code' => $codeReceiver
             ]);
 
+            if($objUser == $this->getUser()){
+                $this->addFlash('warning', "Vous ne pouvez pas vous auto-envoyer une invitation !");
+
+                return $this->redirectToRoute('app_session_home', [
+                    'id' => $session->getId(),
+                ]);
+            }
+
             $objInvitation = new Invitation();
 
             $objInvitation->setSession($session);
-            $objInvitation->setSenderId($this->getUser());
-            $objInvitation->setReceiverId($objUser);
+            $objInvitation->setSender($this->getUser());
+            $objInvitation->setReceiver($objUser);
             $objInvitation->setSendAt(new DateTimeImmutable('now'));
 
 

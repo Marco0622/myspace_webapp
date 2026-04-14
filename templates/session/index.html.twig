@@ -116,7 +116,6 @@
 											</div>
 										</div>
 									</div>
-
 								{% endif %}
 							{% else %}
 								<div class="text-center py-5 text-muted border-secondary">
@@ -158,36 +157,36 @@
 				</div>
 				<div class="card-body p-0 px-3">
 					<ul class="invite-list py-2 px-0">
-						{% for user in session.sessionInvitations %}
+						{% for invitation in session.sessionInvitations %}
 							<li class="py-2  list-unstyled">
 								<div class="d-flex align-items-center gap-2">
 									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
-										{% if user.receiverId.photo is null %}
-											<img src="https://ui-avatars.com/api/?name={{ user.receiverId.firstname ~" "~ user.receiverId.name }}&background=random" alt="Profil" class="w-100 h-100">
+										{% if invitation.receiver.photo is null %}
+											<img src="https://ui-avatars.com/api/?name={{ invitation.receiver.firstname ~" "~ invitation.receiver.name }}&background=random" alt="Profil" class="w-100 h-100">
 										{% else %}
-											<img src="{{ asset('assets/uploads/user/' ~ user.receiverId.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+											<img src="{{ asset('assets/uploads/user/' ~ invitation.receiver.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 										{% endif %}
 									</div>
-									<span class="fw-semibold text-white">{{ user.receiverId.firstname ~" "~ user.receiverId.name }}</span>
-									{% if user.responce is null %}
+									<span class="fw-semibold text-white">{{ invitation.receiver.firstname ~" "~ invitation.receiver.name }}</span>
+									{% if invitation.responce is null %}
 										<span class="badge rounded-pill text-bg-warning" style="font-size:11px;">En attente</span>
-									{% elseif user.responce %}
+									{% elseif invitation.responce %}
 										<span class="badge rounded-pill text-bg-success" style="font-size:11px;">Accepter</span>
 									{% else %}
 										<span class="badge rounded-pill text-bg-danger" style="font-size:11px;">Refuser</span>
 									{% endif %}
 									{% if app.user == owner %}
-										{% if user.responce is null %}
-											<button type="button" class="btn btn-outline-danger btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modalAnnuler{{ user.receiverId.id }}">
+										{% if invitation.responce is null %}
+											<button type="button" class="btn btn-outline-danger btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modalAnnuler{{ invitation.receiver.id }}">
 												Annuler
 											</button>
 										{% else %}
-											<button type="button" class="btn btn-outline-warning btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modalEffacer{{ user.receiverId.id }}">
+											<button type="button" class="btn btn-outline-warning btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#modalEffacer{{ invitation.receiver.id }}">
 												Effacer
 											</button>
 										{% endif %}
 									{% endif %}
-									<div class="modal fade" id="modalAnnuler{{ user.receiverId.id }}" tabindex="-1" aria-hidden="true">
+									<div class="modal fade" id="modalAnnuler{{ invitation.receiver.id }}" tabindex="-1" aria-hidden="true">
 										<div class="modal-dialog modal-dialog-centered">
 											<div class="modal-content text-dark">
 												<div class="modal-header">
@@ -196,17 +195,23 @@
 												</div>
 												<div class="modal-body">
 													Voulez-vous vraiment annuler l'invitation pour
-													<strong>{{ user.receiverId.firstname }}</strong>
+													<strong>{{ invitation.receiver.firstname }}</strong>
 													?
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
-													<a href="#" class="btn btn-danger">Oui, annuler</a>
+													<form action="{{ path('app_invitation_delete', { id: invitation.id })}}" method="post" class="d-inline">
+														<input type="hidden" name="_token" value="{{ csrf_token('delete_invitation') }}">
+														<input type="hidden" name="sessionId" value="{{ session.id }}">
+														<button type="submit" class="btn btn-danger d-flex align-items-center gap-1">
+															Annuler
+														</button>
+													</form>
 												</div>
 											</div>
 										</div>
 									</div>
-									<div class="modal fade" id="modalEffacer{{ user.receiverId.id }}" tabindex="-1" aria-hidden="true">
+									<div class="modal fade" id="modalEffacer{{ invitation.receiver.id }}" tabindex="-1" aria-hidden="true">
 										<div class="modal-dialog modal-dialog-centered">
 											<div class="modal-content text-dark">
 												<div class="modal-header">
@@ -218,7 +223,13 @@
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-													<a href="#" class="btn btn-warning">Confirmer</a>
+													<form action="{{ path('app_invitation_delete', { id: invitation.id })}}" method="post" class="d-inline">
+														<input type="hidden" name="_token" value="{{ csrf_token('delete_invitation') }}">
+														<input type="hidden" name="sessionId" value="{{ session.id }}">
+														<button type="submit" class="btn btn-warning d-flex align-items-center gap-1">
+															Effacer
+														</button>
+													</form>
 												</div>
 											</div>
 										</div>
