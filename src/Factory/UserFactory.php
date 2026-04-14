@@ -45,7 +45,7 @@ final class UserFactory extends PersistentObjectFactory
             'birthdate'     => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'created_at'    => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
             'roles'         => [],
-            'code'         => self::faker()->unique()->regexify('[A-Z0-9]{64}'),
+            'code'          => self::faker()->unique()->regexify('[A-Z0-9]{64}'),
         ];
     }
 

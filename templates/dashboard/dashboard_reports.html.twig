@@ -4,60 +4,61 @@
 {% endblock %}
 
 {% block body %}
-	<twig:NavDashboard/>
+	<div class="py-3">
+		<twig:NavDashboard/>
+	</div>
 	<h1 class="h2">
 		GESTION DES Signalement
 	</h1>
 	{% for report in arrReport %}
-		<div class="card border-0 shadow-sm my-3">
-			<div class="card-header border-bottom py-3">
+		<div class="card border-0 rounded-3 overflow-hidden shadow my-3">
+			<div class="card-header border-0 py-3 px-4 bg-opacity-10">
 				<div class="d-flex justify-content-between align-items-center">
-					<div class="d-flex align-items-center gap-2">
-						<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+					<div class="d-flex align-items-center gap-3">
+						<div class="rounded-circle overflow-hidden flex-shrink-0" style="width: 42px; height: 42px; border: 2px solid rgba(255,255,255,0.3);">
 							{% if report.author.photo is null %}
-								<img src="https://ui-avatars.com/api/?name={{ report.author.name }}&background=random" alt="Profil" class="w-100 h-100">
+								<img src="https://ui-avatars.com/api/?name={{ report.author.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
 							{% else %}
 								<img src="{{ asset('assets/uploads/user/' ~ report.author.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 							{% endif %}
 						</div>
-						<p class="fw-bold text-white m-0">{{ report.author.firstname }}
-							{{ report.author.name }}
-							<a href="{{ path('app_dashboard_users', {query: report.author.firstname ~" "~ report.author.name}) }}" class="btn btn-sm btn-outline-light flex-shrink-0">
-								<twig:ux:icon name='pepicons-pencil:loop' style="width:24px;height:24px;"/>
-							</a>
-						</p>
+						<div>
+							<div class="d-flex align-items-center gap-2">
+								<span class="fw-semibold text-white">{{ report.author.firstname }}
+									{{ report.author.name }}</span>
+								<a href="{{ path('app_dashboard_users', {query: report.author.firstname ~' '~ report.author.name}) }}" class="btn btn-sm py-0 px-2 rounded-pill text-white-50 border border-white border-opacity-25" style="font-size: 11px; background: rgba(255,255,255,0.1);">
+									<twig:ux:icon name="pepicons-pencil:loop" style="width: 12px; height: 12px;"/>
+									Voir profil
+								</a>
+							</div>
+						</div>
 					</div>
-					<div class="text-end">
-						<div class="small text-white">Il y a
-							{{ report.sendAt|date_diff }}</div>
-					</div>
+					<span class="badge rounded-pill text-white fw-normal border border-white border-opacity-25" style="font-size: 11px; background: rgba(255,255,255,0.1);">
+						Il y a
+						{{ report.sendAt|date_diff }}
+					</span>
 				</div>
 			</div>
 
-			<div class="card-body">
-				<div class="mb-4">
-					<h5 class="fw-bold text-white">Sujet :
-						<span class="fw-normal">{{ report.subject }}</span>
-					</h5>
+			<div class="card-body px-4 py-4">
+				<div class="mb-3 pb-3 border-bottom border-white border-opacity-10">
+					<span class="text-uppercase text-white-50 d-block mb-1" >Sujet</span>
+					<p class="text-white fw-semibold mb-0">{{ report.subject }}</p>
 				</div>
-
-				<div class="mail-content mb-4 text-white">
-					<p>{{ report.content }}</p>
+				<div>
+					<span class="text-uppercase text-white-50 d-block mb-1">Message</span>
+					<p class="text-white mb-0 lh-base">{{ report.content }}</p>
 				</div>
 			</div>
-			<div class="card-footer border-white">
-				<form action="{{ path('app_report_responce', { id: report.id }) }}" method="POST" class="mt-4">
-					<div class="mb-3">
-						<label for="replyMessage" class="form-label fw-bold text-uppercase text-white">Votre réponse</label>
-						<textarea class="form-control bg-light" placeholder="Écrivez votre message ici..." rows="4" name="reponce"></textarea>
-					</div>
+
+			<div class="card-footer border-0 px-4 py-4 bg-opacity-25">
+				<form action="{{ path('app_report_responce', { id: report.id }) }}" method="POST">
+					<span class="text-uppercase text-white-50 d-block mb-3" >Votre réponse</span>
+					<textarea class="form-control rounded-3 bg-white bg-opacity-10 text-white border-white border-opacity-25 mb-3" placeholder="Écrivez votre message ici..." rows="4" name="reponce" style="resize: none;"></textarea>
 					<input type="hidden" name="crsf_token" value="{{ csrf_token('responce_of_report') }}">
-					<div class="d-flex justify-content-end align-items-center gap-2">
-						<button type="submit" class="btn btn-light w-100">
-							<i class="bi bi-send me-2"></i>
-							Envoyer la réponse
-						</button>
-					</div>
+					<button type="submit" class="btn btn-light btn-sm w-100 rounded-3 fw-semibold py-2">
+						<i class="bi bi-send me-2"></i>Envoyer la réponse
+					</button>
 				</form>
 			</div>
 		</div>
