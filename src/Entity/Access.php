@@ -19,7 +19,7 @@ class Access
     private ?User $member = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionAccesses')]
-    #[ORM\JoinColumn(name: 'acc_session_id', referencedColumnName: 'ses_id', nullable: false)] 
+    #[ORM\JoinColumn(name: 'acc_session_id', referencedColumnName: 'ses_id', nullable: false, onDelete: 'CASCADE')] 
     private ?Session $session = null;
 
     #[ORM\Column(name: 'acc_role', length: 20)] 

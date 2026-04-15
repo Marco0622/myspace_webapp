@@ -27,7 +27,7 @@ class Pictures
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionPictures')]
-    #[ORM\JoinColumn(name: 'pic_session_id', referencedColumnName: 'ses_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'pic_session_id', referencedColumnName: 'ses_id', nullable: false, onDelete: 'CASCADE')]
     private ?Session $session = null;
 
     #[ORM\ManyToOne(inversedBy: 'userPictures')]

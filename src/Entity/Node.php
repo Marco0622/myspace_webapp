@@ -30,14 +30,12 @@ class Node
     private ?string $type = null;
 
     #[ORM\ManyToOne(targetEntity: Session::class, inversedBy: 'sessionNodes')]
-    #[ORM\JoinColumn(name: 'nod_session_id', referencedColumnName: 'ses_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'nod_session_id', referencedColumnName: 'ses_id', nullable: false, onDelete: 'CASCADE')]
     private ?Session $session = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAddNodes')]
     #[ORM\JoinColumn(name: 'nod_add_by', referencedColumnName: 'usr_id', nullable: false)]
     private ?User $add_by = null;
-
-    // --- RELATION AUTO-RÉFÉRENCÉE (Parent / Enfants) ---
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'nod_parent_id', referencedColumnName: 'nod_id', nullable: true, onDelete: 'CASCADE')]

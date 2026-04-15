@@ -35,31 +35,31 @@ class Session
     /**
      * @var Collection<int, Invitation>
      */
-    #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'session')]
+    #[ORM\OneToMany(targetEntity: Invitation::class, mappedBy: 'session', cascade: ['remove'])]
     private Collection $sessionInvitations;
 
     /**
      * @var Collection<int, Access>
      */
-    #[ORM\OneToMany(targetEntity: Access::class, mappedBy: 'session')]
+    #[ORM\OneToMany(targetEntity: Access::class, mappedBy: 'session', cascade: ['remove'])]
     private Collection $sessionAccesses;
 
     /**
      * @var Collection<int, Pictures>
      */
-    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'session')]
+    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'session', cascade: ['remove'])]
     private Collection $sesssionPictures;
 
     /**
      * @var Collection<int, Page>
      */
-    #[ORM\OneToMany(targetEntity: Page::class, mappedBy: 'session')]
+    #[ORM\OneToMany(targetEntity: Page::class, mappedBy: 'session', cascade: ['remove'])]
     private Collection $sessionPages;
 
     /**
      * @var Collection<int, Node>
      */
-    #[ORM\OneToMany(targetEntity: Node::class, mappedBy: 'session')]
+    #[ORM\OneToMany(targetEntity: Node::class, mappedBy: 'session', cascade: ['remove'])]
     private Collection $sessionNodes;
 
     public function __construct()

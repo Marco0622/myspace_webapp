@@ -5,14 +5,19 @@
 {% endblock %}
 
 {% block body %}
-	<h1 class="h2">{{ session.name }}</h1>
+	{{ dump(session) }}
+	<div class="py-2"> 
+		<twig:NavSession  id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
+	</div>
+	<h1 class="h2 text-center">{{ session.name }}</h1>
 	<div class="row g-4 mt-3">
 		{% if app.user == owner %}
 			<div class="accordion" id="accordionExample">
 				<div class="accordion-item">
 					<h2 class="accordion-header border-bottom border-white" id="headingOne">
 						<button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							Gestion des utilisateurs <twig:ux:icon name="lucide:users" class="ms-2" style="width:32px;height:32px;" />
+							Gestion des utilisateurs
+							<twig:ux:icon name="lucide:users" class="ms-2" style="width:32px;height:32px;"/>
 						</button>
 					</h2>
 					<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -151,7 +156,8 @@
 			<div class="card card-section text-white">
 				<div class="card-header border-white d-flex justify-content-between align-items-center">
 					<span class="d-flex align-items-center gap-2">
-						Invitations en attente <twig:ux:icon name="mingcute:time-line" style="height:32px;width:32px;"/>
+						Invitations en attente
+						<twig:ux:icon name="mingcute:time-line" style="height:32px;width:32px;"/>
 					</span>
 					<span class="badge bg-light text-dark rounded-circle">{{ session.sessionInvitations|length }}</span>
 				</div>
@@ -246,7 +252,8 @@
 		<div class="col-lg-4 ">
 			<div class="card card-section mb-4 text-white">
 				<div class="card-header border-white">
-					Informations <twig:ux:icon name="material-symbols:info-outline" style="width:32px;height:32px;"/>
+					Informations
+					<twig:ux:icon name="material-symbols:info-outline" style="width:32px;height:32px;"/>
 				</div>
 				<div class="card-body">
 					<dl class="row mb-0 small">
@@ -259,7 +266,8 @@
 			</div>
 			<div class="card card-section text-white  mb-4">
 				<div class="card-header border-white">
-					Stockage de la session <twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
+					Stockage de la session
+					<twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
 				</div>
 				<div class="card-body">
 
@@ -281,7 +289,8 @@
 			</div>
 			<div class="card card-section text-white">
 				<div class="card-header border-white">
-					Session <twig:ux:icon name="fluent-mdl2:group" class="text-white me-3" style="width:32px;height:32px;"/>
+					Session
+					<twig:ux:icon name="fluent-mdl2:group" class="text-white me-3" style="width:32px;height:32px;"/>
 				</div>
 				<div class="card-body">
 					{% if app.user !== owner %}
@@ -323,14 +332,15 @@
 										<h5 class="modal-title" id="deleteSessionLabel">Supprimer la session</h5>
 										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 									</div>
-									<form action="#" method="post">
+									<form action="{{ path('app_session_delete', { id: session.id })}}" method="post">
 										<div class="modal-body d-flex flex-column gap-3">
 											<p class="mb-0">Cette action est irréversible. La session et toutes ses données seront définitivement supprimées.</p>
 											<div>
-												<label class="form-label fw-semibold">Tapez
-																									"<span class="text-danger">Je confirme</span>"
-																									pour continuer</label>
-												<input type="text" class="form-control" name="confirmation" placeholder="Je confirme" autocomplete="off" required pattern="Je confirme" title="Veuillez écrire exactement : je confirme">
+												<label class="form-label fw-semibold">
+													Tapez "<span class="text-danger">Je confirme</span>" pour continuer
+												</label>
+												<input type="hidden" name="_token" value="{{ csrf_token('delete_session') }}">
+												<input type="text" class="form-control" name="deleteConfirm" placeholder="Je confirme" autocomplete="off" required pattern="Je confirme" title="Veuillez écrire exactement : je confirme">
 											</div>
 										</div>
 										<div class="modal-footer">

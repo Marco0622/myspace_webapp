@@ -22,7 +22,7 @@ class Page
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionPages')]
-    #[ORM\JoinColumn(name: 'pag_session_id', referencedColumnName: 'ses_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'pag_session_id', referencedColumnName: 'ses_id', nullable: false, onDelete: 'CASCADE')]
     private ?session $session = null;
 
     #[ORM\Column(name: 'pag_created_at',)]

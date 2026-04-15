@@ -40,21 +40,27 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/page/{id<\d+>}', name: 'page')]
-    public function page(): Response
+    public function page(Session $session): Response
     {
-        return $this->render('session/index.html.twig', []);
+        return $this->render('session/page.html.twig', [
+            'session' => $session
+        ]);
     }
 
     #[Route('/manager/{id<\d+>}', name: 'manager')]
-    public function manager(): Response
+    public function manager(Session $session): Response
     {
-        return $this->render('session/index.html.twig', []);
+        return $this->render('session/manager.html.twig', [
+            'session' => $session
+        ]);
     }
 
     #[Route('/gallery/{id<\d+>}', name: 'gallery')]
-    public function gallery(): Response
+    public function gallery(Session $session): Response
     {
-        return $this->render('session/index.html.twig', []);
+        return $this->render('session/gallery.html.twig', [
+            'session' => $session
+        ]);
     }
 
     #[Route('/create', name: 'create', methods: ['POST'])]
@@ -109,24 +115,25 @@ final class SessionController extends AbstractController
 
     #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
     #[IsGranted('IS_OWNER', subject: 'session', message: "Droit insuffisant Seul le propriétaire de la session peux supprimer la session !")]
-    public function delete(Session $session, Request $request): Response
+    public function delete(Session $session, Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('delete_session', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $confirm = $request->request->get('inputConfirm');
+        $confirm = $request->request->get('deleteConfirm');
 
-        if($confirm != "Je comfirme"){
+        if($confirm != "Je confirme"){
             $this->addFlash('danger', "Erreur lors de la tentative de suppression !");
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),
             ]);
         }
 
-        
+        $entityManager->remove($session);
+        $entityManager->flush();
 
-
+        $this->addFlash('success', "La session a été supprimé !");
         return $this->redirectToRoute('app_user_home');
     }
 

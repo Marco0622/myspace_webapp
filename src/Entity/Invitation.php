@@ -29,7 +29,7 @@ class Invitation
     private ?\DateTimeImmutable $send_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionInvitations')]
-    #[ORM\JoinColumn(name: 'inv_session_id', referencedColumnName: 'ses_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'inv_session_id', referencedColumnName: 'ses_id', nullable: false, onDelete: 'CASCADE')]
     private ?Session $session = null;
 
     public function getId(): ?int

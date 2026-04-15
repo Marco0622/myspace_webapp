@@ -1,0 +1,101 @@
+<div{{attributes}}>
+	<nav class="navbar border-0">
+		<div
+			class="p-1 border border-secondary rounded mx-auto w-100">
+			<div class="d-none d-lg-flex justify-content-center gap-2 p-2 text-white">
+				<a href="{{ path('app_session_home', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
+					<twig:ux:icon name="heroicons:home" />
+					Home
+				</a>
+				<a href="{{ path('app_session_manager', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
+					<twig:ux:icon name="heroicons:folder" />
+					Gestionnaire de fichiers
+				</a>
+				<a href="{{ path('app_session_gallery', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
+					<twig:ux:icon name="heroicons:photo" />
+					Galerie d'images
+				</a>
+				<div class="dropdown">
+					<button class="nav-link text-white d-flex align-items-center gap-2 px-3 btn border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+						<twig:ux:icon name="iconoir:page" />
+						Pages
+					</button>
+					<ul class="dropdown-menu mt-1 shadow-sm">
+						{% for page in arrPage %}
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ page.id }}">
+								<twig:ux:icon name="heroicons:pencil" />
+								{{ page.name }}
+							</a>
+						</li>
+						{% endfor %}
+                        <li><hr class="dropdown-divider"></li>
+						<li>
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="#">
+								<twig:ux:icon name="fluent-mdl2:page-add" />
+								Créer une page 
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="d-flex d-lg-none">
+				<div class="dropdown col-12">
+					<button class="btn text-white dropdown-toggle d-flex align-items-center gap-2 w-100 justify-content-between border-0" type="button" data-bs-toggle="dropdown">
+						<span class="d-flex align-items-center gap-2">
+							<i class="bi bi-list" style="font-size:1.5rem"></i>
+							Navigation
+						</span>
+					</button>
+					<ul class="dropdown-menu w-100 mt-1 shadow-sm">
+						<li>
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_home', { id: id }) }}">
+								<twig:ux:icon name="heroicons:home" />
+								Home
+							</a>
+						</li>
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_manager', { id: id }) }}">
+								<twig:ux:icon name="heroicons:folder" />
+								Gestionnaire de fichiers
+							</a>
+						</li>
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_gallery', { id: id }) }}">
+								<twig:ux:icon name="heroicons:photo" />
+								Galerie d'images
+							</a>
+						</li>
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<span class="dropdown-item-text text-white">
+								<twig:ux:icon name="iconoir:page" />
+								Pages
+							</span>
+						</li>
+						{% for page in arrPage %}
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item d-flex align-items-center gap-2 ps-4 text-white" href="{{ page.id }}">
+									<twig:ux:icon name="heroicons:pencil" />
+									{{ page.name }}
+								</a>
+							</li>
+						{% endfor %}
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+							<a class="dropdown-item d-flex align-items-center gap-2 ps-4 text-white" href="#">
+								<twig:ux:icon name="fluent-mdl2:page-add" />
+								Créer une page 
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+	</nav>
+</div>

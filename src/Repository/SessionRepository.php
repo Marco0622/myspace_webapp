@@ -54,6 +54,8 @@ class SessionRepository extends ServiceEntityRepository
             ->addSelect('all_invitation')
             ->leftJoin('all_accesses.member', 'members')
             ->addSelect('members')
+            ->leftJoin('s.sessionPages', 'pages')
+            ->addSelect('pages')
             ->where('s.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
