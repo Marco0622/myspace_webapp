@@ -5,7 +5,97 @@
 {% endblock %}
 
 {% block body %}
-	<div> 
-		<twig:NavSession  id="{{ session.id }}"/>
+	<div>
+		<twig:NavSession id="{{ session.id }}"/>
+	</div>
+	<div class="container py-5">
+		<div class="gallery-toolbar shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 pb-3 mb-3 border-bottom border-white">
+			<div>
+				<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addImageModal">
+					<twig:ux:icon name="icon-park-outline:add-picture" style="height:20px;width:20px;"/>
+					Ajouter une image
+				</button>
+			</div>
+
+			<form class="d-flex align-items-center gap-2 w-100" style=" max-width: 300px;">
+				<select class="form-select form-select-sm">
+					<option>Date</option>
+					<option value="1">One</option>
+					<option value="2">Two</option>
+					<option value="3">Three</option>
+				</select>
+			</form>
+		</div>
+
+		<div class="masonry-grid justify-content-center">
+
+			<div class="gallery-item shadow-sm">
+				<img src="https://picsum.photos/400/600" alt="Portrait">
+				<div class="gallery-overlay">
+					<div class="text-wrap">Nom de l'imageaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
+					<div>
+						<a href="#" class="btn btn-light btn-sm shadow">
+							<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
+						</a>
+						<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg">
+							<twig:ux:icon name="iconamoon:trash-thin" style="height:20px;width:20px;"/>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="modal fade" id="deleteImg" tabindex="-1" aria-labelledby="deleteImg" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<form class="modal-content border-0 shadow">
+						<div class="modal-header">
+							<h5 class="modal-title fw-bold" id="modalTitle">supprimer</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div>
+								<div class="mb-3">
+									<label class="form-label small fw-bold">Sélectionner le fichier</label>
+									<input type="file" class="form-control">
+								</div>
+								<div class="mb-3">
+									<label class="form-label small fw-bold">Nom de l'image</label>
+									<input type="text" class="form-control" placeholder="Ex: Vacances d'été">
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+							<button type="button" class="btn btn-primary">Enregistrer</button>
+						</div>
+					</form>
+				</div>
+			
+
+		</div>
+	</div>
+	<div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content border-0 shadow">
+				<div class="modal-header">
+					<h5 class="modal-title fw-bold" id="modalTitle">Nouvelle Image</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="mb-3">
+							<label class="form-label small fw-bold">Sélectionner le fichier</label>
+							<input type="file" class="form-control">
+						</div>
+						<div class="mb-3">
+							<label class="form-label small fw-bold">Nom de l'image</label>
+							<input type="text" class="form-control" placeholder="Ex: Vacances d'été">
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-primary">Enregistrer</button>
+				</div>
+			</div>
+		</div>
 	</div>
 {% endblock %}

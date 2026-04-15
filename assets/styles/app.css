@@ -1,5 +1,5 @@
-body{
-    font-family: "jetBrains Mono","Inter", monospace;
+body {
+    font-family: "jetBrains Mono", "Inter", monospace;
     background-color: var(--black1);
     color: var(--white1);
 }
@@ -10,7 +10,7 @@ body{
 /* Import de JetBrains Mono (Variable Font 100 à 900) */
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..900&display=swap');
 
-:root{
+:root {
     --white1: rgb(248, 245, 240);
     --white2: rgb(255, 255, 255);
     --black1: rgb(28, 28, 28);
@@ -19,71 +19,74 @@ body{
     --padding: clamp(1rem, 2vw, 2rem);
 }
 
-h1{
+h1 {
     font-size: clamp(2.25rem, 5vw, 4rem);
     color: var(--white1);
     text-transform: uppercase;
     font-weight: 700;
 }
 
-h2{
+h2 {
     font-size: clamp(1.375rem, 3vw, 2.5rem);
     color: var(--white1);
     text-transform: uppercase;
     font-weight: 700;
 }
 
-h3{
+h3 {
     font-size: clamp(1.125rem, 2vw, 1.75rem);
     color: var(--white1);
     text-transform: uppercase;
     font-weight: 700;
 }
 
-.nav-link{
+.nav-link {
     transition: all 0.3s ease-out !important;
 }
 
-.nav-link:hover{
+.nav-link:hover {
     transform: scale(0.8);
     opacity: 0.8;
 }
 
-.bg-dark{
+.bg-dark {
     background: var(--black1) !important;
 }
 
 .table-dark {
-    --bs-table-bg: rgba(255, 255, 255, 0.03)!important;
-    --bs-table-striped-bg: var(--black1) !important; 
+    --bs-table-bg: rgba(255, 255, 255, 0.03) !important;
+    --bs-table-striped-bg: var(--black1) !important;
 }
 
-.text-white{
+.text-white {
     color: var(--white1) !important;
 }
 
-.text{
+.text {
     font-family: "Inter", monospace;
 }
 
-.form-control:focus, .form-select:focus  {
-    color: #212529; 
+.form-control:focus,
+.form-select:focus {
+    color: #212529;
     background-color: var(--white2);
-    border-color: var(--white2); 
+    border-color: var(--white2);
     outline: 4;
-    box-shadow: 0 0 0 0.25rem rgba(238, 234, 234, 0.1); 
+    box-shadow: 0 0 0 0.25rem rgba(238, 234, 234, 0.1);
 }
 
-.form-select option:hover{
-    background-color: #383b3d; 
-    color: #ffffff;        
-    border-radius: 10px; 
+.form-select option:hover {
+    background-color: #383b3d;
+    color: #ffffff;
+    border-radius: 10px;
 }
 
 
 
-.card, .dropdown-menu, .accordion-item {
-    background-color: rgba(255, 255, 255, 0.03); 
+.card,
+.dropdown-menu,
+.accordion-item {
+    background-color: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -102,12 +105,13 @@ h3{
     opacity: 0.7;
 }
 
-.card label, .card legend {
+.card label,
+.card legend {
     color: var(--white1);
 }
 
 .card:hover {
-    background-color: rgba(255, 255, 255, 0.05); 
+    background-color: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -115,10 +119,10 @@ h3{
     display: none !important;
 }
 
-.dropdown-menu li a:hover{
-    background-color: #383b3d; 
-    color: #ffffff;        
-    border-radius: 10px;  
+.dropdown-menu li a:hover {
+    background-color: #383b3d;
+    color: #ffffff;
+    border-radius: 10px;
 }
 
 
@@ -129,7 +133,7 @@ h3{
     --bs-pagination-border-color: #373b3e;
     --bs-pagination-hover-bg: #2c3034;
     --bs-pagination-hover-color: #ffffff;
-    --bs-pagination-active-bg: #0d6efd; 
+    --bs-pagination-active-bg: #0d6efd;
     --bs-pagination-active-border-color: #0d6efd;
 }
 
@@ -143,26 +147,27 @@ h3{
         width: max-content;
     }
 }
+
 .card {
-  position: relative;
-  z-index: 1 !important;
+    position: relative;
+    z-index: 1 !important;
 }
 
-.accordion-button{
+.accordion-button {
     background-color: transparent !important;
 }
 
 .accordion-button:not(.collapsed) {
     background-color: transparent !important;
-    background-image: none !important; 
-    box-shadow: none !important;      
-    color: inherit;                   
+    background-image: none !important;
+    box-shadow: none !important;
+    color: inherit;
 }
 
 
 .accordion-button:focus {
     box-shadow: none !important;
-    border-color: rgba(0,0,0,.125);
+    border-color: rgba(0, 0, 0, .125);
 }
 
 .accordion-button::after {
@@ -174,13 +179,98 @@ h3{
     filter: invert(1) brightness(2) !important;
 }
 
-.page-item .active{
+.page-item .active {
     background-color: var(--white1);
 }
 
 .modal-backdrop {
     z-index: 1040 !important;
 }
+
 .modal {
     z-index: 1050 !important;
+}
+
+
+.masonry-grid {
+    column-count: 1;
+    column-gap: 1.5rem;
+    width: 100%;
+}
+
+@media (min-width: 576px) {
+    .masonry-grid {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 992px) {
+    .masonry-grid {
+        column-count: 3;
+    }
+}
+
+@media (min-width: 1200px) {
+    .masonry-grid {
+        column-count: 4;
+    }
+}
+
+.gallery-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.10);
+    filter: grayscale(1);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+}
+
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-item:hover img {
+    filter: grayscale(1);
+}
+
+.text-wrap {
+    width: 100%;
+    text-align: center;
+    padding: 0 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    color: white;
 }
