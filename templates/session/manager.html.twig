@@ -5,8 +5,176 @@
 {% endblock %}
 
 {% block body %}
-	<div> 
-		<twig:NavSession  id="{{ session.id }}"/>
+	<div>
+		<twig:NavSession id="{{ session.id }}"/>
 	</div>
+	<div class="row mt-4">
+		<div class="col-12">
+			<div class="list-group list-group-flush ">
 
+				<div class="d-flex align-items-center justify-content-between mb-3 px-3">
+                <h1 class="h3 mb-0 text-white">Gestionnaire de fichiers</h1>
+                
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
+                        <twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
+                        <span class="d-none d-sm-inline">Nouveau dossier</span>
+                    </button>
+                    
+                    <button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
+                        <twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
+                        <span class="d-none d-sm-inline">Ajouter un fichier</span>
+                    </button>
+                </div>
+            </div>
+				<div class="list-group-item list-group-item-action bg-transparent border-bottom border-top border-secondary py-3 px-0">
+					<div class="row align-items-center g-0 px-3">
+
+						<div class="col-8 col-md-5 d-flex align-items-center">
+							<div class="avatar-sm me-3 flex-shrink-0">
+								<twig:ux:icon name="bi:filetype-php" class="text-white" style="height:28px;width:28px;"/>
+							</div>
+							<div class="flex-grow-1 overflow-hidden">
+								<h6 class="font-size-14 mb-0 text-truncate">
+									<a href="#" class="text-white">index.main.php</a>
+								</h6>
+								<small class="text-white d-md-none">12.5 MB • 12 Avr</small>
+							</div>
+						</div>
+
+						<div class="col-md-2 d-none d-md-block">
+							<span class="text-white small">12.5 MB</span>
+						</div>
+
+						<div class="col-md-2 d-none d-lg-block text-center">
+							<span class="text-white small">12 Avr 2026</span>
+						</div>
+
+						<div class="col-4 col-md-3 text-end">
+							<div class="d-flex justify-content-end gap-2">
+								<a href="#" class="btn btn-sm btn-soft-light text-white" title="Télécharger">
+									<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
+								</a>
+								<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+									<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
+								</button>
+								<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered modal-sm">
+										<div class="modal-content border-secondary text-dark">
+											<div class="modal-body text-center p-4">
+												<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
+												<h6>Supprimer le fichier ?</h6>
+												<p class="text-muted font-size-13">Cette action est irréversible.</p>
+												<div class="d-flex gap-2 justify-content-center mt-4">
+													<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+													<button type="button" class="btn btn-danger">Confirmer</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="list-group-item list-group-item-action bg-transparent border-bottom border-top border-secondary py-3 px-0">
+					<div class="row align-items-center g-0 px-3">
+
+						<div class="col-8 col-md-5 d-flex align-items-center">
+							<div class="avatar-sm me-3 flex-shrink-0">
+								<twig:ux:icon name="iconoir:folder" class="text-white" style="height:28px;width:28px;"/>
+							</div>
+							<div class="flex-grow-1 overflow-hidden">
+								<h6 class="font-size-14 mb-0 text-truncate">
+									<a href="#" class="text-white">fichier truc</a>
+								</h6>
+								<small class="text-white d-md-none">12.5 MB • 12 Avr</small>
+							</div>
+						</div>
+
+						<div class="col-md-2 d-none d-md-block">
+							<span class="text-white small">12.5 MB</span>
+						</div>
+
+						<div class="col-md-2 d-none d-lg-block text-center">
+							<span class="text-white small">12 Avr 2026</span>
+						</div>
+
+						<div class="col-4 col-md-3 text-end">
+							<div class="d-flex justify-content-end gap-2">
+								<a href="#" class="btn btn-sm btn-soft-light text-white" title="Télécharger">
+									<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
+								</a>
+								<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+									<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
+								</button>
+								<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered modal-sm">
+										<div class="modal-content border-secondary text-dark">
+											<div class="modal-body text-center p-4">
+												<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
+												<h6>Supprimer le fichier ?</h6>
+												<p class="text-muted font-size-13">Cette action est irréversible.</p>
+												<div class="d-flex gap-2 justify-content-center mt-4">
+													<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+													<button type="button" class="btn btn-danger">Confirmer</button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+	</div>
+<div class="modal fade" id="modalNewFolder" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-secondary">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title">Créer un nouveau dossier</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nom du dossier</label>
+                        <input type="text" class="form-control" placeholder="Ex: Projets 2026">
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary">Créer le dossier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalUploadFile" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-secondary">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title">Importer des fichiers</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="border-2 border-dashed border-secondary rounded-3 p-5 text-center">
+                        <twig:ux:icon name="bi:cloud-arrow-up" class="text-primary mb-3" style="height:48px;width:48px;"/>
+                        <h6>Glissez vos fichiers ici</h6>
+                        <p class="text-muted small">ou cliquez pour parcourir votre ordinateur</p>
+                        <input type="file" class="form-control mt-3" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary">
+                    <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary">Lancer l'import</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

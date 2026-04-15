@@ -9,11 +9,11 @@
 				</a>
 				<a href="{{ path('app_session_manager', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
 					<twig:ux:icon name="heroicons:folder" />
-					Gestionnaire de fichiers
+					Gestionnaire
 				</a>
 				<a href="{{ path('app_session_gallery', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
 					<twig:ux:icon name="heroicons:photo" />
-					Galerie d'images
+					Galerie
 				</a>
 				<div class="dropdown">
 					<button class="nav-link text-white d-flex align-items-center gap-2 px-3 btn border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -44,7 +44,7 @@
 				<div class="dropdown col-12">
 					<button class="btn text-white dropdown-toggle d-flex align-items-center gap-2 w-100 justify-content-between border-0" type="button" data-bs-toggle="dropdown">
 						<span class="d-flex align-items-center gap-2">
-							<i class="bi bi-list" style="font-size:1.5rem"></i>
+							{{ ux_icon('radix-icons:dashboard', {class: 'me-2', width: '20px', height: '20px'}) }}
 							Navigation
 						</span>
 					</button>
