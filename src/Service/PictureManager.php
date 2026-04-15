@@ -55,12 +55,15 @@ class PictureManager
         $extension = strtolower(pathinfo($img, PATHINFO_EXTENSION));
 
         if ($extension == 'jpg' || $extension == 'jpeg') {
-            imagejpeg($image_p, $img, 90);
+            imagejpeg($image_p, $filename, 90);
         } elseif ($extension == 'png') {
-            imagepng($image_p, $img, 8);
+            imagepng($image_p, $filename, 8);
         } elseif ($extension == 'webp') {
-            imagewebp($image_p, $img, 85);
+            imagewebp($image_p, $filename, 85);
         }
+
+        imagedestroy($image_p);
+        imagedestroy($image);
     }
 
     public function upload(UploadedFile $file, ?string $oldFilename = null): string

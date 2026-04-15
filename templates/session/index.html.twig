@@ -301,7 +301,12 @@
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-										<button type="submit" class="btn btn-warning">Quitter la session</button>
+										<form action="{{ path('app_access_leave', { id: session.id })}}" method="post" class="d-inline">
+											<input type="hidden" name="inv_token" value="{{ csrf_token('leave_session') }}">
+											<button type="submit" class="btn btn-warning d-flex align-items-center gap-1">
+												Quitter
+											</button>
+										</form>
 									</div>
 								</div>
 							</div>

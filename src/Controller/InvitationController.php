@@ -17,9 +17,7 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @todo faire un voter pour la gestion des invitation
- */
+
 
 #[Route('/invitation', name: 'app_invitation_')]
 final class InvitationController extends AbstractController

@@ -60,28 +60,25 @@ class UserInfoFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
-                
-                'mapped'            => false,
-                'type'              => PasswordType::class,
-
-                'invalid_message'   => 'Les champs doivent être identiques', 
-                'required'          => false, 
-
-                'first_options'     => ['label' => 'Mot de passe'],
-                'second_options'    => ['label' => 'Confirmer le mot de passe'],
-
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
+                'mapped'          => false,
+                'type'            => PasswordType::class,
+                'invalid_message' => 'Les champs doivent être identiques',
+                'required'        => false,
+                'first_options'   => ['label' => 'Mot de passe'],
+                'second_options'  => ['label' => 'Confirmer le mot de passe'],
+                'attr'            => ['autocomplete' => 'new-password'],
+                'constraints'     => [
                     new Length(
                         min: 12,
-                        minMessage: 'Your password should be at least {{ limit }} characters',
+                        minMessage: 'Minimum {{ limit }} caractères',
                         max: 4096,
                     ),
                     new PasswordStrength(),
-                    new NotCompromisedPassword(),
+                    new NotCompromisedPassword(
+                        skipOnError: true  
+                    ),
                 ],
             ])
-           
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
                 'attr' => ['class' => 'btn btn-light w-100'],
@@ -93,6 +90,7 @@ class UserInfoFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'csrf_token_id' => 'user_update_form',
         ]);
     }
 }

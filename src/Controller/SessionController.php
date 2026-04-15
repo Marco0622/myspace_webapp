@@ -26,7 +26,6 @@ final class SessionController extends AbstractController
     #[Route('/{id<\d+>}', name: 'home')]
     public function index(int $id, SessionRepository $sessionRepository, AccessRepository $accessRepository): Response
     {
-       
         $session = $sessionRepository->findSessionWithRelations($id);
 
         $objOwner = $accessRepository->findOneBy([
@@ -108,14 +107,31 @@ final class SessionController extends AbstractController
         }
     }
 
-    #[Route('/delete/{id<\d+>}', name: 'delete')]
-    public function delete(): Response
+    #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
+    #[IsGranted('IS_OWNER', subject: 'session', message: "Droit insuffisant Seul le propriétaire de la session peux supprimer la session !")]
+    public function delete(Session $session, Request $request): Response
     {
-        return $this->render('session/index.html.twig', []);
+        if (!$this->isCsrfTokenValid('delete_session', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $confirm = $request->request->get('inputConfirm');
+
+        if($confirm != "Je comfirme"){
+            $this->addFlash('danger', "Erreur lors de la tentative de suppression !");
+            return $this->redirectToRoute('app_session_home', [
+                'id' => $session->getId(),
+            ]);
+        }
+
+        
+
+
+        return $this->redirectToRoute('app_user_home');
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/blocked/{id<\d+>}', name: 'blocked')]
+    #[Route('/blocked/{id<\d+>}', name: 'blocked', methods: ['POST'])]
     public function blocked(Request $request, Session $session, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isCsrfTokenValid('session_blockage', $request->request->get('_token'))) {
