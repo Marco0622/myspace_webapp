@@ -162,7 +162,7 @@
 						</p>
 						{% for access in session.sessionAccesses %}
 							{% if access.role == 'ROLE_OWNER' %}
-								{% if app.user.id != access.member.id %}
+								
 									<div class="d-flex align-items-center gap-2">
 										<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
 											{% if access.member.photo is null %}
@@ -171,14 +171,14 @@
 												<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 											{% endif %}
 										</div>
-										<p class="fw-bold text-white m-0">{{ access.member.firstname }}
-											{{ access.member.name }}</p>
+										<p class="fw-bold text-white m-0">
+											{{ access.member.firstname }} {{ access.member.name }}
+										</p>
+										{% if access.member == app.user %}
+											<span class="text-white">(Vous)</span>
+										{% endif %}
 									</div>
-								{% else %}
-									<p class="text-white">
-										<strong>Vous</strong>
-									</p>
-								{% endif %}
+								
 							{% endif %}
 						{% endfor %}
 
