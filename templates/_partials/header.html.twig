@@ -3,7 +3,6 @@
         <a class="navbar-brand" href="/">
             <img src="{{ asset('assets/images/icon/logo.svg') }}" alt="MySpace logo" height="50">
         </a>
-
         <div class="navbar-nav ms-auto">
             <ul class="navbar-nav align-items-center text-uppercase flex-row">
                 {% if app.user %}
@@ -27,6 +26,11 @@
                                     </a>
                                 </li>
                             {% endif %}
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center text-white ps-3 py-2 pe-5" href="{{ path('app_user_home') }}">
+                                    {{ ux_icon('heroicons:home', {class: 'me-2', width: '20px', height: '20px'}) }} Acceuil
+                                </a>
+                            </li>
                             <li>
                                 <a class="dropdown-item d-flex align-items-center text-white ps-3 py-2 pe-5" href="{{ path('app_page_contact') }}">
                                     {{ ux_icon('material-symbols:mail-outline', {class: 'me-2', width: '20px', height: '20px'}) }} Nous Contacter

@@ -80,14 +80,16 @@
 													</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 												</div>
-												<form action="#" method="post">
+												<form action="{{ path('app_access_role', { id: session.id }) }}" method="post">
 													<div class="modal-body">
 														<label class="form-label fw-semibold">Rôle</label>
 														<select name="role" class="form-select">
-															<option value="ROLE_EDITOR" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
-															<option value="ROLE_VISITOR" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
+															<option value="editor" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
+															<option value="visitor" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
 														</select>
 													</div>
+													<input type="hidden" name="_token" value="{{ csrf_token('role_access') }}">
+													<input type="hidden" name="userToUpdate" value="{{ access.member.id }}">
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 														<button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -106,11 +108,14 @@
 													</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 												</div>
-												<form action="#" method="post">
+												<form action="{{ path('app_access_remove', { id: session.id }) }}" method="post">
 													<div class="modal-body">
 														<p class="mb-0">Êtes-vous sûr de vouloir exclure
 															<strong>{{ access.member.firstname ~" "~ access.member.name }}</strong>
-															? Cette action lui retirera l'accès à la session.</p>
+															? Cette action lui retirera l'accès à la session.
+														</p>
+														<input type="hidden" name="_token" value="{{ csrf_token('remove_access') }}">
+														<input type="hidden" name="userToRemove" value="{{ access.member.id }}">
 													</div>
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
