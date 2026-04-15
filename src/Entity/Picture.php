@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PicturesRepository;
+use App\Repository\PictureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: PicturesRepository::class)]
-class Pictures
+#[ORM\Entity(repositoryClass: PictureRepository::class)]
+#[ORM\Table(name: 'Pictures')]
+class Picture
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

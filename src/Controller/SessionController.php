@@ -6,6 +6,7 @@ use App\Entity\Access;
 use App\Entity\Session;
 use App\Entity\Storage;
 use App\Repository\AccessRepository;
+use App\Repository\PictureRepository;
 use App\Repository\SessionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,10 +57,15 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/gallery/{id<\d+>}', name: 'gallery')]
-    public function gallery(Session $session): Response
+    public function gallery(int $id, PictureRepository $pictureRepository, SessionRepository $sessionRepository): Response
     {
+        $session = $sessionRepository->findSessionWithRelations($id);
+        $arrPictures = $pictureRepository->findAllPictureForGallery($id);
+
+
         return $this->render('session/gallery.html.twig', [
-            'session' => $session
+            'session' => $session,
+            'arrPicture' => $arrPictures,
         ]);
     }
 

@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block body %}
-	<div>
+	<div class="mb-2">
 		<twig:NavSession id="{{ session.id }}"/>
 	</div>
-	<div class="container py-5">
+	<h1 class="h2">Galerie d'image</h1>
+	<div class="container py-3">
 		<div class="gallery-toolbar shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 pb-3 mb-3 border-bottom border-white">
 			<div>
 				<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addImageModal">
@@ -28,74 +29,79 @@
 		</div>
 
 		<div class="masonry-grid justify-content-center">
-
-			<div class="gallery-item shadow-sm">
-				<img src="https://picsum.photos/400/600" alt="Portrait">
-				<div class="gallery-overlay">
-					<div class="text-wrap">Nom de l'imageaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</div>
-					<div>
-						<a href="#" class="btn btn-light btn-sm shadow">
-							<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
-						</a>
-						<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg">
-							<twig:ux:icon name="iconamoon:trash-thin" style="height:20px;width:20px;"/>
-						</button>
+			{% for picture in arrPicture %}
+				<div class="gallery-item shadow-sm">
+					<img src="{{ asset('assets/uploads/pictures/'~ picture.path)}}" alt="Portrait">
+					<div class="gallery-overlay">
+						<div class="text-wrap">{{ picture.name }}</div>
+						<div>
+							<a href="{{ asset('assets/uploads/pictures/'~ picture.path) }}" class="btn btn-light btn-sm shadow" download>
+								<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
+							</a>
+							<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg{{ picture.id }}">
+								<twig:ux:icon name="iconamoon:trash-thin" style="height:20px;width:20px;"/>
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="modal fade" id="deleteImg" tabindex="-1" aria-labelledby="deleteImg" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<form class="modal-content border-0 shadow">
-						<div class="modal-header">
-							<h5 class="modal-title fw-bold" id="modalTitle">supprimer</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<div>
-								<div class="mb-3">
-									<label class="form-label small fw-bold">Sélectionner le fichier</label>
-									<input type="file" class="form-control">
+				<div class="modal fade" id="deleteImg{{ picture.id }}" tabindex="-1" aria-labelledby="deleteImg" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content border-0 shadow">
+							<div class="modal-header">
+								<h5 class="modal-title fw-bold" id="modalTitle">Supprimer la Photo</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body text-center">
+								<div class="text-center w-50 mx-auto">
+									<img src="{{ asset('assets/uploads/pictures/'~ picture.path)}}" class="img-fluid rounded">
 								</div>
-								<div class="mb-3">
-									<label class="form-label small fw-bold">Nom de l'image</label>
-									<input type="text" class="form-control" placeholder="Ex: Vacances d'été">
-								</div>
+								<div class="mt-3 small">Cette photo sera supprimée définitivement !</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+								<form action="{{ path('app_picture_delete', { id: picture.id })}}" method="post" class="d-inline">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete_picture') }}">
+									<button type="submit" class="btn btn-danger d-flex align-items-center gap-1">
+										Supprimer
+									</button>
+								</form>
 							</div>
 						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-							<button type="button" class="btn btn-primary">Enregistrer</button>
-						</div>
-					</form>
+					</div>
 				</div>
-			
-
+			{% endfor %}
 		</div>
-	</div>
-	<div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content border-0 shadow">
-				<div class="modal-header">
-					<h5 class="modal-title fw-bold" id="modalTitle">Nouvelle Image</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form>
-						<div class="mb-3">
-							<label class="form-label small fw-bold">Sélectionner le fichier</label>
-							<input type="file" class="form-control">
+		<div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<form action="{{ path('app_picture_download', { id: session.id }) }}" class="modal-content border-0 shadow" method="post" enctype="multipart/form-data">
+					<div class="modal-header">
+						<h5 class="modal-title fw-bold" id="modalTitle">Nouvelle Image</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div>
+							<div class="mb-3">
+								<label class="form-label small fw-bold">Sélectionner le fichier</label>
+								<input type="file" name="photo" class="form-control">
+							</div>
+							<div class="mb-3">
+								<label class="form-label small fw-bold">Nom de l'image</label>
+								<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
+							</div>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" value="optimization" id="checkOpti" name="checkOpti" switch>
+								<label class="form-check-label" for="checkNativeSwitch">
+									Optionnel : Optimiser l'image ?
+								</label>
+							</div>
+							<input type="hidden" value="{{ csrf_token('download_picture') }}" name="_token">
 						</div>
-						<div class="mb-3">
-							<label class="form-label small fw-bold">Nom de l'image</label>
-							<input type="text" class="form-control" placeholder="Ex: Vacances d'été">
-						</div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-					<button type="button" class="btn btn-primary">Enregistrer</button>
-				</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-primary">Enregistrer</button>
+					</div>
+				</form>
 			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}

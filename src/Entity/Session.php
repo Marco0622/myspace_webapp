@@ -45,10 +45,10 @@ class Session
     private Collection $sessionAccesses;
 
     /**
-     * @var Collection<int, Pictures>
+     * @var Collection<int, Picture>
      */
-    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'session', cascade: ['remove'])]
-    private Collection $sesssionPictures;
+    #[ORM\OneToMany(targetEntity: Picture::class, mappedBy: 'session', cascade: ['remove'])]
+    private Collection $sessionPictures;
 
     /**
      * @var Collection<int, Page>
@@ -66,7 +66,7 @@ class Session
     {
         $this->sessionInvitations = new ArrayCollection();
         $this->sessionAccesses = new ArrayCollection();
-        $this->sesssionPictures = new ArrayCollection();
+        $this->sessionPictures = new ArrayCollection();
         $this->sessionPages = new ArrayCollection();
         $this->sessionNodes = new ArrayCollection();
     }
@@ -197,29 +197,29 @@ class Session
     }
 
     /**
-     * @return Collection<int, Pictures>
+     * @return Collection<int, Picture>
      */
-    public function getSesssionPictures(): Collection
+    public function getSessionPictures(): Collection
     {
-        return $this->sesssionPictures;
+        return $this->sessionPictures;
     }
 
-    public function addSesssionPicture(Pictures $sesssionPicture): static
+    public function addSessionPicture(Picture $sessionPicture): static
     {
-        if (!$this->sesssionPictures->contains($sesssionPicture)) {
-            $this->sesssionPictures->add($sesssionPicture);
-            $sesssionPicture->setSession($this);
+        if (!$this->sessionPictures->contains($sessionPicture)) {
+            $this->sessionPictures->add($sessionPicture);
+            $sessionPicture->setSession($this);
         }
 
         return $this;
     }
 
-    public function removeSesssionPicture(Pictures $sesssionPicture): static
+    public function removeSessionPicture(Picture $sessionPicture): static
     {
-        if ($this->sesssionPictures->removeElement($sesssionPicture)) {
+        if ($this->sessionPictures->removeElement($sessionPicture)) {
             // set the owning side to null (unless already changed)
-            if ($sesssionPicture->getSession() === $this) {
-                $sesssionPicture->setSession(null);
+            if ($sessionPicture->getSession() === $this) {
+                $sessionPicture->setSession(null);
             }
         }
 

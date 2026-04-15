@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Repository\InvitationRepository;
 use App\Repository\NodeRepository;
 use App\Repository\PageRepository;
-use App\Repository\PicturesRepository;
+use App\Repository\PictureRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
@@ -15,7 +15,7 @@ class StatsService
     public function __construct(
         private UserRepository          $userRepository,
         private SessionRepository       $sessionRepository,
-        private PicturesRepository      $pictureRepository,
+        private PictureRepository      $pictureRepository,
         private NodeRepository          $nodeRepository,
         private ReportRepository        $reportRepository,
         private InvitationRepository    $invitationRepository,

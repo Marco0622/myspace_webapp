@@ -75,9 +75,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $userAccesses;
 
     /**
-     * @var Collection<int, Pictures>
+     * @var Collection<int, Picture>
      */
-    #[ORM\OneToMany(targetEntity: Pictures::class, mappedBy: 'add_by')]
+    #[ORM\OneToMany(targetEntity: Picture::class, mappedBy: 'add_by')]
     private Collection $userPictures;
 
     /**
@@ -315,7 +315,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->sentInvitations->contains($sentInvitation)) {
             $this->sentInvitations->add($sentInvitation);
-            $sentInvitation->setSenderId($this);
+            $sentInvitation->setSender($this);
         }
 
         return $this;
@@ -325,8 +325,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->sentInvitations->removeElement($sentInvitation)) {
             // set the owning side to null (unless already changed)
-            if ($sentInvitation->getSenderId() === $this) {
-                $sentInvitation->setSenderId(null);
+            if ($sentInvitation->getSender() === $this) {
+                $sentInvitation->setSender(null);
             }
         }
 
@@ -345,7 +345,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->receivedInvitations->contains($receivedInvitation)) {
             $this->receivedInvitations->add($receivedInvitation);
-            $receivedInvitation->setReceiverId($this);
+            $receivedInvitation->setReceiver($this);
         }
 
         return $this;
@@ -355,8 +355,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->receivedInvitations->removeElement($receivedInvitation)) {
             // set the owning side to null (unless already changed)
-            if ($receivedInvitation->getReceiverId() === $this) {
-                $receivedInvitation->setReceiverId(null);
+            if ($receivedInvitation->getReceiver() === $this) {
+                $receivedInvitation->setReceiver(null);
             }
         }
 
@@ -394,14 +394,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Pictures>
+     * @return Collection<int, Picture>
      */
     public function getUserPictures(): Collection
     {
         return $this->userPictures;
     }
 
-    public function addUserPicture(Pictures $userPicture): static
+    public function addUserPicture(Picture $userPicture): static
     {
         if (!$this->userPictures->contains($userPicture)) {
             $this->userPictures->add($userPicture);
@@ -411,7 +411,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeUserPicture(Pictures $userPicture): static
+    public function removeUserPicture(Picture $userPicture): static
     {
         if ($this->userPictures->removeElement($userPicture)) {
             // set the owning side to null (unless already changed)

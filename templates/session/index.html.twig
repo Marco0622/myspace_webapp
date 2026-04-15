@@ -8,8 +8,8 @@
 	<div class="py-2"> 
 		<twig:NavSession  id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
 	</div>
-	<h1 class="h2 text-center">{{ session.name }}</h1>
-	<div class="row g-4 mt-3">
+	<h1 class="h2">{{ session.name }}</h1>
+	<div class="row g-4 mt-2">
 		{% if app.user == owner %}
 			<div class="accordion" id="accordionExample">
 				<div class="accordion-item">
