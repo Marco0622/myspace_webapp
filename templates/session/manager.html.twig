@@ -54,7 +54,7 @@
 
 				</div>
 				{% for node in arrNodes %}
-					{% if node.type is not null %}
+					{% if node.type != 'folder' %}
 						<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
 							<div class="row align-items-center g-0 px-3">
 
@@ -119,18 +119,18 @@
 									</div>
 									<div class="flex-grow-1 overflow-hidden">
 										<h6 class="font-size-14 mb-0 text-truncate">
-											<a href="#" class="text-white">fichier truc</a>
+											<a href="#" class="text-white">{{ node.name }}</a>
 										</h6>
-										<small class="text-white d-md-none">12.5 MB • 12 Avr</small>
+										<small class="text-white d-md-none"> ----- • {{ node.addAt|format_datetime('long', 'none', locale='fr') }}</small>
 									</div>
 								</div>
 
 								<div class="col-md-2 d-none d-md-block">
-									<span class="text-white small">12.5 MB</span>
+									<span class="text-white small"> ------- </span>
 								</div>
 
 								<div class="col-md-2 d-none d-lg-block text-center">
-									<span class="text-white small">12 Avr 2026</span>
+									<span class="text-white small">{{ node.addAt|format_datetime('long', 'none', locale='fr') }}</span>
 								</div>
 
 								<div class="col-4 col-md-3 text-end">
@@ -138,21 +138,22 @@
 										<a href="#" class="btn btn-sm btn-soft-light text-white" title="Télécharger">
 											<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
 										</a>
-										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
 											<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
 										</button>
-										<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+										<div class="modal fade" id="deleteModal{{ node.id }}" tabindex="-1" aria-hidden="true">
 											<div class="modal-dialog modal-dialog-centered modal-sm">
 												<div class="modal-content border-secondary text-dark">
-													<div class="modal-body text-center p-4">
+													<form class="modal-body text-center p-4" action="{{ path('app_node_delete_file', { id: node.id })}}" method="post">
 														<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
 														<h6>Supprimer le fichier ?</h6>
 														<p class="text-muted font-size-13">Cette action est irréversible.</p>
+														<input type="hidden" name="_token" value="{{ csrf_token('delete_node') }}">
 														<div class="d-flex gap-2 justify-content-center mt-4">
 															<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-															<button type="button" class="btn btn-danger">Confirmer</button>
+															<button type="submit" class="btn btn-danger">Confirmer</button>
 														</div>
-													</div>
+													</form>
 												</div>
 											</div>
 										</div>
@@ -173,7 +174,7 @@
 	</div>
 	<div class="modal fade" id="modalNewFolder" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content border-secondary">
+			<form class="modal-content border-secondary" action="{{ path('app_node_folder_create', { id: session.id }) }}" method="post">
 				<div class="modal-header border-bottom border-secondary">
 					<h5 class="modal-title">Créer un nouveau dossier</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -181,14 +182,15 @@
 				<div class="modal-body">
 					<div class="mb-3">
 						<label class="form-label">Nom du dossier</label>
-						<input type="text" class="form-control" placeholder="Ex: Projets 2026">
+						<input type="text" name="name" class="form-control" placeholder="Ex: Projets 2026">
+						<input type="hidden" name="_token" value="{{ csrf_token('create_folder') }}" >
 					</div>
 				</div>
 				<div class="modal-footer border-top border-secondary">
 					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
-					<button type="button" class="btn btn-primary">Créer le dossier</button>
+					<button type="submit" class="btn btn-primary">Créer le dossier</button>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 

@@ -67,7 +67,9 @@ final class NodeController extends AbstractController
 
         $sessionId = $node->getSession()->getId();
 
-        $fileManager->remove($node->getPath());
+        if($node->getType() !== 'folder'){
+            $fileManager->remove($node->getPath());
+        }
 
         $entityManager->remove($node);
         $entityManager->flush();
@@ -76,6 +78,43 @@ final class NodeController extends AbstractController
 
         return $this->redirectToRoute('app_session_manager', [
             'id' => $sessionId
+        ]);
+    }
+
+    #[Route('/create/{id<\d+>}', name: 'folder_create', methods: ['POST'])]
+    public function createFolder(Session $session, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('create_folder', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $folderName = trim($request->request->get('name', ''));
+        $parentId   = $request->request->get('parent_id'); 
+
+        if ($folderName === '') {
+            $this->addFlash('warning', 'Le nom du dossier ne peut pas être vide.');
+            return $this->redirectToRoute('app_session_manager', [
+                'id' => $session->getId()
+            ]);
+        }
+
+        $folder = new Node();
+        $folder->setName($folderName);
+        $folder->setType('folder');
+        $folder->setSize(0);
+        $folder->setPath('');
+        $folder->setSession($session);
+        $folder->setAddBy($this->getUser());
+        $folder->setAddAt(new DateTimeImmutable('now'));
+        $folder->setParent($parentId);
+
+        $entityManager->persist($folder);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Le dossier a été créé avec succès !');
+
+        return $this->redirectToRoute('app_session_manager', [
+            'id' => $session->getId()
         ]);
     }
 }
