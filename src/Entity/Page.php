@@ -32,11 +32,11 @@ class Page
     #[ORM\JoinColumn(name: 'pag_created_by', referencedColumnName: 'usr_id', nullable: false)]
     private ?user $created_by = null;
 
-    #[ORM\Column(name: 'pag_edited_at',)]
+    #[ORM\Column(name: 'pag_edited_at', nullable: true)]
     private ?\DateTimeImmutable $edited_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'userEditedPages')]
-    #[ORM\JoinColumn(name: 'pag_edited_by', referencedColumnName: 'usr_id', nullable: false)]
+    #[ORM\JoinColumn(name: 'pag_edited_by', referencedColumnName: 'usr_id', nullable: true)]
     private ?user $edited_by = null;
 
     #[ORM\Column(name: 'pag_is_locked')]
@@ -46,7 +46,7 @@ class Page
     #[ORM\JoinColumn(name: 'pag_locked_by', referencedColumnName: 'usr_id', nullable: true)]
     private ?user $locked_by = null;
 
-    #[ORM\Column(name: 'pag_locked_at' ,nullable: true)]
+    #[ORM\Column(name: 'pag_locked_at', nullable: true)]
     private ?\DateTimeImmutable $locked_at = null;
 
     public function getId(): ?int

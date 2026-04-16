@@ -9,26 +9,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
- #[Route('/page', name: 'app_page_')]
-final class PageController extends AbstractController
+
+final class SupportController extends AbstractController
 {
-    #[Route('/legal-notice', name: 'notice')]
+    #[Route('/legal-notice', name: 'app_support_notice')]
     public function notice(): Response
     {
-        return $this->render('page/notice.html.twig', [
+        return $this->render('support/notice.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
 
-    #[Route('/privacy-policy', name: 'policy')]
+    #[Route('/privacy-policy', name: 'app_support_policy')]
     public function policy(): Response
     {
-        return $this->render('page/policy.html.twig', [
+        return $this->render('support/policy.html.twig', [
             'controller_name' => 'PageController',
         ]);
     }
 
-    #[Route('/contact', name: 'contact')]
+    #[Route('/contact', name: 'app_support_contact')]
     public function contact(Request $request, MailerInterface $mailer): Response
     {
         $strFormError = ""; 
@@ -69,25 +69,21 @@ final class PageController extends AbstractController
                     return $this->redirectToRoute('app_user_home');
                 }
 
-                return $this->redirectToRoute('app_landing_page');
+                return $this->redirectToRoute('app_login');
             }
 
             
             
         }
-        $responseCode = Response::HTTP_OK; 
+       
 
-        if ($request->isMethod('POST') && $strFormError !== "") {
-            $responseCode = Response::HTTP_UNPROCESSABLE_ENTITY; 
-        }
-
-        return $this->render('page/contact.html.twig', [
+        return $this->render('support/contact.html.twig', [
             'strFormError' => $strFormError,
             'fullName' => $fullName,
             'userEmail' => $emailUser,
             'subject' => $subject,
             'message' => $message,
 
-        ], new Response(null, $responseCode));
+        ]);
     }
 }
