@@ -1,11 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session -
-	{{ session.name }}
+{% block title %}Session - {{ session.name }}{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.tiny.cloud/1/ovzm4shy65ncra9oxee7ht64dadq533lxlx2cl26w3ghhvjm/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    {{ importmap(['app', 'editor']) }}
 {% endblock %}
 
 {% block body %}
-	<div> 
-		<twig:NavSession  id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
-	</div>
+    <div class="py-3">
+        <twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
+    </div>
+	<input type="text" class="h2-input" minlength="2" value="{{ page.name }}" id="namePage" maxlength="50">
+    <div class="main-container">
+        <textarea id="my-editor">Commencez à rédiger ici...</textarea>
+    </div>
 {% endblock %}
+

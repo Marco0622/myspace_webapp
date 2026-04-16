@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Access;
+use App\Entity\Page;
 use App\Entity\Session;
 use App\Entity\Storage;
 use App\Repository\AccessRepository;
@@ -42,12 +43,13 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/page/{id<\d+>}', name: 'page')]
-    public function page(int $id, SessionRepository $sessionRepository): Response
+    public function page(Page $page, SessionRepository $sessionRepository): Response
     {
-        $session = $sessionRepository->findSessionWithRelations($id);
+        $session = $sessionRepository->findSessionWithRelations($page->getSession()->getId());
 
         return $this->render('session/page.html.twig', [
-            'session' => $session
+            'session' => $session,
+            'page' => $page,
         ]);
     }
 

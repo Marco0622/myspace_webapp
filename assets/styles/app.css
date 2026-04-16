@@ -272,14 +272,91 @@ h3 {
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;
-    color: white;
+    color: #1C1C1C;
+}
+
+/*Gestion de l'icon pour afficher/masquer le mdp*/
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/*editeur*/
+.main-container {
+    height: calc(100vh - 120px);
+    padding-top: 20px;
+}
+
+.tox-tinymce {
+    border: none !important;
+    background: transparent !important;
+}
+
+.tox .tox-toolbar,
+.tox .tox-toolbar__overflow,
+.tox-editor-header .tox-toolbar__primary {
+    background-color: #1C1C1C !important;
+    border-bottom: 1px solid #F8F5F0 !important;
+}
+
+.tox .tox-tbtn {
+    background-color: #1C1C1C !important;
+}
+
+.tox .tox-editor-header {
+    background-color: #1C1C1C !important;
+    border-bottom: none !important;
+}
+
+.tox .tox-tbtn svg {
+    fill: #F8F5F0 !important;
+}
+
+.tox .tox-tbtn:hover,
+.tox .tox-tbtn--enabled {
+    background-color: #1C1C1C !important;
+}
+
+.tox .tox-tbtn--select .tox-tbtn__select-label {
+    color: #F8F5F0 !important;
+    background: #1C1C1C !important;
+}
+
+.tox .tox-toolbar__group:not(:last-of-type) {
+    border-right: 1px solid #F8F5F0 !important;
+}
+
+.tox .tox-menu,
+.tox .tox-collection__item {
+    background-color: #1C1C1C !important;
+    color: #F8F5F0 !important;
+}
+
+.tox .tox-collection__item:hover,
+.tox .tox-collection__item--active {
+    background-color: #3a3a3a !important;
+}
+
+.tox .tox-collection__item-label * {
+    color: #F8F5F0 !important;
+}
+
+.tox-promotion,
+.tox-statusbar {
+    display: none !important;
 }
 
 
-.toggle-password{
-    position: absolute; 
-    right: 15px; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    cursor: pointer; 
+.h2-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1.5rem;
+    color: var(--white1);
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s;
+    width: 100%;
 }

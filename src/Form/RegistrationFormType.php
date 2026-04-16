@@ -7,13 +7,16 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class RegistrationFormType extends AbstractType
 {
@@ -63,14 +66,24 @@ class RegistrationFormType extends AbstractType
             ])
             
             ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'mapped' => false,
-                'label_attr' => ['class' => 'text-white'],
-                'invalid_message' => 'The password fields must match.',
-                'mapped' => false,
-                'required' => true,
-                'first_options' => ['label' => 'Mot de passe', 'attr' => ['placeholder' => 'Votre mot de passe...']],
-                'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => ['placeholder' => 'Votre mot de passe de comfirmation...']],
+                'mapped'          => false,
+                'type'            => PasswordType::class,
+                'invalid_message' => 'Les champs doivent être identiques',
+                'required'        => false,
+                'first_options'   => ['label' => 'Mot de passe'],
+                'second_options'  => ['label' => 'Confirmer le mot de passe'],
+                'attr'            => ['autocomplete' => 'new-password'],
+                'constraints'     => [
+                    new Length(
+                        min: 12,
+                        minMessage: 'Minimum {{ limit }} caractères',
+                        max: 4096,
+                    ),
+                    new PasswordStrength(),
+                    new NotCompromisedPassword(
+                        skipOnError: true  
+                    ),
+                ],
             ])
 
             ->add('submit', SubmitType::class, [

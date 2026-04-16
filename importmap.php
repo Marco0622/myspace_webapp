@@ -24,6 +24,10 @@ return [
         'path' => './assets/togglePassword.js',
         'entrypoint' => true,
     ],
+    'editor' => [ 
+        'path' => './assets/editor.js',
+        'entrypoint' => true,
+    ],
     'copy' => [ 
         'path' => './assets/copy.js',
         'entrypoint' => true,
