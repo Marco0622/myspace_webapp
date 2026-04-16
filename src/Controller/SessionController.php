@@ -34,7 +34,7 @@ final class SessionController extends AbstractController
             'role' => 'ROLE_OWNER',
             'session' => $session
         ]);
-        
+
         return $this->render('session/index.html.twig', [
             'session' => $session,
             'owner' => $objOwner->getMember(),
@@ -54,15 +54,21 @@ final class SessionController extends AbstractController
     {
         $query = $request->query->get('query', '');
         $filter = $request->query->get('filter', '');
+        $folder = $request->query->get('folder', 0);
 
         $session = $sessionRepository->findSessionWithRelations($id);
-        $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query);
+        $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query, $folder);
+
+        if ($folder > 0) {
+            $folder = $nodeRepository->findOneBy(['id' => $folder]);
+        }
 
         return $this->render('session/manager.html.twig', [
             'session' => $session,
             'arrNodes' => $arrNodes,
             'query' => $query,
             'filter' => $filter,
+            'folder' => $folder,
         ]);
     }
 
@@ -104,7 +110,7 @@ final class SessionController extends AbstractController
             $objSession->setName($name);
             $objSession->setStorage($objStorage);
 
-            
+
             $objAccess = new Access();
             $objAccess->setJoinedAt(new DateTimeImmutable('now'));
             $objAccess->setRole('ROLE_OWNER');
@@ -142,7 +148,7 @@ final class SessionController extends AbstractController
 
         $confirm = $request->request->get('deleteConfirm');
 
-        if($confirm != "Je confirme"){
+        if ($confirm != "Je confirme") {
             $this->addFlash('danger', "Erreur lors de la tentative de suppression !");
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),

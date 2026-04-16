@@ -16,7 +16,7 @@ class NodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Node::class);
     }
 
-    public function findAllNodeForManager(int $id, string $filter = '', string $query): array
+    public function findAllNodeForManager(int $id, string $filter = '', string $query = '', int $parent = 0): array
     {
         $queryBuilder = $this->createQueryBuilder('n')
             ->innerJoin('n.session', 's')
@@ -26,6 +26,13 @@ class NodeRepository extends ServiceEntityRepository
         if (!empty($query)) {
             $queryBuilder->andWhere('LOWER(n.name )LIKE LOWER(:q)')
                 ->setParameter('q', '%' . $query . '%');
+        }
+
+        if($parent > 0){
+            $queryBuilder->andWhere('n.parent = :parent')
+                ->setParameter('parent', $parent);
+        } else{
+            $queryBuilder->andWhere('n.parent IS NULL');
         }
 
         switch ($filter) {

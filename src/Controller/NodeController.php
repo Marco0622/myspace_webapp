@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Node;
 use App\Entity\Session;
+use App\Repository\NodeRepository;
 use App\Service\FileManager;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,14 +17,21 @@ use Symfony\Component\Routing\Attribute\Route;
 final class NodeController extends AbstractController
 {
     #[Route('/upload/{id<\d+>}', name: 'upload', methods: ['POST'])]
-    public function upload(Session $session, Request $request, FileManager $fileManager, EntityManagerInterface $entityManager): Response
-    {
+    public function upload(
+        Session $session,
+        Request $request,
+        FileManager $fileManager,
+        EntityManagerInterface $entityManager,
+        NodeRepository $nodeRepository
+    ): Response {
         if (!$this->isCsrfTokenValid('upload_node', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
         $nodeName  = $request->request->get('name');
         $fileToAdd = $request->files->get('file');
+        $parentId   = $request->request->get('parent_id');
+        $objNodeParent = $nodeRepository->find($parentId) ?? null;
 
         if (is_null($nodeName) || is_null($fileToAdd)) {
             $this->addFlash('warning', 'Erreur, veuillez réessayer !');
@@ -47,6 +55,7 @@ final class NodeController extends AbstractController
         $node->setSession($session);
         $node->setAddAt(new DateTimeImmutable('now'));
         $node->setAddBy($this->getUser());
+        $node->setParent($objNodeParent);
 
         $entityManager->persist($node);
         $entityManager->flush();
@@ -67,7 +76,7 @@ final class NodeController extends AbstractController
 
         $sessionId = $node->getSession()->getId();
 
-        if($node->getType() !== 'folder'){
+        if ($node->getType() !== 'folder') {
             $fileManager->remove($node->getPath());
         }
 
@@ -82,14 +91,19 @@ final class NodeController extends AbstractController
     }
 
     #[Route('/create/{id<\d+>}', name: 'folder_create', methods: ['POST'])]
-    public function createFolder(Session $session, Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function createFolder(
+        Session $session,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        NodeRepository $nodeRepository
+    ): Response {
         if (!$this->isCsrfTokenValid('create_folder', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
         $folderName = trim($request->request->get('name', ''));
-        $parentId   = $request->request->get('parent_id'); 
+        $parentId   = $request->request->get('parent_id');
+        $objNodeParent = $nodeRepository->find($parentId) ?? null;
 
         if ($folderName === '') {
             $this->addFlash('warning', 'Le nom du dossier ne peut pas être vide.');
@@ -106,7 +120,7 @@ final class NodeController extends AbstractController
         $folder->setSession($session);
         $folder->setAddBy($this->getUser());
         $folder->setAddAt(new DateTimeImmutable('now'));
-        $folder->setParent($parentId);
+        $folder->setParent($objNodeParent);
 
         $entityManager->persist($folder);
         $entityManager->flush();
