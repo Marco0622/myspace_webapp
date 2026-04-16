@@ -10,22 +10,32 @@
 	</div>
 	<h1 class="h2">Galerie d'image</h1>
 	<div class="container py-3">
-		<div class="gallery-toolbar shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 pb-3 mb-3 border-bottom border-white">
-			<div>
-				<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addImageModal">
+		<div class="gallery-toolbar shadow-sm d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom border-white">
+
+			<div class="w-100 w-md-auto">
+				<button class="btn btn-light btn-sm d-flex align-items-center justify-content-center gap-2 w-100" data-bs-toggle="modal" data-bs-target="#addImageModal">
 					<twig:ux:icon name="icon-park-outline:add-picture" style="height:20px;width:20px;"/>
-					Ajouter une image
+					<span>Ajouter une image</span>
 				</button>
 			</div>
 
-			<form class="d-flex align-items-center gap-2 w-100" style=" max-width: 300px;">
-				<select class="form-select form-select-sm">
-					<option>Date</option>
-					<option value="1">One</option>
-					<option value="2">Two</option>
-					<option value="3">Three</option>
-				</select>
-			</form>
+			<div class="d-flex flex-column flex-sm-row gap-2 w-100 flex-grow-1 justify-content-md-end" style="max-width: 800px;">
+
+
+				<form class="input-group input-group-sm flex-grow-1" id="search-form">
+					<button type="submit" class="input-group-text bg-dark border-secondary text-white">
+						{{ ux_icon('lucide:search') }}
+					</button>
+
+					<input value="{{ query }}" type="text" name="query" class="form-control bg-dark border-secondary text-white placeholder-white" placeholder="Rechercher une image..." aria-label="Recherche">
+					{% if query %}
+						<a href="{{ path('app_session_gallery', { id: session.id }) }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
+							{{ ux_icon('lucide:x') }}
+						</a>
+					{% endif %}
+				</form>
+
+			</div>
 		</div>
 
 		<div class="masonry-grid justify-content-center">

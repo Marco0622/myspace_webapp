@@ -16,28 +16,28 @@ class NodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Node::class);
     }
 
-    //    /**
-    //     * @return Node[] Returns an array of Node objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('n')
-    //            ->andWhere('n.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('n.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    /*public function findAllPictureForGallery(int $id, string $filter = '', string $query): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->innerJoin('p.session', 's')
+            ->where('s.id = :id')
+            ->setParameter('id', $id);
+        if($filter === 'A-Z'){
+            $queryBuilder->orderBy('p.name', 'DESC');
+        }
+        if($filter === 'Z-A'){
+            $queryBuilder->orderBy('p.name', 'ASC');
+        }
+        if($filter === 'recent'){
+            $queryBuilder->orderBy('p.created_at', 'DESC');
+        }
+        if($filter === 'old'){
+            $queryBuilder->orderBy('p.created_at', 'ASC');
+        }
 
-    //    public function findOneBySomeField($value): ?Node
-    //    {
-    //        return $this->createQueryBuilder('n')
-    //            ->andWhere('n.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+       return $queryBuilder->getQuery()
+            ->getResult();
+
+       
+    }*/
 }

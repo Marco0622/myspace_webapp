@@ -16,14 +16,18 @@ class PictureRepository extends ServiceEntityRepository
         parent::__construct($registry, Picture::class);
     }
 
-    public function findAllPictureForGallery(int $id): array
+    public function findAllPictureForGallery(int $id, string $query): array
     {
-        return $this->createQueryBuilder('p')
-                    ->innerJoin('p.session', 's')
-                    ->where('s.id = :id')
-                    ->setParameter('id', $id)
-                    ->orderBy('p.created_at', 'ASC')
-                    ->getQuery()
-                    ->getResult();
-    }               
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->innerJoin('p.session', 's')
+            ->where('s.id = :id')
+            ->setParameter('id', $id);
+            if(!empty($query)){
+                $queryBuilder->andWhere('LOWER(p.name) LIKE LOWER(:q)')
+                    ->setParameter('q','%'. $query . '%');
+            }
+
+          return  $queryBuilder->getQuery()
+                ->getResult();
+    }
 }

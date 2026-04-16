@@ -57,15 +57,18 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/gallery/{id<\d+>}', name: 'gallery')]
-    public function gallery(int $id, PictureRepository $pictureRepository, SessionRepository $sessionRepository): Response
+    public function gallery(int $id, PictureRepository $pictureRepository, SessionRepository $sessionRepository, Request $request): Response
     {
+        $query = $request->query->get('query', '');
+
         $session = $sessionRepository->findSessionWithRelations($id);
-        $arrPictures = $pictureRepository->findAllPictureForGallery($id);
+        $arrPictures = $pictureRepository->findAllPictureForGallery($id, $query);
 
 
         return $this->render('session/gallery.html.twig', [
             'session' => $session,
             'arrPicture' => $arrPictures,
+            'query' => $query,
         ]);
     }
 

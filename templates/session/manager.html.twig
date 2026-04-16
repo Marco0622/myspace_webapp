@@ -11,22 +11,49 @@
 	<div class="row mt-4">
 		<div class="col-12">
 			<div class="list-group list-group-flush ">
+				<h1 class="h3 mb-0 text-white">Gestionnaire de fichiers</h1>
 
-				<div class="d-flex align-items-center justify-content-between mb-3 px-3">
-                <h1 class="h3 mb-0 text-white">Gestionnaire de fichiers</h1>
-                
-                <div class="d-flex gap-2">
-                    <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
-                        <twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
-                        <span class="d-none d-sm-inline">Nouveau dossier</span>
-                    </button>
-                    
-                    <button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
-                        <twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
-                        <span class="d-none d-sm-inline">Ajouter un fichier</span>
-                    </button>
-                </div>
-            </div>
+				<div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 mb-3 px-3">
+
+					<div class="d-flex gap-2 w-100 w-md-auto justify-content-start">
+						<button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
+							<twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
+							<span class="d-none d-sm-inline">Nouveau dossier</span>
+						</button>
+
+						<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
+							<twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
+							<span class="d-none d-sm-inline">Ajouter un fichier</span>
+						</button>
+					</div>
+					<div class="input-group input-group-sm w-100 w-sm-auto" style="min-width: 150px;">
+						<span class="input-group-text bg-dark border-secondary text-white">
+							{{ ux_icon('lucide:calendar') }}
+						</span>
+						<select class="form-select bg-dark border-secondary text-white shadow-none" onchange="location = this.value;">
+							<option selected disabled>Trier par...</option>
+							<option value="?filter=recent">Plus récent</option>
+							<option value="?filter=old">Plus ancien</option>
+							<option value="?filter=A-Z">Nom (A-Z)</option>
+							<option value="?filter=Z-A">Nom (Z-A)</option>
+						</select>
+					</div>
+
+					<form class="w-100 flex-grow-1" id="search-form" style="max-width: 500px;">
+						<div class="input-group">
+							<button type="submit" class="input-group-text bg-dark border-secondary text-white">
+								{{ ux_icon('lucide:search') }}
+							</button>
+
+							<input type="text" name="query" id="search-input" class="form-control bg-dark border-secondary text-white placeholder-white" placeholder="Rechercher un utilisateur..." aria-label="Recherche">
+
+							<a href="{{ path('app_session_gallery', { id: session.id }) }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
+								{{ ux_icon('lucide:x') }}
+							</a>
+						</div>
+					</form>
+
+				</div>
 				<div class="list-group-item list-group-item-action bg-transparent border-bottom border-top border-secondary py-3 px-0">
 					<div class="row align-items-center g-0 px-3">
 
@@ -131,50 +158,50 @@
 				</div>
 			</div>
 
-			
+
 		</div>
 	</div>
-<div class="modal fade" id="modalNewFolder" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-secondary">
-                <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title">Créer un nouveau dossier</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nom du dossier</label>
-                        <input type="text" class="form-control" placeholder="Ex: Projets 2026">
-                    </div>
-                </div>
-                <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary">Créer le dossier</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal fade" id="modalNewFolder" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content border-secondary">
+				<div class="modal-header border-bottom border-secondary">
+					<h5 class="modal-title">Créer un nouveau dossier</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label class="form-label">Nom du dossier</label>
+						<input type="text" class="form-control" placeholder="Ex: Projets 2026">
+					</div>
+				</div>
+				<div class="modal-footer border-top border-secondary">
+					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-primary">Créer le dossier</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="modal fade" id="modalUploadFile" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-secondary">
-                <div class="modal-header border-bottom border-secondary">
-                    <h5 class="modal-title">Importer des fichiers</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="border-2 border-dashed border-secondary rounded-3 p-5 text-center">
-                        <twig:ux:icon name="bi:cloud-arrow-up" class="text-primary mb-3" style="height:48px;width:48px;"/>
-                        <h6>Glissez vos fichiers ici</h6>
-                        <p class="text-muted small">ou cliquez pour parcourir votre ordinateur</p>
-                        <input type="file" class="form-control mt-3" multiple>
-                    </div>
-                </div>
-                <div class="modal-footer border-top border-secondary">
-                    <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary">Lancer l'import</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal fade" id="modalUploadFile" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content border-secondary">
+				<div class="modal-header border-bottom border-secondary">
+					<h5 class="modal-title">Importer des fichiers</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="border-2 border-dashed border-secondary rounded-3 p-5 text-center">
+						<twig:ux:icon name="bi:cloud-arrow-up" class="text-primary mb-3" style="height:48px;width:48px;"/>
+						<h6>Glissez vos fichiers ici</h6>
+						<p class="text-muted small">ou cliquez pour parcourir votre ordinateur</p>
+						<input type="file" class="form-control mt-3" multiple>
+					</div>
+				</div>
+				<div class="modal-footer border-top border-secondary">
+					<button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-primary">Lancer l'import</button>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
