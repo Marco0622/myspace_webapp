@@ -16,28 +16,36 @@ class NodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Node::class);
     }
 
-    /*public function findAllPictureForGallery(int $id, string $filter = '', string $query): array
+    public function findAllNodeForManager(int $id, string $filter = '', string $query): array
     {
-        $queryBuilder = $this->createQueryBuilder('p')
-            ->innerJoin('p.session', 's')
+        $queryBuilder = $this->createQueryBuilder('n')
+            ->innerJoin('n.session', 's')
             ->where('s.id = :id')
             ->setParameter('id', $id);
-        if($filter === 'A-Z'){
-            $queryBuilder->orderBy('p.name', 'DESC');
-        }
-        if($filter === 'Z-A'){
-            $queryBuilder->orderBy('p.name', 'ASC');
-        }
-        if($filter === 'recent'){
-            $queryBuilder->orderBy('p.created_at', 'DESC');
-        }
-        if($filter === 'old'){
-            $queryBuilder->orderBy('p.created_at', 'ASC');
+
+        if (!empty($query)) {
+            $queryBuilder->andWhere('LOWER(n.name )LIKE LOWER(:q)')
+                ->setParameter('q', '%' . $query . '%');
         }
 
-       return $queryBuilder->getQuery()
-            ->getResult();
+        switch ($filter) {
+            case 'A-Z':
+                $queryBuilder->orderBy('LOWER(n.name)', 'ASC');
+                break;
+            case 'Z-A':
+                $queryBuilder->orderBy('LOWER(n.name)', 'DESC');
+                break;
+            case 'recent':
+                $queryBuilder->orderBy('n.addAt', 'DESC');
+                break;
+            case 'old':
+                $queryBuilder->orderBy('n.addAt', 'ASC');
+                break;
+            default:
+                $queryBuilder->orderBy('n.addAt', 'DESC');
+                break;
+        }
 
-       
-    }*/
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

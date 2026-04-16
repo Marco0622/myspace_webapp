@@ -31,11 +31,11 @@
 							{{ ux_icon('lucide:calendar') }}
 						</span>
 						<select class="form-select bg-dark border-secondary text-white shadow-none" onchange="location = this.value;">
-							<option selected disabled>Trier par...</option>
-							<option value="?filter=recent">Plus récent</option>
-							<option value="?filter=old">Plus ancien</option>
-							<option value="?filter=A-Z">Nom (A-Z)</option>
-							<option value="?filter=Z-A">Nom (Z-A)</option>
+							<option value="?filter=" {% if filter is null %} selected disabled {% endif %}>Trier par...</option>
+							<option value="?filter=recent" {% if filter == 'recent' %} selected disabled {% endif %}>Plus récent</option>
+							<option value="?filter=old" {% if filter == 'old' %} selected disabled {% endif %}>Plus ancien</option>
+							<option value="?filter=A-Z" {% if filter == 'A-Z' %} selected disabled {% endif %}>Nom (A-Z)</option>
+							<option value="?filter=Z-A" {% if filter == 'Z-A' %} selected disabled {% endif %}>Nom (Z-A)</option>
 						</select>
 					</div>
 
@@ -53,47 +53,106 @@
 					</form>
 
 				</div>
-				<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
-					<div class="row align-items-center g-0 px-3">
+				{% for node in arrNodes %}
+					{% if node.type is not null %}
+						<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
+							<div class="row align-items-center g-0 px-3">
 
-						<div class="col-8 col-md-5 d-flex align-items-center">
-							<div class="avatar-sm me-3 flex-shrink-0">
-								<twig:ux:icon name="bi:filetype-php" class="text-white" style="height:28px;width:28px;"/>
+								<div class="col-8 col-md-5 d-flex align-items-center">
+									<div class="avatar-sm me-3 flex-shrink-0">
+										<twig:ux:icon name="subway:file-13" class="text-white" style="height:28px;width:28px;"/>
+									</div>
+									<div class="flex-grow-1 overflow-hidden">
+										<h6 class="font-size-14 mb-0 text-truncate text-white">
+											{{ node.name }}
+										</h6>
+										<small class="text-white d-md-none">{{ (node.size / 1024 / 1024)|number_format(3) }}
+											MB •
+											{{ node.addAt|format_datetime('long', 'none', locale='fr') }}</small>
+									</div>
+								</div>
+
+								<div class="col-md-2 d-none d-md-block">
+									<span class="text-white small">{{ (node.size / 1024 / 1024)|number_format(3) }} MB</span>
+								</div>
+
+								<div class="col-md-2 d-none d-lg-block text-center">
+									<span class="text-white small">{{ node.addAt|format_datetime('long', 'none', locale='fr') }}</span>
+								</div>
+
+								<div class="col-4 col-md-3 text-end">
+									<div class="d-flex justify-content-end gap-2">
+										<a href="{{ asset('assets/uploads/files/'~ node.path) }}" class="btn btn-sm btn-soft-light text-white" title="Télécharger" download>
+											<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
+										</a>
+										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
+											<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
+										</button>
+										<div class="modal fade" id="deleteModal{{ node.id }}" tabindex="-1" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered modal-sm">
+												<div class="modal-content border-secondary text-dark">
+													<form class="modal-body text-center p-4" action="{{ path('app_node_delete_file', { id: node.id })}}" method="post">
+														<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
+														<h6>Supprimer le fichier ?</h6>
+														<p class="text-muted font-size-13">Cette action est irréversible.</p>
+														<input type="hidden" name="_token" value="{{ csrf_token('delete_node') }}">
+														<div class="d-flex gap-2 justify-content-center mt-4">
+															<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+															<button type="submit" class="btn btn-danger">Confirmer</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
 							</div>
-							<div class="flex-grow-1 overflow-hidden">
-								<h6 class="font-size-14 mb-0 text-truncate">
-									<a href="#" class="text-white">index.main.php</a>
-								</h6>
-								<small class="text-white d-md-none">12.5 MB • 12 Avr</small>
-							</div>
 						</div>
+					{% else %}
+						<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
+							<div class="row align-items-center g-0 px-3">
 
-						<div class="col-md-2 d-none d-md-block">
-							<span class="text-white small">12.5 MB</span>
-						</div>
+								<div class="col-8 col-md-5 d-flex align-items-center">
+									<div class="avatar-sm me-3 flex-shrink-0">
+										<twig:ux:icon name="guidance:folder" class="text-white" style="height:28px;width:28px;"/>
+									</div>
+									<div class="flex-grow-1 overflow-hidden">
+										<h6 class="font-size-14 mb-0 text-truncate">
+											<a href="#" class="text-white">fichier truc</a>
+										</h6>
+										<small class="text-white d-md-none">12.5 MB • 12 Avr</small>
+									</div>
+								</div>
 
-						<div class="col-md-2 d-none d-lg-block text-center">
-							<span class="text-white small">12 Avr 2026</span>
-						</div>
+								<div class="col-md-2 d-none d-md-block">
+									<span class="text-white small">12.5 MB</span>
+								</div>
 
-						<div class="col-4 col-md-3 text-end">
-							<div class="d-flex justify-content-end gap-2">
-								<a href="#" class="btn btn-sm btn-soft-light text-white" title="Télécharger">
-									<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
-								</a>
-								<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
-									<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
-								</button>
-								<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-centered modal-sm">
-										<div class="modal-content border-secondary text-dark">
-											<div class="modal-body text-center p-4">
-												<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
-												<h6>Supprimer le fichier ?</h6>
-												<p class="text-muted font-size-13">Cette action est irréversible.</p>
-												<div class="d-flex gap-2 justify-content-center mt-4">
-													<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-													<button type="button" class="btn btn-danger">Confirmer</button>
+								<div class="col-md-2 d-none d-lg-block text-center">
+									<span class="text-white small">12 Avr 2026</span>
+								</div>
+
+								<div class="col-4 col-md-3 text-end">
+									<div class="d-flex justify-content-end gap-2">
+										<a href="#" class="btn btn-sm btn-soft-light text-white" title="Télécharger">
+											<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
+										</a>
+										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+											<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
+										</button>
+										<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered modal-sm">
+												<div class="modal-content border-secondary text-dark">
+													<div class="modal-body text-center p-4">
+														<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
+														<h6>Supprimer le fichier ?</h6>
+														<p class="text-muted font-size-13">Cette action est irréversible.</p>
+														<div class="d-flex gap-2 justify-content-center mt-4">
+															<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+															<button type="button" class="btn btn-danger">Confirmer</button>
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -101,60 +160,12 @@
 								</div>
 							</div>
 						</div>
-
+					{% endif %}
+				{% else %}
+					<div class="py-3 text-center">
+						<h2 class="h3 text-white-50">Aucun fichier trouver !</h2>
 					</div>
-				</div>
-				<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
-					<div class="row align-items-center g-0 px-3">
-
-						<div class="col-8 col-md-5 d-flex align-items-center">
-							<div class="avatar-sm me-3 flex-shrink-0">
-								<twig:ux:icon name="iconoir:folder" class="text-white" style="height:28px;width:28px;"/>
-							</div>
-							<div class="flex-grow-1 overflow-hidden">
-								<h6 class="font-size-14 mb-0 text-truncate">
-									<a href="#" class="text-white">fichier truc</a>
-								</h6>
-								<small class="text-white d-md-none">12.5 MB • 12 Avr</small>
-							</div>
-						</div>
-
-						<div class="col-md-2 d-none d-md-block">
-							<span class="text-white small">12.5 MB</span>
-						</div>
-
-						<div class="col-md-2 d-none d-lg-block text-center">
-							<span class="text-white small">12 Avr 2026</span>
-						</div>
-
-						<div class="col-4 col-md-3 text-end">
-							<div class="d-flex justify-content-end gap-2">
-								<a href="#" class="btn btn-sm btn-soft-light text-white" title="Télécharger">
-									<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
-								</a>
-								<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
-									<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
-								</button>
-								<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-centered modal-sm">
-										<div class="modal-content border-secondary text-dark">
-											<div class="modal-body text-center p-4">
-												<twig:ux:icon name="bi:exclamation-triangle" class="text-danger mb-3" style="height:48px;width:48px;"/>
-												<h6>Supprimer le fichier ?</h6>
-												<p class="text-muted font-size-13">Cette action est irréversible.</p>
-												<div class="d-flex gap-2 justify-content-center mt-4">
-													<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
-													<button type="button" class="btn btn-danger">Confirmer</button>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-
-					</div>
-				</div>
+				{% endfor %}
 			</div>
 
 

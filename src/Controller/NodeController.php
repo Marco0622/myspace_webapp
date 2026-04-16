@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Node;
 use App\Entity\Session;
 use App\Service\FileManager;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,11 +31,12 @@ final class NodeController extends AbstractController
                 'id' => $session->getId()
             ]);
         }
-        
+
         $type = $fileToAdd->getMimeType();
         $size = $fileToAdd->getSize();
+        $extension = $fileToAdd->guessExtension();
         $filename = $fileManager->upload($fileToAdd);
-
+        $nodeName .= '.' . $extension;
 
 
         $node = new Node();
@@ -43,6 +45,7 @@ final class NodeController extends AbstractController
         $node->setSize($size);
         $node->setType($type);
         $node->setSession($session);
+        $node->setAddAt(new DateTimeImmutable('now'));
         $node->setAddBy($this->getUser());
 
         $entityManager->persist($node);
@@ -52,6 +55,27 @@ final class NodeController extends AbstractController
 
         return $this->redirectToRoute('app_session_manager', [
             'id' => $session->getId()
+        ]);
+    }
+
+    #[Route('/delete-file/{id<\d+>}', name: 'delete_file', methods: ['POST'])]
+    public function delete(Node $node, Request $request, FileManager $fileManager, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isCsrfTokenValid('delete_node', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $sessionId = $node->getSession()->getId();
+
+        $fileManager->remove($node->getPath());
+
+        $entityManager->remove($node);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le fichier a été supprimée avec succès !");
+
+        return $this->redirectToRoute('app_session_manager', [
+            'id' => $sessionId
         ]);
     }
 }

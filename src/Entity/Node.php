@@ -44,6 +44,9 @@ class Node
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $children;
 
+    #[ORM\Column(name: 'nod_add_at')]
+    private ?\DateTimeImmutable $addAt = null;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -155,6 +158,18 @@ class Node
                 $child->setParent(null);
             }
         }
+        return $this;
+    }
+
+    public function getAddAt(): ?\DateTimeImmutable
+    {
+        return $this->addAt;
+    }
+
+    public function setAddAt(\DateTimeImmutable $addAt): static
+    {
+        $this->addAt = $addAt;
+
         return $this;
     }
 }

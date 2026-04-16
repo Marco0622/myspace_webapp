@@ -6,6 +6,7 @@ use App\Entity\Access;
 use App\Entity\Session;
 use App\Entity\Storage;
 use App\Repository\AccessRepository;
+use App\Repository\NodeRepository;
 use App\Repository\PictureRepository;
 use App\Repository\SessionRepository;
 use DateTimeImmutable;
@@ -49,15 +50,17 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/manager/{id<\d+>}', name: 'manager')]
-    public function manager(int $id, Request $request, SessionRepository $sessionRepository): Response
+    public function manager(int $id, Request $request, SessionRepository $sessionRepository, NodeRepository $nodeRepository): Response
     {
         $query = $request->query->get('query', '');
         $filter = $request->query->get('filter', '');
 
         $session = $sessionRepository->findSessionWithRelations($id);
+        $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query);
 
         return $this->render('session/manager.html.twig', [
             'session' => $session,
+            'arrNodes' => $arrNodes,
             'query' => $query,
             'filter' => $filter,
         ]);
