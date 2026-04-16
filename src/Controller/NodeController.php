@@ -63,7 +63,8 @@ final class NodeController extends AbstractController
         $this->addFlash('success', 'Le fichier a été téléchargé avec succès !');
 
         return $this->redirectToRoute('app_session_manager', [
-            'id' => $session->getId()
+            'id' => $session->getId(),
+            'folder' => $objNodeParent->getId() ?? 0,
         ]);
     }
 
@@ -128,7 +129,8 @@ final class NodeController extends AbstractController
         $this->addFlash('success', 'Le dossier a été créé avec succès !');
 
         return $this->redirectToRoute('app_session_manager', [
-            'id' => $session->getId()
+            'id' => $session->getId(),
+            'folder' => $objNodeParent->getId() ?? 0,
         ]);
     }
 }
