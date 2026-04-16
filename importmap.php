@@ -20,6 +20,10 @@ return [
         'path' => './assets/popPup.js',
         'entrypoint' => true,
     ],
+    'togglePassword' => [ 
+        'path' => './assets/togglePassword.js',
+        'entrypoint' => true,
+    ],
     'copy' => [ 
         'path' => './assets/copy.js',
         'entrypoint' => true,

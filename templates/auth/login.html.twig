@@ -1,51 +1,53 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Connexion - MySpace
+{% endblock %}
+
+{% block javascripts %}
+	{{ importmap(['app', 'togglePassword']) }}
+{% endblock %}
 
 {% block body %}
-   <div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
-    
-    <div class="card" style="max-width: 800px; width: 100%; border-radius: 1rem;">
-        <div class="card-body p-4 p-md-5">
-            
-            <div class="text-center mb-4 text-white">
-                <h2 class="fw-bold ">Connexion</h2>
-                <p class="text-muted small text-white">Heureux de vous revoir !</p>
-            </div>
+	<div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
 
-            <form method="post" class="text-white">
-                {% if error %}
-                   <div class="alert alert-danger shadow-sm">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>
-                {% endif %}
+		<div class="card" style="max-width: 800px; width: 100%; border-radius: 1rem;">
+			<div class="card-body p-4 p-md-5">
 
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label text-uppercase fw-semibold">Email</label>
-                    <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" 
-                           class="form-control form-control-lg fs-6" autocomplete="email" required autofocus 
-                           placeholder="nom@exemple.com" style="border-radius: 0.75rem;">
-                </div>
+				<div class="text-center mb-4 text-white">
+					<h2 class="fw-bold ">Connexion</h2>
+					<p class="text-muted small text-white">Heureux de vous revoir !</p>
+				</div>
 
-                <div class="mb-3">
-                    <label for="inputPassword" class="form-label text-uppercase fw-semibold">Mot de passe</label>
-                    <input type="password" name="_password" id="inputPassword" 
-                           class="form-control form-control-lg fs-6" autocomplete="current-password" required 
-                           placeholder="••••••••" style="border-radius: 0.75rem;">
-                    <a href="{{ path('app_forgot_password_request')}}" class="small  text-white text py-1">Mot de passe oublié ?</a>
-                </div>
+				<form method="post" class="text-white">
+					{% if error %}
+						<div class="alert alert-danger shadow-sm">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>
+					{% endif %}
 
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+					<div class="mb-3">
+						<label for="inputEmail" class="form-label text-uppercase fw-semibold">Email</label>
+						<input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control form-control-lg fs-6" autocomplete="email" required autofocus placeholder="nom@exemple.com" style="border-radius: 0.75rem;">
+					</div>
 
-                <button class="btn btn-light w-100 fw-bold py-2 shadow-sm" type="submit" style="border-radius: 0.75rem;">
-                    Se connecter
-                </button>
+					<div class="mb-3">
+						<label for="inputPassword" class="form-label text-uppercase fw-semibold">Mot de passe</label>
+						<div class="position-relative">
+							<input type="password" name="_password" id="inputPassword" class="form-control form-control-lg fs-6" autocomplete="current-password" required placeholder="••••••••" style="border-radius: 0.75rem; padding-right: 2.5rem;">
 
-                <div class="text-center mt-4">
-                    <span class="text-muted small text-white">Pas de compte ?</span>
-                    <a href="{{ path('app_register') }}" class="small fw-bold text-white">Créer un profil</a>
-                </div>
-            </form>
+							<img src="/assets/images/icon/hide.png" id="togglePassword" class="toggle-password">
+						</div>
+						<a href="{{ path('app_forgot_password_request')}}" class="small text-white text py-1">Mot de passe oublié ?</a>
+					</div>
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+					<button class="btn btn-light w-100 fw-bold py-2 shadow-sm" type="submit" style="border-radius: 0.75rem;">
+						Se connecter
+					</button>
+					<div class="text-center mt-4">
+						<span class="text-muted small text-white">Pas de compte ?</span>
+						<a href="{{ path('app_register') }}" class="small fw-bold text-white">Créer un profil</a>
+					</div>
+				</form>
 
-        </div>
-    </div>
-</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
