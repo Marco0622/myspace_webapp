@@ -42,11 +42,15 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         # Bloquage des page d'inscription et de cconnexion pour les utilisateur connecter
-        #- { path: ^/login, allow_if: "!is_authenticated()" }
-        #- { path: ^/register, allow_if: "!is_authenticated()" }
-        - { path: ^/user, allow_if: "is_authenticated()" }
+        - { path: ^/user, roles: ROLE_USER }
         - { path: ^/dashboard, roles: ROLE_ADMIN }
-        - { path: ^/session, allow_if: "is_authenticated()" }
+        - { path: ^/session, roles: ROLE_USER }
+        - { path: ^/session, roles: ROLE_USER }
+        - { path: ^/picture, roles: ROLE_USER }
+        - { path: ^/node, roles: ROLE_USER }
+        - { path: ^/access, roles: ROLE_USER }
+        - { path: ^/invitation, roles: ROLE_USER }
+        - { path: ^/report, roles: ROLE_USER }
 
 when@test:
     security:

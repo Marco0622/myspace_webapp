@@ -42,8 +42,10 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/page/{id<\d+>}', name: 'page')]
-    public function page(Session $session): Response
+    public function page(int $id, SessionRepository $sessionRepository): Response
     {
+        $session = $sessionRepository->findSessionWithRelations($id);
+
         return $this->render('session/page.html.twig', [
             'session' => $session
         ]);

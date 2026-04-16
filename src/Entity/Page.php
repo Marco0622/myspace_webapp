@@ -23,28 +23,28 @@ class Page
 
     #[ORM\ManyToOne(inversedBy: 'sessionPages')]
     #[ORM\JoinColumn(name: 'pag_session_id', referencedColumnName: 'ses_id', nullable: false, onDelete: 'CASCADE')]
-    private ?session $session = null;
+    private ?Session $session = null;
 
     #[ORM\Column(name: 'pag_created_at',)]
     private ?\DateTimeImmutable $created_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'userCreatedPages')]
     #[ORM\JoinColumn(name: 'pag_created_by', referencedColumnName: 'usr_id', nullable: false)]
-    private ?user $created_by = null;
+    private ?User $created_by = null;
 
     #[ORM\Column(name: 'pag_edited_at', nullable: true)]
     private ?\DateTimeImmutable $edited_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'userEditedPages')]
     #[ORM\JoinColumn(name: 'pag_edited_by', referencedColumnName: 'usr_id', nullable: true)]
-    private ?user $edited_by = null;
+    private ?User $edited_by = null;
 
     #[ORM\Column(name: 'pag_is_locked')]
-    private ?bool $is_locked = null;
+    private ?bool $is_locked = false;
 
     #[ORM\ManyToOne(inversedBy: 'userLockedPages')]
     #[ORM\JoinColumn(name: 'pag_locked_by', referencedColumnName: 'usr_id', nullable: true)]
-    private ?user $locked_by = null;
+    private ?User $locked_by = null;
 
     #[ORM\Column(name: 'pag_locked_at', nullable: true)]
     private ?\DateTimeImmutable $locked_at = null;

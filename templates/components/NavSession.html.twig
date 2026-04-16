@@ -1,40 +1,39 @@
 <div{{attributes}}>
 	<nav class="navbar border-0">
-		<div
-			class="p-1 border border-secondary rounded mx-auto w-100">
+		<div class="p-1 border border-secondary rounded mx-auto w-100">
 			<div class="d-none d-lg-flex justify-content-center gap-2 p-2 text-white">
 				<a href="{{ path('app_session_home', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
-					<twig:ux:icon name="heroicons:home" />
+					<twig:ux:icon name="heroicons:home"/>
 					Home
 				</a>
 				<a href="{{ path('app_session_manager', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
-					<twig:ux:icon name="heroicons:folder" />
+					<twig:ux:icon name="heroicons:folder"/>
 					Gestionnaire
 				</a>
 				<a href="{{ path('app_session_gallery', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
-					<twig:ux:icon name="heroicons:photo" />
+					<twig:ux:icon name="heroicons:photo"/>
 					Galerie
 				</a>
 				<div class="dropdown">
 					<button class="nav-link text-white d-flex align-items-center gap-2 px-3 btn border-0 dropdown-toggle" type="button" data-bs-toggle="dropdown">
-						<twig:ux:icon name="iconoir:page" />
+						<twig:ux:icon name="iconoir:page"/>
 						Pages
 					</button>
 					<ul class="dropdown-menu mt-1 shadow-sm">
 						{% for page in arrPage %}
+							<li><hr class="dropdown-divider"></li>
+							<li>
+								<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ page.id }}">
+									<twig:ux:icon name="heroicons:pencil"/>
+									{{ page.name }}
+								</a>
+							</li>
+						{% endfor %}
 						<li><hr class="dropdown-divider"></li>
 						<li>
-							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ page.id }}">
-								<twig:ux:icon name="heroicons:pencil" />
-								{{ page.name }}
-							</a>
-						</li>
-						{% endfor %}
-                        <li><hr class="dropdown-divider"></li>
-						<li>
-							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="#">
-								<twig:ux:icon name="fluent-mdl2:page-add" />
-								Créer une page 
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalCreatePage">
+								<twig:ux:icon name="fluent-mdl2:page-add"/>
+								Créer une page
 							</a>
 						</li>
 					</ul>
@@ -51,28 +50,28 @@
 					<ul class="dropdown-menu w-100 mt-1 shadow-sm">
 						<li>
 							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_home', { id: id }) }}">
-								<twig:ux:icon name="heroicons:home" />
+								<twig:ux:icon name="heroicons:home"/>
 								Home
 							</a>
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li>
 							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_manager', { id: id }) }}">
-								<twig:ux:icon name="heroicons:folder" />
+								<twig:ux:icon name="heroicons:folder"/>
 								Gestionnaire de fichiers
 							</a>
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li>
 							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_gallery', { id: id }) }}">
-								<twig:ux:icon name="heroicons:photo" />
+								<twig:ux:icon name="heroicons:photo"/>
 								Galerie d'images
 							</a>
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li>
 							<span class="dropdown-item-text text-white">
-								<twig:ux:icon name="iconoir:page" />
+								<twig:ux:icon name="iconoir:page"/>
 								Pages
 							</span>
 						</li>
@@ -80,17 +79,17 @@
 							<li><hr class="dropdown-divider"></li>
 							<li>
 								<a class="dropdown-item d-flex align-items-center gap-2 ps-4 text-white" href="{{ page.id }}">
-									<twig:ux:icon name="heroicons:pencil" />
+									<twig:ux:icon name="heroicons:pencil"/>
 									{{ page.name }}
 								</a>
 							</li>
 						{% endfor %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-							<a class="dropdown-item d-flex align-items-center gap-2 ps-4 text-white" href="#">
-								<twig:ux:icon name="fluent-mdl2:page-add" />
-								Créer une page 
-							</a>
+						<li><hr class="dropdown-divider"></li>
+						<li>
+							<button class="dropdown-item d-flex align-items-center gap-2 ps-4 text-white" type="button" data-bs-toggle="modal" data-bs-target="#modalCreatePage">
+								<twig:ux:icon name="fluent-mdl2:page-add"/>
+								Créer une page
+							</button>
 						</li>
 					</ul>
 				</div>
@@ -98,4 +97,30 @@
 
 		</div>
 	</nav>
+	<div class="modal fade" id="modalCreatePage" tabindex="-1" aria-labelledby="modalCreatePageLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content bg-dark border-secondary text-white">
+				<div class="modal-header border-secondary">
+					<h5 class="modal-title d-flex align-items-center gap-2" id="modalCreatePageLabel">
+						<twig:ux:icon name="fluent-mdl2:page-add"/>
+						Créer une nouvelle page
+					</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form action="{{ path('app_page_create', { id: id }) }}" method="POST">
+					<div class="modal-body">
+						<div class="mb-3">
+							<label for="pageName" class="form-label">Nom de la page</label>
+							<input type="text" class="form-control text-dark border-secondary" id="pageName" name="pageName" placeholder="Ex: Ma nouvelle page" required>
+							<input type="hidden" name="_token" value="{{ csrf_token('page_create') }}"
+						</div>
+					</div>
+					<div class="modal-footer border-secondary">
+						<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-primary">Créer la page</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
