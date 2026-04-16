@@ -49,10 +49,17 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/manager/{id<\d+>}', name: 'manager')]
-    public function manager(Session $session): Response
+    public function manager(int $id, Request $request, SessionRepository $sessionRepository): Response
     {
+        $query = $request->query->get('query', '');
+        $filter = $request->query->get('filter', '');
+
+        $session = $sessionRepository->findSessionWithRelations($id);
+
         return $this->render('session/manager.html.twig', [
-            'session' => $session
+            'session' => $session,
+            'query' => $query,
+            'filter' => $filter,
         ]);
     }
 
