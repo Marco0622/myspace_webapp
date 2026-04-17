@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login Mini-jeu</title>
+        <link
+            rel="shortcut icon"
+            href="/Game-Marco/Icon/Icon-Logo.svg"
+            type="image/x-icon"
+        />
+        <link rel="stylesheet" href="style.css" />
+        <meta
+            name="description"
+            content="Mini-jeu de Marco Schmitt, développeur web junior. Découvrez mon Mini-jeu, Entrer un pseudo pour y accéder!"
+        />
+    </head>
+    <body id="login">
+        <main>
+            <section id="pseudo">
+                <h1>Rentrer votre pseudo</h1>
+                <div class="error" id="error"></div>
+                <input
+                    type="text"
+                    placeholder="Entre votre pseudo"
+                    id="player"
+                    value=""
+                    class="input"
+                />
+                <button class="btnPseudo" id="btnPlayer">Valider</button>
+            </section>
+        </main>
+        <script src="index.js"></script>
+    </body>
+</html>

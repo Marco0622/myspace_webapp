@@ -19,7 +19,7 @@
 				</button>
 			</div>
 
-			<div class="d-flex flex-column flex-sm-row gap-2 w-100 flex-grow-1 justify-content-md-end" style="max-width: 800px;">
+			<div class="d-flex flex-column flex-sm-row gap-2 w-100 flex-grow-1 justify-content-md-end">
 
 
 				<form class="input-group input-group-sm flex-grow-1" id="search-form">
@@ -43,7 +43,7 @@
 				<div class="gallery-item shadow-sm">
 					<img src="{{ asset('assets/uploads/pictures/'~ picture.path)}}" alt="Portrait">
 					<div class="gallery-overlay">
-						<div class="text-wrap">{{ picture.name }}</div>
+						<div class="text-wrap text-white">{{ picture.name }}</div>
 						<div>
 							<a href="{{ asset('assets/uploads/pictures/'~ picture.path) }}" class="btn btn-light btn-sm shadow" download>
 								<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>

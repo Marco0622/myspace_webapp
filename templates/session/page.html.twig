@@ -1,19 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session - {{ session.name }}{% endblock %}
+{% block title %}Session -
+	{{ session.name }}
+{% endblock %}
 
 {% block javascripts %}
-    <script src="https://cdn.tiny.cloud/1/ovzm4shy65ncra9oxee7ht64dadq533lxlx2cl26w3ghhvjm/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    {{ importmap(['app', 'editor']) }}
+	<script src="https://cdn.tiny.cloud/1/ovzm4shy65ncra9oxee7ht64dadq533lxlx2cl26w3ghhvjm/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+	{{ importmap(['app', 'editor']) }}
 {% endblock %}
 
 {% block body %}
-    <div class="py-3">
-        <twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
+	<div class="py-3">
+		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
+	</div>
+    <div class="py-3 d-flex align-items-center">
+        <h1 class="h2 d-block">{{ page.name }}</h1>
+        <button type="button" class="btn btn-outline-danger ms-auto btn-sm py-1" data-bs-toggle="modal" data-bs-target="#deletePageModal">
+           <twig:ux:icon name="formkit:trash" /> Supprimer la page
+        </button>
     </div>
-	<input type="text" class="h2-input" minlength="2" value="{{ page.name }}" id="namePage" maxlength="50">
-    <div class="main-container">
-        <textarea id="my-editor">Commencez à rédiger ici...</textarea>
-    </div>
+	<div class="modal fade" id="deletePageModal" tabindex="-1" aria-labelledby="deletePageModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="deletePageModalLabel">Confirmer la suppression</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					Êtes-vous sûr de vouloir supprimer la page
+					<strong>{{ page.name }}</strong>
+					? Cette action est irréversible.
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<form action="{{ path('app_page_delete', { id: page.id }) }}" method="POST" style="display:inline;">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete_page') }}">
+						<button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="main-container">
+		<textarea id="my-editor">Commencez à rédiger ici...</textarea>
+	</div>
 {% endblock %}
-

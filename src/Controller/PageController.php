@@ -34,16 +34,28 @@ final class PageController extends AbstractController
         $entityManager->persist($objPage);
         $entityManager->flush();
 
+        $this->addFlash('success', 'La page a était créé !');
+
         return $this->redirectToRoute('app_session_page', [
-            'id' => $session->getId(),
+            'id' => $objPage->getId(),
         ]);
     }
 
     #[Route('/delete/{id<\d+>}', name: 'delete')]
-    public function delete(): Response
+    public function delete(Page $page, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('page/index.html.twig', [
-            'controller_name' => 'PageController',
+        if (!$this->isCsrfTokenValid('delete_page', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $session = $page->getSession();
+        $entityManager->remove($page);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La page a était supprimé !');
+
+        return $this->redirectToRoute('app_session_home', [
+            'id' => $session->getId(),
         ]);
     }
 
