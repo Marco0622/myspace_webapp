@@ -16,12 +16,9 @@ class UserChecker implements UserCheckerInterface
         if (!$user instanceof AppUser) {
             return;
         }
-
-        //Est ce que le compte était bannie?
-        if (!empty($user->getBanAt())) {
-            throw new CustomUserMessageAccountStatusException('Ce compte est banni. Pour plus d\'informations, veuillez <a href="/page/contact">nous contacter</a>');
-        }
     }
+
+    
 
     public function checkPostAuth(UserInterface $user, ?TokenInterface $token = null): void
     {
@@ -37,6 +34,11 @@ class UserChecker implements UserCheckerInterface
         //Est ce que le compte a était supprimer?
         if (!empty($user->getDeletedAt())) {
             throw new CustomUserMessageAccountStatusException('Ce compte a été supprimé. Pour plus d\'informations, veuillez <a href="/page/contact">nous contacter</a>');
+        }
+
+         //Est ce que le compte était bannie?
+        if (!empty($user->getBanAt())) {
+            throw new CustomUserMessageAccountStatusException('Ce compte est banni. Pour plus d\'informations, veuillez <a href="/page/contact">nous contacter</a>');
         }
     }
 }

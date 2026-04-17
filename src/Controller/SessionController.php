@@ -31,6 +31,8 @@ final class SessionController extends AbstractController
     {
         $session = $sessionRepository->findSessionWithRelations($id);
 
+        $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
+
         $objOwner = $accessRepository->findOneBy([
             'role' => 'ROLE_OWNER',
             'session' => $session
@@ -47,6 +49,8 @@ final class SessionController extends AbstractController
     {
         $session = $sessionRepository->findSessionWithRelations($page->getSession()->getId());
 
+        $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
+
         return $this->render('session/page.html.twig', [
             'session' => $session,
             'page' => $page,
@@ -62,6 +66,8 @@ final class SessionController extends AbstractController
 
         $session = $sessionRepository->findSessionWithRelations($id);
         $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query, $folder);
+
+        $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
 
         if ($folder > 0) {
             $folder = $nodeRepository->findOneBy(['id' => $folder]);
@@ -83,6 +89,8 @@ final class SessionController extends AbstractController
 
         $session = $sessionRepository->findSessionWithRelations($id);
         $arrPictures = $pictureRepository->findAllPictureForGallery($id, $query);
+
+        $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
 
 
         return $this->render('session/gallery.html.twig', [
@@ -143,9 +151,11 @@ final class SessionController extends AbstractController
     }
 
     #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
-    #[IsGranted('IS_OWNER', subject: 'session', message: "Droit insuffisant Seul le propriétaire de la session peux supprimer la session !")]
     public function delete(Session $session, Request $request, EntityManagerInterface $entityManager): Response
     {
+        
+        $this->denyAccessUnlessGranted('IS_OWNER_SESSION', $session);
+
         if (!$this->isCsrfTokenValid('delete_session', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
