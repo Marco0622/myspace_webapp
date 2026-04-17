@@ -41,7 +41,10 @@
 			</div>
 		</div>
 	</div>
+    <div class="save-indicator" id="save-indicator">
+
+    </div>
 	<div class="main-container">
-		<textarea id="my-editor">Commencez à rédiger ici...</textarea>
+		<textarea id="my-editor" data-id="{{ page.id }}" data-token="{{ csrf_token('save_page') }}">{{ page.content }}</textarea>
 	</div>
 {% endblock %}

@@ -360,3 +360,26 @@ h3 {
     transition: border-color 0.3s;
     width: 100%;
 }
+
+/*indicatio sauvegarde*/
+.save-indicator {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: opacity 0.3s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.save-indicator.success {
+    background: #1a3a1a;
+    color: #6fcf6f;
+    opacity: 1;
+}
+
+.save-indicator.error {
+    background: #3a1a1a;
+    color: #cf6f6f;
+    opacity: 1;
+}

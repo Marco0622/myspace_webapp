@@ -59,12 +59,29 @@ final class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/save/{id<\d+>}', name: 'save')]
-    public function save(): Response
+    #[Route('/save/{id<\d+>}', name: 'save', methods: ['POST'])]
+    public function save(Page $page, Request $request, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('page/index.html.twig', [
-            'controller_name' => 'PageController',
-        ]);
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data) {
+            return $this->json(['error' => 'Payload invalide'], 400);
+        }
+
+        $content = $data['content'] ?? null;
+        $token = $data['_token'] ?? null;
+        if (!$this->isCsrfTokenValid('save_page', $token)) {
+            return $this->json(['error' => 'Token CSRF invalide'], 403);
+        }
+
+        $page->setContent($content);
+        $page->setEditedAt(new DateTimeImmutable('now'));
+        $page->setEditedBy($this->getUser());
+        
+        $entityManager->flush();
+
+
+        return $this->json(['success' => true]);
     }
 
 }

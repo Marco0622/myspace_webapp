@@ -17,19 +17,19 @@ return [
         'entrypoint' => true,
     ],
     'popPup' => [ 
-        'path' => './assets/popPup.js',
+        'path' => './assets/js/popPup.js',
         'entrypoint' => true,
     ],
     'togglePassword' => [ 
-        'path' => './assets/togglePassword.js',
+        'path' => './assets/js/togglePassword.js',
         'entrypoint' => true,
     ],
     'editor' => [ 
-        'path' => './assets/editor.js',
+        'path' => './assets/js/editor.js',
         'entrypoint' => true,
     ],
     'copy' => [ 
-        'path' => './assets/copy.js',
+        'path' => './assets/js/copy.js',
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
