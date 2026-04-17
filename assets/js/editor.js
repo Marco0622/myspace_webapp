@@ -60,7 +60,7 @@ window.addEventListener('turbo:load', function () {
                     });
 
                     sendRequest(content);
-                }, 300);
+                }, 1000);
             });
         },
 
@@ -101,7 +101,7 @@ window.addEventListener('turbo:load', function () {
 
     function sendRequest(content) {
         console.log('save');
-        fetch(`http://localhost:8000/page/save/${id}`, {
+        fetch(`/page/save/${id}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: content

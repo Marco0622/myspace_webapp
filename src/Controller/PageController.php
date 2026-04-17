@@ -18,6 +18,8 @@ final class PageController extends AbstractController
     #[Route('/create/{id<\d+>}', name: 'create')]
     public function create(Session $session, Request $request, EntityManagerInterface $entityManager, PageRepository $pageRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $session);
+
         if (!$this->isCsrfTokenValid('page_create', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
@@ -44,6 +46,8 @@ final class PageController extends AbstractController
     #[Route('/delete/{id<\d+>}', name: 'delete')]
     public function delete(Page $page, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $page->getSession());
+
         if (!$this->isCsrfTokenValid('delete_page', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
@@ -62,6 +66,8 @@ final class PageController extends AbstractController
     #[Route('/save/{id<\d+>}', name: 'save', methods: ['POST'])]
     public function save(Page $page, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $page->getSession());
+
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {

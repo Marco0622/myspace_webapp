@@ -18,6 +18,8 @@ final class PictureController extends AbstractController
     #[Route('/download/{id<\d+>}', name: 'download', methods: ['POST'])]
     public function download(Session $session, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $session);
+
         if (!$this->isCsrfTokenValid('download_picture', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
@@ -62,6 +64,8 @@ final class PictureController extends AbstractController
     #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
     public function delete(Picture $picture, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $picture->getSession());
+
         if (!$this->isCsrfTokenValid('delete_picture', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }

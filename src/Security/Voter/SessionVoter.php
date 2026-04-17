@@ -10,8 +10,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class SessionVoter extends Voter
 {
-    public const MEMBER = 'IS_MEMBER';
-    public const OWNER = 'IS_OWNER';
+    public const EDITOR = 'IS_EDITOR_SESSION';
+    public const OWNER = 'IS_OWNER_SESSION';
+    public const VISITOR = 'IS_VISITOR_SESSION';
 
     public function __construct(
         private SessionManager  $sessionManager,
@@ -21,7 +22,7 @@ final class SessionVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::MEMBER, self::OWNER])
+        return in_array($attribute, [self::EDITOR, self::OWNER, self::VISITOR])
             && $subject instanceof \App\Entity\Session;
     }
 
@@ -42,7 +43,12 @@ final class SessionVoter extends Voter
 
                 break;
 
-            case self::MEMBER:
+            case self::EDITOR:
+
+                 if($this->sessionManager->isEditor($subject, $user) || $this->sessionManager->isOwner($subject, $user)) return true;
+
+                break;
+            case self::VISITOR:
 
                  if($this->sessionManager->isEditor($subject, $user) || $this->sessionManager->isVisitor($subject, $user) || $this->sessionManager->isOwner($subject, $user)) return true;
 

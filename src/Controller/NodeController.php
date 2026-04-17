@@ -24,6 +24,8 @@ final class NodeController extends AbstractController
         EntityManagerInterface $entityManager,
         NodeRepository $nodeRepository
     ): Response {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $session);
+
         if (!$this->isCsrfTokenValid('upload_node', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
@@ -77,6 +79,8 @@ final class NodeController extends AbstractController
     #[Route('/delete-file/{id<\d+>}', name: 'delete_file', methods: ['POST'])]
     public function delete(Node $node, Request $request, FileManager $fileManager, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $node->getSession());
+
         if (!$this->isCsrfTokenValid('delete_node', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
@@ -104,6 +108,8 @@ final class NodeController extends AbstractController
         EntityManagerInterface $entityManager,
         NodeRepository $nodeRepository
     ): Response {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $session);
+
         if (!$this->isCsrfTokenValid('create_folder', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
