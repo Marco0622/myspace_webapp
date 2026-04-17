@@ -12,9 +12,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Gère les opérations liées aux pages d'une session : création, suppression et sauvegarde du contenu.
+ * Accès contrôlé par le droit IS_EDITOR_SESSION sur la session propriétaire.
+ */
 #[Route('/page', name: 'app_page_')]
 final class PageController extends AbstractController
 {
+    /**
+     * Création d'une nouvelle page associée à une session.
+     * 
+     * @param Session $session
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param PageRepository $pageRepository
+     * @return Response
+     */
     #[Route('/create/{id<\d+>}', name: 'create')]
     public function create(Session $session, Request $request, EntityManagerInterface $entityManager, PageRepository $pageRepository): Response
     {
@@ -43,6 +56,14 @@ final class PageController extends AbstractController
         ]);
     }
 
+    /**
+     * Supprime une page spécifique et redirige vers l'accueil de la session.
+     * 
+     * @param Page $page
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/delete/{id<\d+>}', name: 'delete')]
     public function delete(Page $page, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -63,6 +84,14 @@ final class PageController extends AbstractController
         ]);
     }
 
+    /**
+     * Sauvegarde le contenu d'une page via une requête JSON (AJAX).
+     * 
+     * @param Page $page
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/save/{id<\d+>}', name: 'save', methods: ['POST'])]
     public function save(Page $page, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -83,11 +112,10 @@ final class PageController extends AbstractController
         $page->setContent($content);
         $page->setEditedAt(new DateTimeImmutable('now'));
         $page->setEditedBy($this->getUser());
-        
+
         $entityManager->flush();
 
 
         return $this->json(['success' => true]);
     }
-
 }

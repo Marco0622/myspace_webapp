@@ -13,11 +13,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * Gère les droits d'accès et les permissions des utilisateurs au sein des sessions.
+ */
+
 #[Route('/access', name: 'app_access_')]
 final class AccessController extends AbstractController
 {
-
-
+   /**
+    * Ajoute l'utilisateur actuel à une session après qu'une invitation a été acceptée.
+    *
+    * @param Session $session
+    * @param EntityManagerInterface $entityManager
+    * @return Response
+    */
    #[Route('/add/{id<\d+>}', name: 'add', methods: ['GET'])]
    #[IsGranted('IS_RECEIVER', subject: 'session', message: "Vous devez avoir était invité !")]
    public function add(Session $session, EntityManagerInterface $entityManager, AccessRepository $accessRepository): Response
@@ -40,7 +49,16 @@ final class AccessController extends AbstractController
       ]);
    }
 
-
+   /**
+    * Exclut un membre d'une session accéssible uniquement par le propriétaire
+    * de la session il ne peux pas s'auto-exclure.
+    *
+    * @param Session $session
+    * @param EntityManagerInterface $entityManager
+    * @param AccessRepository $accessRepository
+    * @param Request $request
+    * @return Response
+    */
    #[Route('/remove/{id<\d+>}', name: 'remove', methods: ['POST'])]
    #[IsGranted('IS_OWNER', subject: 'session', message: "Droit insuffisant  Seul le propriétaire de la session peux exclure un utilisateur !")]
    public function remove(Session $session, EntityManagerInterface $entityManager, AccessRepository $accessRepository, Request $request): Response
@@ -72,7 +90,15 @@ final class AccessController extends AbstractController
       ]);
    }
 
-
+   /**
+    * Permet de quitter une session à condition de ne pas être propriétaire.
+    *
+    * @param Session $session
+    * @param EntityManagerInterface $entityManager
+    * @param AccessRepository $accessRepository
+    * @param Request $request
+    * @return Response
+    */
    #[Route('/leave/{id<\d+>}', name: 'leave', methods: ['POST'])]
    #[IsGranted('REMOVE_ACCESS', subject: 'session', message: "Vous devez étre menbre de la session et ne pas étre le propriétaire !")]
    public function leave(Session $session, EntityManagerInterface $entityManager, AccessRepository $accessRepository, Request $request): Response
@@ -102,7 +128,15 @@ final class AccessController extends AbstractController
       return $this->redirectToRoute('app_user_home');
    }
 
-
+   /**
+    * Permet de modifier le role d'un menbre d'une session condition d'être propriétaire de la session.
+    *
+    * @param Session $session
+    * @param EntityManagerInterface $entityManager
+    * @param AccessRepository $accessRepository
+    * @param Request $request
+    * @return Response
+    */
    #[Route('/role/{id<\d+>}', name: 'role', methods: ['POST'])]
    #[IsGranted('IS_OWNER', subject: 'session', message: "Droit insuffisant Seul le propriétaire de la session peux exclure un utilisateur !")]
    public function role(Session $session, EntityManagerInterface $entityManager, AccessRepository $accessRepository, Request $request): Response
@@ -126,10 +160,10 @@ final class AccessController extends AbstractController
          ]);
       }
 
-      if($role === 'visitor'){
+      if ($role === 'visitor') {
          $objUserToUpdate->setRole('ROLE_VISITOR');
-      }  
-      if($role === 'editor'){
+      }
+      if ($role === 'editor') {
          $objUserToUpdate->setRole('ROLE_EDITOR');
       }
 
@@ -141,6 +175,5 @@ final class AccessController extends AbstractController
       return $this->redirectToRoute('app_session_home', [
          'id' => $session->getId(),
       ]);
-
    }
 }

@@ -19,13 +19,28 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * Contrôleur principal pour la gestion des sessions : affichage, création, suppression et modération.
+ * L'accès aux méthodes est protégé par des Voters personnalisés (IS_VISITOR_SESSION, IS_OWNER_SESSION).
+ */
 #[Route('/session', name: 'app_session_')]
 final class SessionController extends AbstractController
 {
+    /**
+     * @param LoggerInterface $logger Service de journalisation des erreurs.
+     */
     public function __construct(
         private LoggerInterface $logger
     ) {}
 
+    /**
+     * Page d'accueil d'une session affichant les informations générales et le propriétaire.
+     * 
+     * @param int $id de la session.
+     * @param SessionRepository $sessionRepository
+     * @param AccessRepository $accessRepository
+     * @return Response
+     */
     #[Route('/{id<\d+>}', name: 'home')]
     public function index(int $id, SessionRepository $sessionRepository, AccessRepository $accessRepository): Response
     {
@@ -44,6 +59,13 @@ final class SessionController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche le contenu d'une page spécifique au sein d'une session.
+     * 
+     * @param Page $page
+     * @param SessionRepository $sessionRepository
+     * @return Response
+     */
     #[Route('/page/{id<\d+>}', name: 'page')]
     public function page(Page $page, SessionRepository $sessionRepository): Response
     {
@@ -57,6 +79,15 @@ final class SessionController extends AbstractController
         ]);
     }
 
+    /**
+     * Gestionnaire de fichiers de la session avec filtres et recherche.
+     * 
+     * @param int $id de la session.
+     * @param Request $request
+     * @param SessionRepository $sessionRepository
+     * @param NodeRepository $nodeRepository
+     * @return Response
+     */
     #[Route('/manager/{id<\d+>}', name: 'manager')]
     public function manager(int $id, Request $request, SessionRepository $sessionRepository, NodeRepository $nodeRepository): Response
     {
@@ -82,6 +113,15 @@ final class SessionController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche la galerie photo de la session avec option de recherche.
+     * 
+     * @param int $id de la session.
+     * @param PictureRepository $pictureRepository
+     * @param SessionRepository $sessionRepository
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/gallery/{id<\d+>}', name: 'gallery')]
     public function gallery(int $id, PictureRepository $pictureRepository, SessionRepository $sessionRepository, Request $request): Response
     {
@@ -100,6 +140,13 @@ final class SessionController extends AbstractController
         ]);
     }
 
+    /**
+     * Crée une nouvelle session et définit l'utilisateur actuel comme propriétaire (ROLE_OWNER).
+     * 
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/create', name: 'create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -150,10 +197,18 @@ final class SessionController extends AbstractController
         }
     }
 
+    /**
+     * Supprime définitivement une session après vérification de la confirmation textuelle réserver aux propriétaire de la session.
+     * 
+     * @param Session $session
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
     public function delete(Session $session, Request $request, EntityManagerInterface $entityManager): Response
     {
-        
+
         $this->denyAccessUnlessGranted('IS_OWNER_SESSION', $session);
 
         if (!$this->isCsrfTokenValid('delete_session', $request->request->get('_token'))) {
@@ -176,6 +231,14 @@ final class SessionController extends AbstractController
         return $this->redirectToRoute('app_user_home');
     }
 
+    /**
+     * Alterne l'état de blocage d'une session (Action réservée aux administrateurs).
+     * 
+     * @param Request $request
+     * @param Session $session
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/blocked/{id<\d+>}', name: 'blocked', methods: ['POST'])]
     public function blocked(Request $request, Session $session, EntityManagerInterface $entityManager): Response
@@ -185,7 +248,7 @@ final class SessionController extends AbstractController
         }
 
 
-        if ($session->isBlocked()) {
+        if ($session->getIsBlocked()) {
             $session->setIsBlocked(false);
             $entityManager->flush();
 

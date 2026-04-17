@@ -13,9 +13,23 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Gère les opérations sur les nœuds (fichiers et dossiers) : upload, création et suppression.
+ * L'accès est contrôlé par le droit IS_EDITOR_SESSION sur la session concernée.
+ */
 #[Route('/node', name: 'app_node_')]
 final class NodeController extends AbstractController
-{
+{   
+    /**
+     * Gère l'upload d'un fichier dans une session ou un dossier spécifique.
+     * 
+     * @param Session $session
+     * @param Request $request
+     * @param FileManager $fileManager
+     * @param EntityManagerInterface $entityManager
+     * @param NodeRepository $nodeRepository
+     * @return Response
+     */
     #[Route('/upload/{id<\d+>}', name: 'upload', methods: ['POST'])]
     public function upload(
         Session $session,
@@ -76,6 +90,15 @@ final class NodeController extends AbstractController
         
     }
 
+    /**
+     * Supprime un fichier physiquement et son entrée en base de données, ou un dossier.
+     * 
+     * @param Node $node
+     * @param Request $request
+     * @param FileManager $fileManager
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/delete-file/{id<\d+>}', name: 'delete_file', methods: ['POST'])]
     public function delete(Node $node, Request $request, FileManager $fileManager, EntityManagerInterface $entityManager): Response
     {
@@ -101,6 +124,15 @@ final class NodeController extends AbstractController
         ]);
     }
 
+    /**
+     * Crée un nouveau dossier au sein d'une session ou d'un dossier parent.
+     * 
+     * @param Session $session
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param NodeRepository $nodeRepository
+     * @return Response
+     */
     #[Route('/create/{id<\d+>}', name: 'folder_create', methods: ['POST'])]
     public function createFolder(
         Session $session,

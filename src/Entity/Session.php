@@ -88,7 +88,7 @@ class Session
         return $this;
     }
 
-    public function isBlocked(): ?bool
+    public function getIsBlocked(): ?bool
     {
         return $this->is_blocked;
     }

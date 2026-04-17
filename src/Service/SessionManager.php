@@ -14,6 +14,10 @@ class SessionManager
 
     public function isOwner(object $objSession, object $objConnectUser): bool
     {
+        if($objSession->getIsBlocked()){
+            return false;
+        }
+
         $objUserAccess = $this->accesRepository->findOneBy([
             'session' => $objSession,
             'member' => $objConnectUser,
@@ -28,6 +32,10 @@ class SessionManager
 
     public function isEditor(object $objSession, object $objConnectUser): string
     {
+        if($objSession->getIsBlocked()){
+            return false;
+        }
+
         $objUserAccess = $this->accesRepository->findOneBy([
             'session' => $objSession,
             'member' => $objConnectUser,
@@ -42,6 +50,10 @@ class SessionManager
 
     public function isVisitor(object $objSession, object $objConnectUser): string
     {
+        if($objSession->getIsBlocked()){
+            return false;
+        }
+
         $objUserAccess = $this->accesRepository->findOneBy([
             'session' => $objSession,
             'member' => $objConnectUser,

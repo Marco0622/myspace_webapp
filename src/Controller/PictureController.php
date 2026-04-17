@@ -12,9 +12,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Gère les médias visuels de la galerie : upload (avec option d'optimisation) et suppression.
+ * L'accès est contrôlé par le droit IS_EDITOR_SESSION sur la session propriétaire.
+ */
 #[Route('/picture', name: 'app_picture_')]
 final class PictureController extends AbstractController
 {
+    /**
+     * Gère l'upload d'une image, sa potentielle optimisation et son enregistrement en base de données.
+     * 
+     * @param Session $session
+     * @param Request $request
+     * @param PictureManager $pictureManager
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/download/{id<\d+>}', name: 'download', methods: ['POST'])]
     public function download(Session $session, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager): Response
     {
@@ -31,7 +44,7 @@ final class PictureController extends AbstractController
         $picToAdd = $request->files->get('photo');
         $fileSize = $picToAdd->getSize();
 
-        if(is_null($namePicture) || is_null($picToAdd)){
+        if (is_null($namePicture) || is_null($picToAdd)) {
             $this->addFlash('warning', "Erreur, veuillez réessayer !");
             return $this->redirectToRoute('app_session_gallery', [
                 'id' => $session->getId(),
@@ -40,10 +53,10 @@ final class PictureController extends AbstractController
 
         $filename = $pictureManager->upload($picToAdd);
 
-        if($opti === 'optimization'){
-           $pictureManager->resize($filename, 400, 400, true);
+        if ($opti === 'optimization') {
+            $pictureManager->resize($filename, 400, 400, true);
         }
-        
+
         $objPicture->setAddBy($this->getUser());
         $objPicture->setCreatedAt(new DateTimeImmutable('now'));
         $objPicture->setName($namePicture);
@@ -61,6 +74,15 @@ final class PictureController extends AbstractController
         ]);
     }
 
+    /**
+     * Supprime physiquement le fichier image et retire son enregistrement en base de données.
+     * 
+     * @param Picture $picture
+     * @param Request $request
+     * @param PictureManager $pictureManager
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/delete/{id<\d+>}', name: 'delete', methods: ['POST'])]
     public function delete(Picture $picture, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager): Response
     {

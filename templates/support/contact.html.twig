@@ -17,20 +17,17 @@
                         <label for="fullName" class="form-label text-white small text-uppercase">Nom complet*</label>
                         <input value="{{ fullName }}" type="text" class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="name" name="fullName" placeholder="Jean Dupont"  required>
                     </div>
-
                     <div class="col-md-6">
                         <label for="email" class="form-label text-white small text-uppercase">Email*</label>
                         <input value="{{ userEmail }}" type="email" class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="email" name="email" placeholder="nom@exemple.com" required>
                     </div>
-
                     <div class="col-12">
                         <label for="subject" class="form-label text-white small text-uppercase">Objet*</label>
                         <input value="{{ subject }}" type="text" class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="subject" name="subject" placeholder="Sujet de votre message">
                     </div>
-
                     <div class="col-12">
                         <label for="message" class="form-label text-white small text-uppercase">Message*</label>
-                        <textarea class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="message" name="message" row="4" placeholder="Votre message ici..." required>{{ message }}</textarea>
+                        <textarea class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="message" name="message" rows="9" placeholder="Votre message ici..." required>{{ message }}</textarea>
                     </div>
                     <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('contact_form') }}">
                     <div class="col-12 mt-4">

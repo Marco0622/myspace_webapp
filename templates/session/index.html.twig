@@ -8,7 +8,7 @@
 	<div class="py-2">
 		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
 	</div>
-	<h1 class="h2">{{ session.name }}</h1>
+	<h1 class="h2">SESSION : {{ session.name }}</h1>
 	<div class="row g-4 mt-2">
 
 		<div class="accordion" id="accordionExample">
@@ -140,7 +140,7 @@
 		</div>
 
 		<div class="col-lg-8">
-			{% if app.user == owner %}
+			{% if is_granted('IS_OWNER_SESSION', session) %}
 				<div class="card card-section mb-4 text-white">
 					<div class="card-header border-white">
 						Inviter un participant

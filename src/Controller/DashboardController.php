@@ -11,9 +11,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+
+/**
+ * Gère l'affichage des statistiques et la consultation des données sensibles.
+ * Accès strictement réservé aux utilisateurs possédant le rôle ROLE_ADMIN.
+ */
+
 #[Route('/dashboard', name: 'app_dashboard_')]
 final class DashboardController extends AbstractController
 {
+    /**
+     * Accueil du dashboard.
+     * 
+     * @param StatsService $statsService Class service permettent l'affichage de statistiques.
+     * @return response
+     */
+
     #[Route('/', name: 'home')]
     public function index(StatsService $statsService): Response
     {
@@ -24,30 +37,45 @@ final class DashboardController extends AbstractController
         ]);
     }
 
-
+    /**
+     * Liste des utilisateurs avec recherche et pagination.
+     * 
+     * @param UserRepository 
+     * @param Request $request
+     * @param PaginatorInterface 
+     * @return Response
+     */
     #[Route('/users', name: 'users')]
     public function users(UserRepository $userRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $search = $request->query->get('query', '');
 
-        
+
         $query =  $userRepository->userCreateQueryBuilderPaginator($search);
-        
+
         $pagination = $paginator->paginate(
-            $query, 
+            $query,
             $request->query->getInt('page', 1),
-            $request->query->getInt('perPage', 10) 
+            $request->query->getInt('perPage', 10)
         );
 
 
         return $this->render('dashboard/dashboard_users.html.twig', [
             'pagination' => $pagination,
-            'query' => $search, 
+            'query' => $search,
         ]);
     }
 
+    /**
+     * Liste des sessions avec recherche et pagination.
+     * 
+     * @param Request $request
+     * @param SessionRepository $sessionRepository 
+     * @param PaginatorInterface $paginator 
+     * @return Response
+     */
     #[Route('/sessions', name: 'sessions')]
-    public function sessions(Request $request ,SessionRepository $sessionRepository, PaginatorInterface $paginator): Response
+    public function sessions(Request $request, SessionRepository $sessionRepository, PaginatorInterface $paginator): Response
     {
         $search = $request->query->get('query', '');
 
@@ -55,18 +83,24 @@ final class DashboardController extends AbstractController
 
 
         $pagination = $paginator->paginate(
-            $query, 
+            $query,
             $request->query->getInt('page', 1),
-            $request->query->getInt('perPage', 10) 
+            $request->query->getInt('perPage', 10)
         );
 
 
         return $this->render('dashboard/dashboard_sessions.html.twig', [
             'pagination' => $pagination,
-            'query' => $search, 
+            'query' => $search,
         ]);
     }
 
+    /**
+     * Consultation des signalements des 5 derniers signalement pour l'administration.
+     * 
+     * @param ReportRepository $reportRepository
+     * @return Response
+     */
     #[Route('/reports', name: 'reports')]
     public function reports(ReportRepository $reportRepository): Response
     {

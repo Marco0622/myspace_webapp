@@ -10,8 +10,17 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * Gère les pages d'assistance et les informations légales de l'application.
+ * Inclut les mentions légales, la politique de confidentialité et le formulaire de contact.
+ */
 final class SupportController extends AbstractController
 {
+    /**
+     * Affiche la page des mentions légales.
+     * 
+     * @return Response
+     */
     #[Route('/legal-notice', name: 'app_support_notice')]
     public function notice(): Response
     {
@@ -20,6 +29,11 @@ final class SupportController extends AbstractController
         ]);
     }
 
+    /**
+     * Affiche la page de la politique de confidentialité.
+     * 
+     * @return Response
+     */
     #[Route('/privacy-policy', name: 'app_support_policy')]
     public function policy(): Response
     {
@@ -28,20 +42,27 @@ final class SupportController extends AbstractController
         ]);
     }
 
+    /**
+     * Gère l'affichage et le traitement du formulaire de contact avec envoi d'email.
+     * 
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @return Response
+     */
     #[Route('/contact', name: 'app_support_contact')]
     public function contact(Request $request, MailerInterface $mailer): Response
     {
-        $strFormError = ""; 
+        $strFormError = "";
 
-        $fullName = $request->getPayload()->get('fullName','');
-        $emailUser = $request->getPayload()->get('email','');
-        $subject = $request->getPayload()->get('subject','');
-        $message = $request->getPayload()->get('message','');
+        $fullName = $request->getPayload()->get('fullName', '');
+        $emailUser = $request->getPayload()->get('email', '');
+        $subject = $request->getPayload()->get('subject', '');
+        $message = $request->getPayload()->get('message', '');
 
-        if($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
 
             $submittedToken = $request->getPayload()->get('_csrf_token');
-            
+
             if (!$this->isCsrfTokenValid('contact_form', $submittedToken)) {
                 $strFormError = "Jeton de sécurité invalide.";
             } elseif (empty($fullName) || empty($subject) || empty($message)) {
@@ -53,15 +74,14 @@ final class SupportController extends AbstractController
                 $email = new TemplatedEmail()
                     ->from($emailUser)
                     ->to(new Address('slendsher48@gmail.com'))
-                    ->subject('Contact MySpace - '. $fullName)
+                    ->subject('Contact MySpace - ' . $fullName)
                     ->htmlTemplate('emails/contact.html.twig')
                     ->context([
                         'fullName' => $fullName,
                         'userEmail' => $emailUser,
                         'subject' => $subject,
                         'message' => $message,
-                    ])
-                ;
+                    ]);
                 $mailer->send($email);
                 $this->addFlash('success', "L'email a bien été envoyé !");
 
@@ -71,11 +91,7 @@ final class SupportController extends AbstractController
 
                 return $this->redirectToRoute('app_login');
             }
-
-            
-            
         }
-       
 
         return $this->render('support/contact.html.twig', [
             'strFormError' => $strFormError,

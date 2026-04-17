@@ -39,22 +39,20 @@
 					</span>
 				</div>
 			</div>
-
 			<div class="card-body px-4 py-4">
 				<div class="mb-3 pb-3 border-bottom border-white border-opacity-10">
-					<span class="text-uppercase text-white-50 d-block mb-1" >Sujet</span>
+					<span class="text-uppercase text-white d-block mb-1" >Sujet</span>
 					<p class="text-white fw-semibold mb-0">{{ report.subject }}</p>
 				</div>
 				<div>
-					<span class="text-uppercase text-white-50 d-block mb-1">Message</span>
+					<span class="text-uppercase text-white d-block mb-1">Message</span>
 					<p class="text-white mb-0 lh-base">{{ report.content }}</p>
 				</div>
 			</div>
-
 			<div class="card-footer border-0 px-4 py-4 bg-opacity-25">
 				<form action="{{ path('app_report_responce', { id: report.id }) }}" method="POST">
-					<span class="text-uppercase text-white-50 d-block mb-3" >Votre réponse</span>
-					<textarea class="form-control rounded-3 bg-white bg-opacity-10 text-white border-white border-opacity-25 mb-3" placeholder="Écrivez votre message ici..." rows="4" name="reponce" style="resize: none;"></textarea>
+					<span class="text-uppercase text-white d-block mb-3" >Votre réponse</span>
+					<textarea class="form-control rounded-3 bg-white border-white border-opacity-25 mb-3" placeholder="Écrivez votre message ici..." rows="4" name="reponce" style="resize: none;"></textarea>
 					<input type="hidden" name="crsf_token" value="{{ csrf_token('responce_of_report') }}">
 					<button type="submit" class="btn btn-light btn-sm w-100 rounded-3 fw-semibold py-2">
 						<i class="bi bi-send me-2"></i>Envoyer la réponse
