@@ -16,6 +16,14 @@ class NodeRepository extends ServiceEntityRepository
         parent::__construct($registry, Node::class);
     }
 
+    /**
+     * Cherche les fichiers/dossiers d'une session.
+     * 
+     * @param $id de la session.
+     * @param $filter filter sélectionné par l'utilisateur.
+     * @param $query recherche de l'utilisateur.
+     * @param $parent id du parent.
+     */
     public function findAllNodeForManager(int $id, string $filter = '', string $query = '', int $parent = 0): array
     {
         $queryBuilder = $this->createQueryBuilder('n')

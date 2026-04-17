@@ -16,6 +16,12 @@ class PictureRepository extends ServiceEntityRepository
         parent::__construct($registry, Picture::class);
     }
 
+    /**
+     * Cherche les images de la galerie d'une session.
+     * 
+     * @param $id de la session.
+     * @param $query recherche de l'utilisateur.
+     */
     public function findAllPictureForGallery(int $id, string $query): array
     {
         $queryBuilder = $this->createQueryBuilder('p')

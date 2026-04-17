@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,17 +34,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * Prépare la requête de recherche des utilisateurs pour la pagination du dashboard.
+     * Recherche par nom, prénom ou nom complet, mail, pseudo, en excluant les comptes supprimés.
+     * 
+     * @param $query recherche de l'administrateur.
+     */
     public function userCreateQueryBuilderPaginator(string $query): QueryBuilder
     {
         return $this->createQueryBuilder('u')
             ->where('(LOWER(u.firstname) LIKE LOWER(:q) 
-                        OR LOWER(u.name) LIKE LOWER(:q)
-                        OR LOWER(CONCAT(u.firstname, \' \', u.name)) LIKE LOWER(:q)
-                        OR LOWER(CONCAT(u.name, \' \', u.firstname)) LIKE LOWER(:q)) 
-                        AND u.deleted_at IS NULL')
+                    OR LOWER(u.name) LIKE LOWER(:q)
+                    OR LOWER(u.pseudo) LIKE LOWER(:q)
+                    OR LOWER(u.email) LIKE LOWER(:q)
+                    OR LOWER(CONCAT(u.firstname, \' \', u.name)) LIKE LOWER(:q)
+                    OR LOWER(CONCAT(u.name, \' \', u.firstname)) LIKE LOWER(:q)) 
+                    AND u.deleted_at IS NULL')
             ->setParameter('q', '%' . $query . '%')
             ->orderBy('u.created_at', 'DESC');
-            
-
     }
 }

@@ -16,6 +16,11 @@ class ReportRepository extends ServiceEntityRepository
         parent::__construct($registry, Report::class);
     }
 
+    /**
+     * Cherche les signalements effectués par un utilisateur spécifique.
+     * 
+     * @param $user utilisateur en session.
+     */
     public function findReportOfUser($user){
         return $this->createQueryBuilder('r')
             ->where('r.author = :user')
@@ -25,7 +30,10 @@ class ReportRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
+    /**
+     * Récupère les 5 derniers signalements non traités pour l'administration.
+     * Filtre les auteurs bannis ou supprimés.
+     */
     public function allReportForAdmin(){
         return $this->createQueryBuilder('r')
             ->innerJoin('r.author', 'a')

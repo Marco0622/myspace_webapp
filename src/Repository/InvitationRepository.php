@@ -16,9 +16,15 @@ class InvitationRepository extends ServiceEntityRepository
         parent::__construct($registry, Invitation::class);
     }
 
-    public function findInvitationsForUser($user){
+    /**
+     * Cherche les invitations pour l'utilisateur en session.
+     * 
+     * @param $user utilisateur en session.
+     */
+    public function findInvitationsForUser($user)
+    {
         return $this->createQueryBuilder('i')
-            ->leftJoin('i.sender', 's') 
+            ->leftJoin('i.sender', 's')
             ->addSelect('s')
             ->where('i.receiver = :user AND i.responce IS NULL')
             ->setParameter('user', $user)
