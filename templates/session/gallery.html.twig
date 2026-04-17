@@ -11,13 +11,14 @@
 	<h1 class="h2">Galerie d'image</h1>
 	<div class="container py-3">
 		<div class="gallery-toolbar shadow-sm d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom border-white">
-
-			<div class="w-100 w-md-auto">
-				<button class="btn btn-light btn-sm d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#addImageModal">
-					<twig:ux:icon name="icon-park-outline:add-picture" style="height:20px;width:20px;"/>
-					<span>Ajouter une image</span>
-				</button>
-			</div>
+			{% if is_granted('IS_EDITOR_SESSION', session) %}
+				<div class="w-100 w-md-auto">
+					<button class="btn btn-light btn-sm d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#addImageModal">
+						<twig:ux:icon name="icon-park-outline:add-picture" style="height:20px;width:20px;"/>
+						<span>Ajouter une image</span>
+					</button>
+				</div>
+			{% endif %}
 
 			<div class="d-flex flex-column flex-sm-row gap-2 w-100 flex-grow-1 justify-content-md-end">
 
@@ -44,14 +45,16 @@
 					<img src="{{ asset('assets/uploads/pictures/'~ picture.path)}}" alt="Portrait">
 					<div class="gallery-overlay">
 						<div class="text-wrap text-white">{{ picture.name }}</div>
-						<div>
-							<a href="{{ asset('assets/uploads/pictures/'~ picture.path) }}" class="btn btn-light btn-sm shadow" download>
-								<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
-							</a>
-							<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg{{ picture.id }}">
-								<twig:ux:icon name="iconamoon:trash-thin" style="height:20px;width:20px;"/>
-							</button>
-						</div>
+						{% if is_granted('IS_EDITOR_SESSION', session) %}
+							<div>
+								<a href="{{ asset('assets/uploads/pictures/'~ picture.path) }}" class="btn btn-light btn-sm shadow" download>
+									<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
+								</a>
+								<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg{{ picture.id }}">
+									<twig:ux:icon name="iconamoon:trash-thin" style="height:20px;width:20px;"/>
+								</button>
+							</div>
+						{% endif %}
 					</div>
 				</div>
 				<div class="modal fade" id="deleteImg{{ picture.id }}" tabindex="-1" aria-labelledby="deleteImg" aria-hidden="true">

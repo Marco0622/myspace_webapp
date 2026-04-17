@@ -13,12 +13,15 @@
 	<div class="py-3">
 		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
 	</div>
-    <div class="py-3 d-flex align-items-center">
-        <h1 class="h2 d-block">{{ page.name }}</h1>
-        <button type="button" class="btn btn-outline-danger ms-auto btn-sm py-1" data-bs-toggle="modal" data-bs-target="#deletePageModal">
-           <twig:ux:icon name="formkit:trash" /> Supprimer la page
-        </button>
-    </div>
+	<div class="py-3 d-flex align-items-center">
+		<h1 class="h2 d-block">{{ page.name }}</h1>
+		{% if is_granted('IS_EDITOR_SESSION', session) %}
+			<button type="button" class="btn btn-outline-danger ms-auto btn-sm py-1" data-bs-toggle="modal" data-bs-target="#deletePageModal">
+				<twig:ux:icon name="formkit:trash"/>
+				Supprimer la page
+			</button>
+		{% endif %}
+	</div>
 	<div class="modal fade" id="deletePageModal" tabindex="-1" aria-labelledby="deletePageModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -41,10 +44,8 @@
 			</div>
 		</div>
 	</div>
-    <div class="save-indicator" id="save-indicator">
-
-    </div>
+	<div class="save-indicator" id="save-indicator"></div>
 	<div class="main-container">
-		<textarea id="my-editor" data-id="{{ page.id }}" data-token="{{ csrf_token('save_page') }}">{{ page.content }}</textarea>
+		<textarea id="my-editor" data-id="{{ page.id }}" data-token="{{ csrf_token('save_page') }}" {% if is_granted('IS_EDITOR_SESSION', session) %} data-bool="false" {% else %} data-bool="true" {% endif %}>{{ page.content }}</textarea>
 	</div>
 {% endblock %}

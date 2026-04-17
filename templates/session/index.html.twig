@@ -5,137 +5,140 @@
 {% endblock %}
 
 {% block body %}
-	<div class="py-2"> 
-		<twig:NavSession  id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
+	<div class="py-2">
+		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
 	</div>
 	<h1 class="h2">{{ session.name }}</h1>
 	<div class="row g-4 mt-2">
-		{% if app.user == owner %}
-			<div class="accordion" id="accordionExample">
-				<div class="accordion-item">
-					<h2 class="accordion-header border-bottom border-white" id="headingOne">
-						<button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-							Gestion des utilisateurs
-							<twig:ux:icon name="lucide:users" class="ms-2" style="width:32px;height:32px;"/>
-						</button>
-					</h2>
-					<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-						<div class="accordion-body">
-							{% for access in session.sessionAccesses %}
-								{% if access.member != app.user %}
-									<div class="d-flex align-items-center gap-2 py-2">
-										<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
-											{% if access.member.photo is null %}
-												<img src="https://ui-avatars.com/api/?name={{ access.member.firstname ~" "~ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
-											{% else %}
-												<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-											{% endif %}
-										</div>
 
-										<span class="fw-semibold text-white">{{ access.member.firstname ~" "~ access.member.name }}</span>
-
-										{% if 'ROLE_EDITOR' in access.role %}
-											<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
+		<div class="accordion" id="accordionExample">
+			<div class="accordion-item">
+				<h2 class="accordion-header border-bottom border-white" id="headingOne">
+					<button class="accordion-button collapsed text-white" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						Liste des utilisateurs
+						<twig:ux:icon name="lucide:users" class="ms-2" style="width:32px;height:32px;"/>
+					</button>
+				</h2>
+				<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						{% for access in session.sessionAccesses %}
+							{% if access.member != app.user %}
+								<div class="d-flex align-items-center gap-2 py-2">
+									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+										{% if access.member.photo is null %}
+											<img src="https://ui-avatars.com/api/?name={{ access.member.firstname ~" "~ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
 										{% else %}
-											<span class="badge rounded-pill text-bg-success text-capitalize">Visiteur</span>
+											<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 										{% endif %}
+									</div>
 
+									<span class="fw-semibold text-white">{{ access.member.firstname ~" "~ access.member.name }}</span>
+
+									{% if 'ROLE_EDITOR' in access.role %}
+										<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
+									{% elseif 'ROLE_VISITOR' in access.role %}
+										<span class="badge rounded-pill text-bg-success text-capitalize">Visiteur</span>
+									{% else %}
+										<span class="badge rounded-pill text-bg-danger text-capitalize">Propriétaire</span>
+									{% endif %}
+									{% if is_granted('IS_OWNER_SESSION', session) %}
 										<button class="btn btn-sm btn-outline-warning ms-auto" data-bs-toggle="modal" data-bs-target="#manageModal-{{ access.id }}">
 											Gérer
 											<twig:ux:icon name="mingcute:edit-line" style="width:20px;height:20px;"/>
 										</button>
-									</div>
-
-									<div class="modal fade" id="manageModal-{{ access.id }}" tabindex="-1" aria-labelledby="manageModalLabel-{{ access.id }}" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="manageModalLabel-{{ access.id }}">
-														Gérer
-														{{ access.member.firstname ~" "~ access.member.name }}
-													</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-												</div>
-												<div class="modal-body d-flex flex-column gap-3">
-													<button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#roleModal-{{ access.id }}">
-														<i class="bi bi-shield-fill me-1"></i>
-														Modifier le rôle
-													</button>
-													<button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#excludeModal-{{ access.id }}">
-														<i class="bi bi-person-x-fill me-1"></i>
-														Exclure ce membre
-													</button>
-
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="modal fade" id="roleModal-{{ access.id }}" tabindex="-1" aria-labelledby="roleModalLabel-{{ access.id }}" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title" id="roleModalLabel-{{ access.id }}">
-														Modifier le rôle de
-														{{ access.member.firstname ~" "~ access.member.name }}
-													</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-												</div>
-												<form action="{{ path('app_access_role', { id: session.id }) }}" method="post">
-													<div class="modal-body">
-														<label class="form-label fw-semibold">Rôle</label>
-														<select name="role" class="form-select">
-															<option value="editor" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
-															<option value="visitor" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
-														</select>
-													</div>
-													<input type="hidden" name="_token" value="{{ csrf_token('role_access') }}">
-													<input type="hidden" name="userToUpdate" value="{{ access.member.id }}">
-													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-														<button type="submit" class="btn btn-primary">Enregistrer</button>
-													</div>
-												</form>
-											</div>
-										</div>
-									</div>
-									<div class="modal fade" id="excludeModal-{{ access.id }}" tabindex="-1" aria-labelledby="excludeModalLabel-{{ access.id }}" aria-hidden="true">
-										<div class="modal-dialog modal-dialog-centered">
-											<div class="modal-content">
-												<div class="modal-header">
-													<h5 class="modal-title text-danger" id="excludeModalLabel-{{ access.id }}">
-														Exclure
-														{{ access.member.firstname ~" "~ access.member.name }}
-													</h5>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-												</div>
-												<form action="{{ path('app_access_remove', { id: session.id }) }}" method="post">
-													<div class="modal-body">
-														<p class="mb-0">Êtes-vous sûr de vouloir exclure
-															<strong>{{ access.member.firstname ~" "~ access.member.name }}</strong>
-															? Cette action lui retirera l'accès à la session.
-														</p>
-														<input type="hidden" name="_token" value="{{ csrf_token('remove_access') }}">
-														<input type="hidden" name="userToRemove" value="{{ access.member.id }}">
-													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-														<button type="submit" class="btn btn-danger">Confirmer l'exclusion</button>
-													</div>
-												</form>
-											</div>
-										</div>
-									</div>
-								{% endif %}
-							{% else %}
-								<div class="text-center py-5 text-muted border-secondary">
-									<p class="text-white">Aucun utilisateur.</p>
+									{% endif %}
 								</div>
-							{% endfor %}
-						</div>
+
+								<div class="modal fade" id="manageModal-{{ access.id }}" tabindex="-1" aria-labelledby="manageModalLabel-{{ access.id }}" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="manageModalLabel-{{ access.id }}">
+													Gérer
+													{{ access.member.firstname ~" "~ access.member.name }}
+												</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+											</div>
+											<div class="modal-body d-flex flex-column gap-3">
+												<button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#roleModal-{{ access.id }}">
+													<i class="bi bi-shield-fill me-1"></i>
+													Modifier le rôle
+												</button>
+												<button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#excludeModal-{{ access.id }}">
+													<i class="bi bi-person-x-fill me-1"></i>
+													Exclure ce membre
+												</button>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal fade" id="roleModal-{{ access.id }}" tabindex="-1" aria-labelledby="roleModalLabel-{{ access.id }}" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="roleModalLabel-{{ access.id }}">
+													Modifier le rôle de
+													{{ access.member.firstname ~" "~ access.member.name }}
+												</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+											</div>
+											<form action="{{ path('app_access_role', { id: session.id }) }}" method="post">
+												<div class="modal-body">
+													<label class="form-label fw-semibold">Rôle</label>
+													<select name="role" class="form-select">
+														<option value="editor" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
+														<option value="visitor" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
+													</select>
+												</div>
+												<input type="hidden" name="_token" value="{{ csrf_token('role_access') }}">
+												<input type="hidden" name="userToUpdate" value="{{ access.member.id }}">
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+													<button type="submit" class="btn btn-primary">Enregistrer</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<div class="modal fade" id="excludeModal-{{ access.id }}" tabindex="-1" aria-labelledby="excludeModalLabel-{{ access.id }}" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title text-danger" id="excludeModalLabel-{{ access.id }}">
+													Exclure
+													{{ access.member.firstname ~" "~ access.member.name }}
+												</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+											</div>
+											<form action="{{ path('app_access_remove', { id: session.id }) }}" method="post">
+												<div class="modal-body">
+													<p class="mb-0">Êtes-vous sûr de vouloir exclure
+														<strong>{{ access.member.firstname ~" "~ access.member.name }}</strong>
+														? Cette action lui retirera l'accès à la session.
+													</p>
+													<input type="hidden" name="_token" value="{{ csrf_token('remove_access') }}">
+													<input type="hidden" name="userToRemove" value="{{ access.member.id }}">
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+													<button type="submit" class="btn btn-danger">Confirmer l'exclusion</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% else %}
+							<div class="text-center py-5 text-muted border-secondary">
+								<p class="text-white">Aucun utilisateur.</p>
+							</div>
+						{% endfor %}
 					</div>
 				</div>
 			</div>
-		{% endif %}
+		</div>
+
 		<div class="col-lg-8">
 			{% if app.user == owner %}
 				<div class="card card-section mb-4 text-white">
@@ -297,34 +300,7 @@
 					<twig:ux:icon name="fluent-mdl2:group" class="text-white me-3" style="width:32px;height:32px;"/>
 				</div>
 				<div class="card-body">
-					{% if app.user !== owner %}
-						<button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#leaveSession">
-							<twig:ux:icon name="fluent-mdl2:leave" style="height:20px;width:20px;"/>
-							Quitter la Session
-						</button>
-						<div class="modal fade" id="leaveSession" tabindex="-1" aria-labelledby="leaveSessionLabel" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="leaveSessionLabel">Quitter la session</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-									</div>
-									<div class="modal-body">
-										<p class="mb-0">Êtes-vous sûr de vouloir quitter cette session ? Vous perdrez votre accès.</p>
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-										<form action="{{ path('app_access_leave', { id: session.id })}}" method="post" class="d-inline">
-											<input type="hidden" name="inv_token" value="{{ csrf_token('leave_session') }}">
-											<button type="submit" class="btn btn-warning d-flex align-items-center gap-1">
-												Quitter
-											</button>
-										</form>
-									</div>
-								</div>
-							</div>
-						</div>
-					{% else %}
+					{% if is_granted('IS_OWNER_SESSION', session) %}
 						<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteSession">
 							Supprimer la Session
 						</button>
@@ -352,6 +328,33 @@
 											<button type="submit" class="btn btn-danger">Supprimer définitivement</button>
 										</div>
 									</form>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<button type="button" class="btn btn-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#leaveSession">
+							<twig:ux:icon name="fluent-mdl2:leave" style="height:20px;width:20px;"/>
+							Quitter la Session
+						</button>
+						<div class="modal fade" id="leaveSession" tabindex="-1" aria-labelledby="leaveSessionLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="leaveSessionLabel">Quitter la session</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+									</div>
+									<div class="modal-body">
+										<p class="mb-0">Êtes-vous sûr de vouloir quitter cette session ? Vous perdrez votre accès.</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+										<form action="{{ path('app_access_leave', { id: session.id })}}" method="post" class="d-inline">
+											<input type="hidden" name="inv_token" value="{{ csrf_token('leave_session') }}">
+											<button type="submit" class="btn btn-warning d-flex align-items-center gap-1">
+												Quitter
+											</button>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>

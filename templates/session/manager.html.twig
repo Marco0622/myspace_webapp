@@ -19,17 +19,19 @@
 							<twig:ux:icon name="bi:arrow-left" style="height:18px;width:18px;"/>
 						</a>
 					{% endif %}
-					<div class="d-flex gap-2 w-100 w-md-auto justify-content-start">
-						<button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
-							<twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
-							<span class="d-sm-inline">Nouveau dossier</span>
-						</button>
+					{% if is_granted('IS_EDITOR_SESSION', session) %}
+						<div class="d-flex gap-2 w-100 w-md-auto justify-content-start">
+							<button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
+								<twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
+								<span class="d-sm-inline">Nouveau dossier</span>
+							</button>
 
-						<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
-							<twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
-							<span class="d-sm-inline">Ajouter un fichier</span>
-						</button>
-					</div>
+							<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
+								<twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
+								<span class="d-sm-inline">Ajouter un fichier</span>
+							</button>
+						</div>
+					{% endif %}
 
 					<div class="input-group input-group-sm w-100 w-sm-auto" style="min-width: 150px;">
 						<span class="input-group-text bg-dark border-secondary text-white">
@@ -48,11 +50,11 @@
 						<button type="submit" class="input-group-text bg-dark border-secondary text-white">
 							{{ ux_icon('lucide:search') }}
 						</button>
-						<input type="hidden" name="folder" value="{{ folder.id ?? 0  }}">
+						<input type="hidden" name="folder" value="{{ folder.id ?? 0 }}">
 
 						<input value="{{ query }}" type="text" name="query" class="form-control bg-dark border-secondary text-white placeholder-white" placeholder="Rechercher une image..." aria-label="Recherche">
 						{% if query %}
-							<a href="{{ path('app_session_manager', { id: session.id, folder: folder.id ?? 0  }) }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
+							<a href="{{ path('app_session_manager', { id: session.id, folder: folder.id ?? 0 }) }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
 								{{ ux_icon('lucide:x') }}
 							</a>
 						{% endif %}
@@ -89,12 +91,14 @@
 
 								<div class="col-4 col-md-3 text-end">
 									<div class="d-flex justify-content-end gap-2">
-										<a href="{{ asset('assets/uploads/files/'~ node.path) }}" class="btn btn-sm btn-soft-light text-white" title="Télécharger" download>
-											<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
-										</a>
-										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
-											<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
-										</button>
+										{% if is_granted('IS_EDITOR_SESSION', session) %}
+											<a href="{{ asset('assets/uploads/files/'~ node.path) }}" class="btn btn-sm btn-soft-light text-white" title="Télécharger" download>
+												<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
+											</a>
+											<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
+												<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
+											</button>
+										{% endif %}
 										<div class="modal fade" id="deleteModal{{ node.id }}" tabindex="-1" aria-hidden="true">
 											<div class="modal-dialog modal-dialog-centered modal-sm">
 												<div class="modal-content border-secondary text-dark">
@@ -192,7 +196,7 @@
 						<label class="form-label">Nom du dossier</label>
 						<input type="text" name="name" class="form-control" placeholder="Ex: Projets 2026">
 						<input type="hidden" name="_token" value="{{ csrf_token('create_folder') }}">
-						<input type="hidden" name="parent_id" value="{{ folder.id ?? 0  }}">
+						<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 					</div>
 				</div>
 				<div class="modal-footer border-top border-secondary">
@@ -218,7 +222,7 @@
 						<div class="pb-3">
 							<input type="file" name="file" class="form-control mt-3">
 							<input type="hidden" value="{{ csrf_token('upload_node') }}" name="_token">
-							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0  }}">
+							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 						</div>
 						<div>
 							<label class="form-label">Nom de l'image</label>

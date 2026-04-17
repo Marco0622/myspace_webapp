@@ -4,6 +4,7 @@ window.addEventListener('turbo:load', function () {
     const editor = document.getElementById('my-editor');
     const id = editor.dataset.id;
     const token = editor.dataset.token;
+    const readonly = editor.dataset.bool;
     let lastContent = '';
     let timer = null;
 
@@ -19,8 +20,9 @@ window.addEventListener('turbo:load', function () {
         menubar: false,
         statusbar: false,
         promotion: false,
-        //readonly: true, pour le visiteur
-
+        
+        readonly: readonly === 'true',
+           
         plugins: 'lists checklist table link',
 
         toolbar: 'undo redo | fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright | checklist bullist numlist | table | link',
