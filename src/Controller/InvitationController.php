@@ -122,6 +122,8 @@ final class InvitationController extends AbstractController
                 ]);
             }
 
+            
+
             $objInvitation = new Invitation();
 
             $objInvitation->setSession($session);

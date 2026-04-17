@@ -21,7 +21,10 @@ class ReportFormType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Message',
-                'attr' => ['placeholder' => 'Votre Message...']
+                'attr' => [
+                    'placeholder' => 'Votre Message...',
+                    'rows' => 10
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',

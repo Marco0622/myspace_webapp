@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Acceuil - MySpace
+{% block title %}Acceuil - {{ parent() }}
 {% endblock %}
 
 {% block body %}
@@ -17,7 +17,7 @@
 		<h3 class="fw-medium mb-0">
 			Invitations reçues
 		</h3>
-		<a href="{{ path('app_user_home') }}" class="btn btn-light d-flex align-items-center gap-2">
+		<a href="{{ path('app_user_home') }}" class="btn btn-light btn-sm d-flex align-items-center gap-2">
 			{{ ux_icon('zondicons:reload') }}
 			Actualiser
 		</a>
@@ -138,7 +138,7 @@
 		<h3 class="fw-medium mb-0">
 			Vos sessions
 		</h3>
-		<button type="button" class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
+		<button type="button" class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
 			{{ ux_icon('fa7-solid:plus') }}
 			Créer une session
 		</button>
@@ -336,9 +336,6 @@
 						<div class="mb-3">
 							<label for="sessionName" class="form-label">Nom de la session</label>
 							<input type="text" class="form-control" id="sessionName" name="name" placeholder="Ex: Session 2025..." required autofocus>
-							<small class="text-danger">
-								Le nom de la session est obligatoire au minimum 2 caractères !
-							</small>
 						</div>
 						<div class="mb-3">
 							<label for="sessionStorage" class="form-label">Niveau de stockage</label>
@@ -346,7 +343,7 @@
 								<option value="" disabled selected>-- Choisir un niveau --</option>
 								{% for storage in arrStorage %}
 									<option value="{{ storage.id }}">{{ storage.size }}
-										MB</option>
+										GO</option>
 								{% endfor %}
 							</select>
 						</div>
