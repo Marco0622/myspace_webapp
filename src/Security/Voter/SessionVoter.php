@@ -37,17 +37,19 @@ final class SessionVoter extends Voter
         }
 
         switch ($attribute) {
+            // Est-ce que l'utilisateur connecté a le rôle ROLE_OWNER pour la session en question.
             case self::OWNER:
                
                 return $this->sessionManager->isOwner($subject, $user);
 
                 break;
-
+             // Est-ce que l'utilisateur connecté a le rôle ROLE_OWNER ou ROLE_EDITOR pour la session en question.
             case self::EDITOR:
 
                  if($this->sessionManager->isEditor($subject, $user) || $this->sessionManager->isOwner($subject, $user)) return true;
 
                 break;
+            // Est-ce que l'utilisateur connecté a le rôle ROLE_OWNER, ROLE_VISITOR ou ROLE_EDITOR pour la session en question.
             case self::VISITOR:
 
                  if($this->sessionManager->isEditor($subject, $user) || $this->sessionManager->isVisitor($subject, $user) || $this->sessionManager->isOwner($subject, $user)) return true;

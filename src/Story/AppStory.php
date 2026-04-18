@@ -17,20 +17,24 @@ final class AppStory extends Story
 {
     public function build(): void
     {
-
+        //Créer 9 niveaux de stockage
         StorageFactory::createMany(9);
 
+        //Créer 30 sessions
         SessionFactory::createMany(30);
 
+        //Créer 60 signalements
         ReportFactory::createMany(60);
         
+        //Créer un compte utilisateur
         UserFactory::createOne([
             'email'     => 'user@gmail.com',
             'roles'     => [],
             'name'  => 'Doe',
             'firstname' => 'John'
         ]);
-
+        
+        //Créer un compte administrateur
         UserFactory::createOne([
             'email'     => 'admin@gmail.com',
             'roles'     => ["ROLE_ADMIN"],
@@ -39,6 +43,7 @@ final class AppStory extends Story
         ]);
         $now = new DateTimeImmutable('now');
         
+        //Création d'accès avec différents grades
         $arrAccess = [
             
             ['joined_at' => $now, 'member' => UserFactory::find(['id' => 1]),  'role' => 'ROLE_OWNER',   'session' => SessionFactory::find(['id' => 1])],
@@ -56,6 +61,7 @@ final class AppStory extends Story
 
         AccessFactory::createSequence($arrAccess);
 
+        //Création de 10 invitations
         $arrInv = [
             ['send_at' => $now, 'sender_id' => UserFactory::find(['id' => 1]), 'receiver_id' => UserFactory::find(['id' => 20]), 'responce' => null, 'session' => SessionFactory::find(['id' => 1])],
             ['send_at' => $now, 'sender_id' => UserFactory::find(['id' => 2]), 'receiver_id' => UserFactory::find(['id' => 21]), 'responce' => null, 'session' => SessionFactory::find(['id' => 2])],

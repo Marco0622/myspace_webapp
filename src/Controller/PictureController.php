@@ -51,6 +51,16 @@ final class PictureController extends AbstractController
             ]);
         }
 
+        $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
+        $extension = strtolower($picToAdd->getClientOriginalExtension());
+
+        if (!in_array($extension, $allowedExtensions)) {
+            $this->addFlash('warning', "Format invalide. Seuls les formats PNG, JPG et WEBP sont acceptés.");
+            return $this->redirectToRoute('app_session_gallery', [
+                'id' => $session->getId(),
+            ]);
+        }
+
         $filename = $pictureManager->upload($picToAdd);
 
         if ($opti === 'optimization') {

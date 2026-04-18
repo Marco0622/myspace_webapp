@@ -10,8 +10,14 @@ use App\Repository\ReportRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 
+/**
+ * Service utilisé principalement pour l'affichage des statistiques dans le dashboard.
+ */
 class StatsService
 {
+    /**
+     * Injection des différents repositories pour le calcul des statistiques.
+     */
     public function __construct(
         private UserRepository          $userRepository,
         private SessionRepository       $sessionRepository,
@@ -23,6 +29,11 @@ class StatsService
        
     ) {}
 
+    /**
+     * Récupère le décompte total de chaque entité majeure.
+     * 
+     * @return array tableau associatif contenant les statistiques globales.
+     */
     public function getDashboardStats(): array
     {
         return [

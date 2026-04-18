@@ -58,7 +58,7 @@ final class NodeController extends AbstractController
 
         $type = $fileToAdd->getMimeType();
         $size = $fileToAdd->getSize();
-        $extension = $fileToAdd->guessExtension();
+        $extension = $fileToAdd->getClientOriginalExtension();
         $filename = $fileManager->upload($fileToAdd);
         $nodeName .= '.' . $extension;
 

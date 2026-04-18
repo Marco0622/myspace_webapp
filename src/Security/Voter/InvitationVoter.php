@@ -36,6 +36,7 @@ final class InvitationVoter extends Voter
 
         
         switch ($attribute) {
+            //Vérifie si l'utilisateur connecter est bien le receveur de l'invitation.
             case self::RESPONSE:
                 
                 if($user == $subject->getReceiver()){
@@ -43,7 +44,7 @@ final class InvitationVoter extends Voter
                 } 
                 return false;
                 break;
-
+            //Vérifie si l'utilisateur connecter a le droit d'envoyer une ivitation pour une session défini.
             case self::SEND:
 
                 foreach ($subject->getSessionAccesses() as $access) {
@@ -55,7 +56,7 @@ final class InvitationVoter extends Voter
                
                 return false;
                 break;
-
+            //Vérifie si l'utilisateur connecter a le droit d'annuler l'invitation.
             case self::CANCEL:
 
                 $session = $subject->getSession();

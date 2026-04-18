@@ -35,6 +35,7 @@ final class UserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            // Vérification des infos privées d'un profil. Est-ce que c'est son profil ou un administrateur qui modifie un utilisateur ?
             case self::EDIT_DELETE_VIEW:
                 
                 $isOwner = ($user === $targetUser);
@@ -51,7 +52,7 @@ final class UserVoter extends Voter
                 }
                 return false;
                 break;
-
+            // Vérifie que seul un administrateur puisse bannir un utilisateur et l'empêcher de s'auto-bannir.
             case self::BAN:
 
                 $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());

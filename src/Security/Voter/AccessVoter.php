@@ -38,22 +38,25 @@ final class AccessVoter extends Voter
         }
 
         switch ($attribute) {
+            // Est-ce que l'utilisateur connecté a le rôle ROLE_OWNER pour la session en question.
             case self::OWNER:
                
                 return $this->sessionManager->isOwner($subject, $user);
 
                 break;
-
+            // Est-ce que l'utilisateur connecté a un accès à cette session.
             case self::MEMBER:
 
                 if($this->sessionManager->isEditor($subject, $user) || $this->sessionManager->isVisitor($subject, $user) || $this->sessionManager->isOwner($subject, $user)) return true;
 
                 break;
+            // Est-ce que l'utilisateur connecté est le recever de l'invitation.
             case self::RECEIVER:
 
                 return $this->sessionManager->isReceiver($subject, $user);
 
                 break;
+            // Est-ce que l'utilisateur connecté peux quitter la session.
             case self::LEAVE:
 
                 if($this->sessionManager->isEditor($subject, $user) || $this->sessionManager->isVisitor($subject, $user)) return true;

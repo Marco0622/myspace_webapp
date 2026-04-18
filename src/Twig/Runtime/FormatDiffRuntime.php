@@ -7,7 +7,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 class FormatDiffRuntime implements RuntimeExtensionInterface
 {
     
-
+    /**
+     * Filtre twig permet d'avoir l'écart entre la date actuelle et une date ultérieure.
+     * 
+     * @param \DateTimeInterface $date date à comparer avec la date actuelle.
+     */
     public function dateDiff(\DateTimeInterface $date): string
     {
         $now = new \DateTime();

@@ -5,12 +5,23 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class PictureManager
-{
+{   
+    /**
+     * Injection des différents repositories.
+     */
      public function __construct(
         private string $userPhotosDirectory  
     ) {}
 
-    public function resize($img, $intX = 400, $intY = 400, $keepRatio = false)
+    /**
+     * Redimension d'un image
+     * 
+     * @param string $img Nom de l'image.
+     * @param int $intX largeur de l'image.
+     * @param int $intY Hauter de l'image.
+     * @param bool $keepRatio Permet de garde le ratio si true.
+     */
+    public function resize(string $img, int $intX = 400, int $intY = 400, bool $keepRatio = false)
     {
         $filename = $this->userPhotosDirectory . '/' .$img;
 
@@ -66,6 +77,12 @@ class PictureManager
         imagedestroy($image);
     }
 
+    /**
+     * Téléchargement d'une image.
+     * 
+     * @param UploadedFile $file fichier à télécharger.
+     * @param string $oldFilename Nom du fichier a supprimer.
+     */
     public function upload(UploadedFile $file, ?string $oldFilename = null): string
     {
 
@@ -78,6 +95,11 @@ class PictureManager
         return $newFilename;
     }
 
+    /**
+     * Suppression d'une image
+     * 
+     * @param string $filename nom de l'image a supprimer
+     */
     public function delete(?string $filename): void
     {
         if (!$filename) return;
