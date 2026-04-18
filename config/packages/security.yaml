@@ -18,6 +18,10 @@ security:
             security: false
             
         main:
+            # anti brute force 5 tentative toutes les 15 minutes
+            login_throttling:
+                max_attempts: 3          
+                interval: 15 minutes 
             lazy: true
             provider: app_user_provider
             user_checker: App\Security\UserChecker
