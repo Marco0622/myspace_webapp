@@ -41,7 +41,7 @@
 						<div class="text-wrap text-white fw-bold">{{ picture.name }}</div>
 						{% if is_granted('IS_EDITOR_SESSION', session) %}
 							<div>
-								<a href="{{ asset('assets/uploads/pictures/'~ picture.path) }}" class="btn btn-light btn-sm shadow" download>
+								<a href="{{ path('app_picture_download_file', { id: picture.id }) }}" class="btn btn-light btn-sm shadow" >
 									<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
 								</a>
 								<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg{{ picture.id }}">

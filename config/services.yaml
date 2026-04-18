@@ -22,6 +22,9 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Controller\PictureController:
+        arguments:
+            $userPhotosDirectory: '%photos_directory_user%'
     App\Service\PictureManager:
         arguments:
             $userPhotosDirectory: '%photos_directory_user%'

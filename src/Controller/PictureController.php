@@ -19,6 +19,9 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/picture', name: 'app_picture_')]
 final class PictureController extends AbstractController
 {
+    public function __construct(
+        private string $userPhotosDirectory  
+    ) {}
     /**
      * Gère l'upload d'une image, sa potentielle optimisation et son enregistrement en base de données.
      * 
@@ -52,10 +55,13 @@ final class PictureController extends AbstractController
         }
 
         $allowedExtensions = ['png', 'jpg', 'jpeg', 'webp'];
-        $extension = strtolower($picToAdd->getClientOriginalExtension());
+        $allowedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
 
-        if (!in_array($extension, $allowedExtensions)) {
-            $this->addFlash('warning', "Format invalide. Seuls les formats PNG, JPG et WEBP sont acceptés.");
+        $extension = strtolower($picToAdd->getClientOriginalExtension());
+        $mimeType = $picToAdd->getMimeType();
+
+        if (!in_array($extension, $allowedExtensions) || !in_array($mimeType, $allowedMimeTypes)) {
+            $this->addFlash('warning', "Format invalide. Seuls les formats PNG, JPG, JPEG et WEBP sont acceptés.");
             return $this->redirectToRoute('app_session_gallery', [
                 'id' => $session->getId(),
             ]);
@@ -114,5 +120,25 @@ final class PictureController extends AbstractController
         return $this->redirectToRoute('app_session_gallery', [
             'id' => $sessionId->getId(),
         ]);
+    }
+    /**
+     * Méthode permettant un téléchargement propre de l'image par rapport aux noms stockés en BDD.
+     * 
+     * @param Picture $picture image à télécharger
+     */
+    #[Route('/download-file/{id<\d+>}', name: 'download_file', methods: ['GET'])]
+    public function downloadFile(Picture $picture): Response
+    {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $picture->getSession());
+        $filePath = $this->userPhotosDirectory . '/' . $picture->getPath();
+
+        if (!file_exists($filePath)) {
+            $this->addFlash('warning', 'Image introuvable.');
+            return $this->redirectToRoute('app_session_gallery', [
+                'id' => $picture->getSession()->getId(),
+            ]);
+        }
+
+        return $this->file($filePath, $picture->getName() . '.' . pathinfo($picture->getPath(), PATHINFO_EXTENSION));
     }
 }
