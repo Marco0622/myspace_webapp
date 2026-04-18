@@ -1,2 +1,0 @@
-Réorganiser le code JS Game
-Méthode calcul accurate

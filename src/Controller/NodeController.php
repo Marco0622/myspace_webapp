@@ -9,6 +9,7 @@ use App\Service\FileManager;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 #[Route('/node', name: 'app_node_')]
 final class NodeController extends AbstractController
-{   
+{
     /**
      * Gère l'upload d'un fichier dans une session ou un dossier spécifique.
      * 
@@ -44,10 +45,10 @@ final class NodeController extends AbstractController
             throw $this->createAccessDeniedException('Token CSRF invalide.');
         }
 
-        $nodeName  = $request->request->get('name');
         $fileToAdd = $request->files->get('file');
         $parentId   = $request->request->get('parent_id');
         $objNodeParent = $nodeRepository->find($parentId) ?? null;
+        $nodeName = pathinfo($fileToAdd->getClientOriginalName(), PATHINFO_FILENAME);
 
         if (is_null($nodeName) || is_null($fileToAdd)) {
             $this->addFlash('warning', 'Erreur, veuillez réessayer !');
@@ -56,18 +57,16 @@ final class NodeController extends AbstractController
             ]);
         }
 
-        $type = $fileToAdd->getMimeType();
         $size = $fileToAdd->getSize();
         $extension = $fileToAdd->getClientOriginalExtension();
         $filename = $fileManager->upload($fileToAdd);
-        $nodeName .= '.' . $extension;
 
 
         $node = new Node();
         $node->setName($nodeName);
         $node->setPath($filename);
         $node->setSize($size);
-        $node->setType($type);
+        $node->setType($extension);
         $node->setSession($session);
         $node->setAddAt(new DateTimeImmutable('now'));
         $node->setAddBy($this->getUser());
@@ -87,7 +86,6 @@ final class NodeController extends AbstractController
                 'folder' => $objNodeParent->getId() ?? 0,
             ]);
         }
-        
     }
 
     /**
@@ -182,5 +180,78 @@ final class NodeController extends AbstractController
                 'folder' => $objNodeParent->getId() ?? 0,
             ]);
         }
+    }
+
+    /**
+     * Méthode permettant renommer du champ name de la table pictures
+     * 
+     * @param Picture $picture fichier à télécharger
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     */
+    #[Route('/rename/{id<\d+>}', name: 'rename', methods: ['POST'])]
+    public function rename(Node $node, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $node->getSession());
+
+        if (!$this->isCsrfTokenValid('rename_node', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $newName = trim($request->request->get('name', ''));
+
+        if ($newName === '') {
+            $this->addFlash('warning', 'Le nom ne peut pas être vide.');
+            return $this->redirectToRoute('app_session_manager', [
+                'id' => $node->getSession()->getId()
+            ]);
+        }
+
+        $node->setName($newName);
+        $entityManager->flush();
+
+        $this->addFlash('success', "Le fichier a été renommée avec succès !");
+
+        return $this->redirectToRoute('app_session_manager', [
+            'id' => $node->getSession()->getId()
+        ]);
+    }
+
+    /**
+     * Méthode permettant le téléchargement de maniére sécuriser
+     * 
+     * @param Picture $picture fichier à télécharger
+     */
+    #[Route('/download/{id<\d+>}', name: 'download', methods: ['GET'])]
+    public function download(Node $node): Response
+    {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $node->getSession());
+
+        if ($node->getType() === 'folder') {
+            $this->addFlash('warning', "Les dossier ne sont pas téléchargable !");
+            return $this->redirectToRoute('app_session_manager', [
+                'id' => $node->getSession()->getId()
+            ]);
+        }
+
+        $filepath = $this->getParameter('files_session_directory') . '/' . $node->getPath();
+
+        if (!file_exists($filepath)) {
+            $this->addFlash('warning', "Fichier introuvable.");
+            return $this->redirectToRoute('app_session_manager', [
+                'id' => $node->getSession()->getId()
+            ]);
+        }
+
+        $filename = $node->getName() . '.' . $node->getType();
+        // Nom du fichier / code 200 requête réussie
+        return new BinaryFileResponse($filepath, 200, [ 
+            // donne un mimeType que le navigateur ne peux pas éxecuter
+            'Content-Type'           => 'application/octet-stream',
+            // Oblige le navigateur a le télécharger
+            'Content-Disposition'    => 'attachment; filename="' . $filename, 
+            //bloque le navigateur pour ne pas qu'il devine le mimiType
+            'X-Content-Type-Options' => 'nosniff', 
+        ]);
     }
 }

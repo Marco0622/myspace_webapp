@@ -41,11 +41,14 @@
 						<div class="text-wrap text-white fw-bold">{{ picture.name }}</div>
 						{% if is_granted('IS_EDITOR_SESSION', session) %}
 							<div>
-								<a href="{{ path('app_picture_download_file', { id: picture.id }) }}" class="btn btn-light btn-sm shadow" >
+								<a href="{{ path('app_picture_download_file', { id: picture.id }) }}" class="btn btn-light btn-sm shadow">
 									<twig:ux:icon name="material-symbols:download" style="height:20px;width:20px; "/>
 								</a>
 								<button class="btn btn-danger btn-sm shadow" data-bs-toggle="modal" data-bs-target="#deleteImg{{ picture.id }}">
 									<twig:ux:icon name="iconamoon:trash-thin" style="height:20px;width:20px;"/>
+								</button>
+								<button class="btn btn-light btn-sm shadow text-dark" data-bs-toggle="modal" data-bs-target="#editImg{{ picture.id }}" title="Renommer">
+									<twig:ux:icon name="material-symbols:edit-outline" style="height:20px;width:20px;"/>
 								</button>
 							</div>
 						{% endif %}
@@ -76,6 +79,33 @@
 						</div>
 					</div>
 				</div>
+				<div class="modal fade" id="editImg{{ picture.id }}" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content border-0 shadow">
+							<form action="{{ path('app_picture_rename', { id: picture.id }) }}" method="post">
+								<div class="modal-header">
+									<h5 class="modal-title fw-bold">Modifier le nom</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="mb-3">
+										<label for="name{{ picture.id }}" class="form-label small fw-bold">Nom de l'image</label>
+										<input type="text" name="name" id="name{{ picture.id }}" class="form-control" value="{{ picture.name }}" required>
+									</div>
+									<input type="hidden" name="_token" value="{{ csrf_token('rename_picture') }}">
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+									<button type="submit" class="btn btn-success text-white">Enregistrer</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<div class="py-5 text-center">
+					<p class="h5 text-white-50 ">Aucun élément trouver !</p>
+				</div>
 			{% endfor %}
 		</div>
 		<div class="modal fade" id="addImageModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
@@ -90,10 +120,6 @@
 							<div class="mb-3">
 								<label class="form-label small fw-bold">Sélectionner le fichier</label>
 								<input type="file" name="photo" class="form-control">
-							</div>
-							<div class="mb-3">
-								<label class="form-label small fw-bold">Nom de l'image</label>
-								<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
 							</div>
 							<div class="form-check form-switch">
 								<input class="form-check-input" type="checkbox" value="optimization" id="checkOpti" name="checkOpti" switch>

@@ -225,6 +225,7 @@ h3 {
     overflow: hidden;
     break-inside: avoid;
     -webkit-column-break-inside: avoid;
+    cursor: pointer;
 }
 
 .gallery-item img {

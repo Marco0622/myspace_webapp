@@ -22,6 +22,7 @@ final class PictureController extends AbstractController
     public function __construct(
         private string $userPhotosDirectory  
     ) {}
+
     /**
      * Gère l'upload d'une image, sa potentielle optimisation et son enregistrement en base de données.
      * 
@@ -43,8 +44,8 @@ final class PictureController extends AbstractController
         $objPicture = new Picture();
 
         $opti = $request->request->get('checkOpti');
-        $namePicture = $request->request->get('name');
         $picToAdd = $request->files->get('photo');
+        $namePicture = pathinfo($picToAdd->getClientOriginalName(), PATHINFO_FILENAME);
         $fileSize = $picToAdd->getSize();
 
         if (is_null($namePicture) || is_null($picToAdd)) {
@@ -121,6 +122,7 @@ final class PictureController extends AbstractController
             'id' => $sessionId->getId(),
         ]);
     }
+
     /**
      * Méthode permettant un téléchargement propre de l'image par rapport aux noms stockés en BDD.
      * 
@@ -140,5 +142,40 @@ final class PictureController extends AbstractController
         }
 
         return $this->file($filePath, $picture->getName() . '.' . pathinfo($picture->getPath(), PATHINFO_EXTENSION));
+    }
+
+    /**
+     * Méthode permettant renommer du champ name de la table pictures
+     * 
+     * @param Picture $picture image à télécharger
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     */
+    #[Route('/rename/{id<\d+>}', name: 'rename', methods: ['POST'])]
+    public function rename(Picture $picture, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $picture->getSession());
+
+        if (!$this->isCsrfTokenValid('rename_picture', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $newName = trim($request->request->get('name', ''));
+
+        if ($newName === '') {
+            $this->addFlash('warning', 'Le nom ne peut pas être vide.');
+            return $this->redirectToRoute('app_session_gallery', [
+                'id' => $picture->getSession()->getId()
+            ]);
+        }
+
+        $picture->setName($newName);
+        $entityManager->flush();
+
+        $this->addFlash('success', "L'image a été renommée avec succès !");
+
+        return $this->redirectToRoute('app_session_gallery', [
+            'id' => $picture->getSession()->getId()
+        ]);
     }
 }

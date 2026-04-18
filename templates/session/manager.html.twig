@@ -65,14 +65,26 @@
 					{% if node.type != 'folder' %}
 						<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
 							<div class="row align-items-center g-0 px-3">
-
 								<div class="col-8 col-md-5 d-flex align-items-center">
+									{% if node.type == 'js' %}
+										{% set icon_name = 'ph:file-js' %}
+									{% elseif node.type == 'php' %}
+										{% set icon_name = 'vscode-icons:file-type-php' %}
+									{% elseif node.type == 'html' %}
+										{% set icon_name = 'streamline-ultimate:file-html' %}
+									{% elseif node.type == 'css' %}
+										{% set icon_name = 'hugeicons:css-file-02' %}
+									{% elseif node.type == 'pdf' %}
+										{% set icon_name = 'fa6-regular:file-pdf' %}
+									{% else %}
+										{% set icon_name = 'subway:file-13' %}
+									{% endif %}
 									<div class="avatar-sm me-3 flex-shrink-0">
-										<twig:ux:icon name="subway:file-13" class="text-white" style="height:28px;width:28px;"/>
+										<twig:ux:icon name="{{ icon_name }}" class="text-white" style="height:28px;width:28px;"/>
 									</div>
 									<div class="flex-grow-1 overflow-hidden">
 										<h6 class="font-size-14 mb-0 text-truncate text-white">
-											{{ node.name }}
+											{{ node.name ~'.'~ node.type }}
 										</h6>
 										<small class="text-white d-md-none">{{ (node.size / 1024 / 1024)|number_format(3) }}
 											MB •
@@ -92,9 +104,12 @@
 								<div class="col-4 col-md-3 text-end">
 									<div class="d-flex justify-content-end gap-2">
 										{% if is_granted('IS_EDITOR_SESSION', session) %}
-											<a href="{{ asset('assets/uploads/files/'~ node.path) }}" class="btn btn-sm btn-soft-light text-white" title="Télécharger" download>
+											<a href="{{ path('app_node_download', { id: node.id }) }}" class="btn btn-sm btn-soft-light text-white" title="Télécharger" download>
 												<twig:ux:icon name="bi:cloud-download" style="height:18px;width:18px;"/>
 											</a>
+											<button type="button" class="btn btn-sm btn-soft-info text-info" data-bs-toggle="modal" data-bs-target="#renameModal{{ node.id }}" title="Renommer">
+												<twig:ux:icon name="bi:pencil" style="height:18px;width:18px;"/>
+											</button>
 											<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
 												<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
 											</button>
@@ -114,6 +129,29 @@
 													</form>
 												</div>
 											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal fade" id="renameModal{{ node.id }}" tabindex="-1" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content border-secondary text-dark">
+											<form class="modal-body p-4" action="{{ path('app_node_rename', { id: node.id }) }}" method="post">
+												<div class="text-center mb-4">
+													<h3 class="text-dark">Renommer l'élément</h3>
+												</div>
+
+												<div class="mb-3">
+													<label for="newName{{ node.id }}" class="form-label">Nouveau nom</label>
+													<input type="text" name="name" id="newName{{ node.id }}" class="form-control" value="{{ node.name }}" required>
+												</div>
+
+												<input type="hidden" name="_token" value="{{ csrf_token('rename_node') }}">
+
+												<div class="d-flex gap-2 justify-content-center mt-4">
+													<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+													<button type="submit" class="btn btn-success text-white">Enregistrer</button>
+												</div>
+											</form>
 										</div>
 									</div>
 								</div>
@@ -150,6 +188,9 @@
 
 								<div class="col-4 col-md-3 text-end">
 									<div class="d-flex justify-content-end gap-2">
+										<button type="button" class="btn btn-sm btn-soft-info text-info" data-bs-toggle="modal" data-bs-target="#renameModal{{ node.id }}" title="Renommer">
+											<twig:ux:icon name="bi:pencil" style="height:18px;width:18px;"/>
+										</button>
 										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
 											<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
 										</button>
@@ -164,6 +205,29 @@
 														<div class="d-flex gap-2 justify-content-center mt-4">
 															<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
 															<button type="submit" class="btn btn-danger">Confirmer</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+										<div class="modal fade" id="renameModal{{ node.id }}" tabindex="-1" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered">
+												<div class="modal-content border-secondary text-dark">
+													<form class="modal-body p-4" action="{{ path('app_node_rename', { id: node.id }) }}" method="post">
+														<div class="text-center text-dark mb-4">
+															<h3 class="text-dark">Renommer l'élément</h3>
+														</div>
+
+														<div class="mb-3">
+															<label for="newName{{ node.id }}" class="form-label">Nouveau nom</label>
+															<input type="text" name="name" id="newName{{ node.id }}" class="form-control" value="{{ node.name }}" required>
+														</div>
+
+														<input type="hidden" name="_token" value="{{ csrf_token('rename_node') }}">
+
+														<div class="d-flex gap-2 justify-content-center mt-4">
+															<button type="button" class="btn btn-light" data-bs-dismiss="modal">Annuler</button>
+															<button type="submit" class="btn btn-success text-white">Enregistrer</button>
 														</div>
 													</form>
 												</div>
@@ -224,10 +288,10 @@
 							<input type="hidden" value="{{ csrf_token('upload_node') }}" name="_token">
 							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 						</div>
-						<div>
+						{# <div>
 							<label class="form-label">Nom de l'image</label>
 							<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
-						</div>
+						</div> #}
 					</div>
 				</div>
 				<div class="modal-footer border-top border-secondary">
