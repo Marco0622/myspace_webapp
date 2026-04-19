@@ -65,7 +65,11 @@
 					<ol class="breadcrumb text-white">
 
 						<li class="breadcrumb-item text-white">
-							<a class="text-white" href="{{ path('app_session_manager', {id: session.id}) }}">Vos Fichiers</a>
+							{% if breadcrumb|length > 0 %}
+								<a class="text-white" href="{{ path('app_session_manager', {id: session.id}) }}">Vos Fichiers</a>
+							{% else %}
+								<span class="text-white">Vos Fichiers</span>
+							{% endif %}
 						</li>
 
 						{% for node in breadcrumb %}
@@ -329,9 +333,9 @@
 							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 						</div>
 						{# <div>
-																									<label class="form-label">Nom de l'image</label>
-																									<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
-																								</div> #}
+																															<label class="form-label">Nom de l'image</label>
+																															<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
+																														</div> #}
 					</div>
 				</div>
 				<div class="modal-footer border-top border-secondary">

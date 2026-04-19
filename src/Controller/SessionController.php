@@ -10,6 +10,7 @@ use App\Repository\NodeRepository;
 use App\Repository\PictureRepository;
 use App\Repository\SessionRepository;
 use App\Repository\StorageRepository;
+use App\Service\BreadcrumbService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -89,21 +90,24 @@ final class SessionController extends AbstractController
      * @return Response
      */
     #[Route('/manager/{id<\d+>}', name: 'manager')]
-    public function manager(int $id, Request $request, SessionRepository $sessionRepository, NodeRepository $nodeRepository): Response
-    {
+    public function manager(int $id, Request $request, SessionRepository $sessionRepository, NodeRepository $nodeRepository, BreadcrumbService $breadcrumbService): Response
+    {   
+        $breadcrumb = '';
         $query = $request->query->get('query', '');
         $filter = $request->query->get('filter', '');
         $folder = $request->query->get('folder', 0);
 
         $session = $sessionRepository->findSessionWithRelations($id);
         $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query, $folder);
-        $breadcrumb = $nodeRepository->getBreadcrumb($folder);
-
-        $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
 
         if ($folder > 0) {
             $folder = $nodeRepository->findOneBy(['id' => $folder]);
+            $breadcrumb = $breadcrumbService->buildBreadcrumb($folder);
         }
+
+        
+
+        $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
 
         return $this->render('session/manager.html.twig', [
             'session' => $session,

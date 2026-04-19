@@ -64,19 +64,4 @@ class NodeRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function getBreadcrumb(int $nodeId): array
-    {
-        $breadcrumb = [];
-        $currentNode = $this->find($nodeId);
-
-        while ($currentNode !== null) {
-            // On ajoute le nœud au début du tableau pour avoir l'ordre Racine -> Enfant
-            array_unshift($breadcrumb, $currentNode);
-
-            // On passe au parent pour la prochaine itération
-            $currentNode = $currentNode->getParent();
-        }
-
-        return $breadcrumb;
-    }
 }
