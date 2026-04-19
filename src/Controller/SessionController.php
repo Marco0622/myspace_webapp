@@ -93,7 +93,7 @@ final class SessionController extends AbstractController
     public function manager(int $id, Request $request, SessionRepository $sessionRepository, NodeRepository $nodeRepository, BreadcrumbService $breadcrumbService): Response
     {
         $breadcrumb = '';
-        $query = $request->query->get('query', '');
+        $query = trim($request->query->get('query', ''));
         $filter = $request->query->get('filter', '');
         $folder = $request->query->get('folder', 0);
 
@@ -131,7 +131,7 @@ final class SessionController extends AbstractController
     #[Route('/gallery/{id<\d+>}', name: 'gallery')]
     public function gallery(int $id, PictureRepository $pictureRepository, SessionRepository $sessionRepository, Request $request): Response
     {
-        $query = $request->query->get('query', '');
+        $query = trim($request->query->get('query', ''));
 
         $session = $sessionRepository->findSessionWithRelations($id);
         $arrPictures = $pictureRepository->findAllPictureForGallery($id, $query);

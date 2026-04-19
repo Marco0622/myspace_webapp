@@ -75,7 +75,7 @@
 										{% endif %}
 									</div>
 
-									<a href="{{ path('app_dashboard_users', {query: access.member.firstname ~" "~ access.member.name}) }}" class="btn btn-sm btn-outline-light flex-shrink-0">
+									<a href="{{ path('app_dashboard_users', {query: access.member.email }) }}" class="btn btn-sm btn-outline-light flex-shrink-0">
 										<twig:ux:icon name='pepicons-pencil:loop' style="width:24px;height:24px;"/>
 										Trouver
 									</a>

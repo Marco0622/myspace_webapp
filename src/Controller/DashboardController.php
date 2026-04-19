@@ -48,7 +48,7 @@ final class DashboardController extends AbstractController
     #[Route('/users', name: 'users')]
     public function users(UserRepository $userRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $search = $request->query->get('query', '');
+        $search = trim($request->query->get('query', ''));
 
 
         $query =  $userRepository->userCreateQueryBuilderPaginator($search);
@@ -77,7 +77,7 @@ final class DashboardController extends AbstractController
     #[Route('/sessions', name: 'sessions')]
     public function sessions(Request $request, SessionRepository $sessionRepository, PaginatorInterface $paginator): Response
     {
-        $search = $request->query->get('query', '');
+        $search = trim($request->query->get('query', ''));
 
         $query = $sessionRepository->sessionQuerybuilderForPaginator($search);
 

@@ -49,9 +49,18 @@ class SessionRepository extends ServiceEntityRepository
             ->addSelect('all_accesses')
             ->leftJoin('all_accesses.member', 'members')
             ->addSelect('members')
-            ->where('LOWER(s.name) LIKE LOWER(:q)')
+            ->where(
+                '(LOWER(members.firstname) LIKE LOWER(:q) 
+        OR LOWER(members.name) LIKE LOWER(:q)
+        OR LOWER(members.pseudo) LIKE LOWER(:q)
+        OR LOWER(members.email) LIKE LOWER(:q)
+        OR LOWER(CONCAT(members.firstname, \' \', members.name)) LIKE LOWER(:q)
+        OR LOWER(CONCAT(members.name, \' \', members.firstname)) LIKE LOWER(:q)
+        OR LOWER(s.name) LIKE LOWER(:q))
+        AND members.deleted_at IS NULL'
+            )
             ->setParameter('q', '%' . $query . '%')
-            ->orderBy('s.created_at', 'DESC');      
+            ->orderBy('s.created_at', 'DESC');
     }
 
     /**
