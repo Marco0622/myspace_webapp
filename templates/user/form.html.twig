@@ -103,12 +103,13 @@
 				</small>
 				{% if user is defined and user is not null %}
 					{% if app.user.id == user.id %}
-						<a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
+						<a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100 mb-3" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
 					{% endif %}
 				{% endif %}
+				{{ form_row(userForm.submit) }}
 			</div>
 		</div>
-		{{ form_row(userForm.submit) }}
+		
 		{{ form_end(userForm) }}
 
 <div class="modal fade" id="deletePhotoModal" tabindex="-1" aria-labelledby="deletePhotoModalLabel" aria-hidden="true">
