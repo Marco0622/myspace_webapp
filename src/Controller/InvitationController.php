@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Invitation;
 use App\Entity\Session;
 use App\Entity\User;
+use App\Service\InvitationManagerService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -117,7 +118,8 @@ final class InvitationController extends AbstractController
         Session $session,
         EntityManagerInterface $entityManager,
         Request $request,
-        MailerInterface $mailer
+        MailerInterface $mailer,
+        InvitationManagerService $invitationManager
     ): Response {
         if (!$this->isCsrfTokenValid('create_invitation', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
@@ -141,6 +143,14 @@ final class InvitationController extends AbstractController
             $this->addFlash('warning', "Erreur, Aucun utilisateur trouvé !");
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),
+            ]);
+        }
+
+        $reason = $invitationManager->verifySessionAndInvitation($objUser, $session);
+        if ($reason !== null) {
+            $this->addFlash('warning', $reason);
+            return $this->redirectToRoute('app_session_home', [
+                'id' => $session->getId()
             ]);
         }
 
