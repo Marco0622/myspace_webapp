@@ -5,10 +5,10 @@
 {% endblock %}
 
 {% block body %}
-	<div>
+	<div class="py-3">
 		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
 	</div>
-	<div class="row mt-4">
+	<div class="row">
 		<div class="col-12">
 			<div class="list-group list-group-flush ">
 				<h1 class="h3 mb-0 text-white">Gestionnaire de fichiers</h1>
@@ -61,11 +61,31 @@
 					</form>
 
 				</div>
+				<nav class="pt-3">
+					<ol class="breadcrumb text-white">
+
+						<li class="breadcrumb-item text-white">
+							<a class="text-white" href="{{ path('app_session_manager', {id: session.id}) }}">Vos Fichiers</a>
+						</li>
+
+						{% for node in breadcrumb %}
+							<li class="breadcrumb-item text-white">
+								{% if not loop.last %}
+									<a class="text-white" href="{{ path('app_session_manager', {id: session.id, folder: node.id}) }}">
+										{{ node.name }}
+									</a>
+								{% else %}
+									{{ folder.name }}
+								{% endif %}
+							</li>
+						{% endfor %}
+					</ol>
+				</nav>
 				{% for node in arrNodes %}
 					{% if node.type != 'folder' %}
 						<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
 							<div class="row align-items-center g-0 px-3">
-								<div class="col-8 col-md-5 d-flex align-items-center">
+								<div class="col-8 col-md-4 d-flex align-items-center">
 									{% if node.type == 'js' %}
 										{% set icon_name = 'ph:file-js' %}
 									{% elseif node.type == 'php' %}
@@ -101,7 +121,17 @@
 									<span class="text-white small">{{ node.addAt|format_datetime('long', 'none', locale='fr') }}</span>
 								</div>
 
-								<div class="col-4 col-md-3 text-end">
+								<div class="col-md-2 d-none d-lg-block text-center">
+									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+										{% if node.addBy.photo is null %}
+											<img src="https://ui-avatars.com/api/?name={{ node.addBy.firstname ~" "~ node.addBy.name }}&background=random" alt="Profil" class="w-100 h-100">
+										{% else %}
+											<img src="{{ asset('assets/uploads/pictures/' ~ node.addBy.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+										{% endif %}
+									</div>
+								</div>
+
+								<div class="col-4 col-md-2 text-end">
 									<div class="d-flex justify-content-end gap-2">
 										{% if is_granted('IS_EDITOR_SESSION', session) %}
 											<a href="{{ path('app_node_download', { id: node.id }) }}" class="btn btn-sm btn-soft-light text-white" title="Télécharger" download>
@@ -162,7 +192,7 @@
 						<div class="list-group-item list-group-item-action bg-transparent border-bottom border-secondary py-3 px-0">
 							<div class="row align-items-center g-0 px-3">
 
-								<div class="col-8 col-md-5 d-flex align-items-center">
+								<div class="col-8 col-md-4 d-flex align-items-center">
 									<div class="avatar-sm me-3 flex-shrink-0">
 										<twig:ux:icon name="guidance:folder" class="text-white" style="height:28px;width:28px;"/>
 									</div>
@@ -186,7 +216,17 @@
 									<span class="text-white small">{{ node.addAt|format_datetime('long', 'none', locale='fr') }}</span>
 								</div>
 
-								<div class="col-4 col-md-3 text-end">
+								<div class="col-md-2 d-none d-lg-block text-center">
+									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+										{% if node.addBy.photo is null %}
+											<img src="https://ui-avatars.com/api/?name={{ node.addBy.firstname ~" "~ node.addBy.name }}&background=random" alt="Profil" class="w-100 h-100">
+										{% else %}
+											<img src="{{ asset('assets/uploads/pictures/' ~ node.addBy.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+										{% endif %}
+									</div>
+								</div>
+
+								<div class="col-4 col-md-2 text-end">
 									<div class="d-flex justify-content-end gap-2">
 										<button type="button" class="btn btn-sm btn-soft-info text-info" data-bs-toggle="modal" data-bs-target="#renameModal{{ node.id }}" title="Renommer">
 											<twig:ux:icon name="bi:pencil" style="height:18px;width:18px;"/>
@@ -289,9 +329,9 @@
 							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 						</div>
 						{# <div>
-							<label class="form-label">Nom de l'image</label>
-							<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
-						</div> #}
+																									<label class="form-label">Nom de l'image</label>
+																									<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
+																								</div> #}
 					</div>
 				</div>
 				<div class="modal-footer border-top border-secondary">

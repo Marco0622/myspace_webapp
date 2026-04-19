@@ -36,10 +36,10 @@ class NodeRepository extends ServiceEntityRepository
                 ->setParameter('q', '%' . $query . '%');
         }
 
-        if($parent > 0){
+        if ($parent > 0) {
             $queryBuilder->andWhere('n.parent = :parent')
                 ->setParameter('parent', $parent);
-        } else{
+        } else {
             $queryBuilder->andWhere('n.parent IS NULL');
         }
 
@@ -62,5 +62,21 @@ class NodeRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function getBreadcrumb(int $nodeId): array
+    {
+        $breadcrumb = [];
+        $currentNode = $this->find($nodeId);
+
+        while ($currentNode !== null) {
+            // On ajoute le nœud au début du tableau pour avoir l'ordre Racine -> Enfant
+            array_unshift($breadcrumb, $currentNode);
+
+            // On passe au parent pour la prochaine itération
+            $currentNode = $currentNode->getParent();
+        }
+
+        return $breadcrumb;
     }
 }

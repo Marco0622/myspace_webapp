@@ -191,6 +191,11 @@ h3 {
     z-index: 1050 !important;
 }
 
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+    color: var(--white1); 
+}
+
 
 .masonry-grid {
     column-count: 1;
@@ -384,3 +389,4 @@ h3 {
     color: #cf6f6f;
     opacity: 1;
 }
+

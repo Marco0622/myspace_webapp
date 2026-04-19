@@ -97,6 +97,7 @@ final class SessionController extends AbstractController
 
         $session = $sessionRepository->findSessionWithRelations($id);
         $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query, $folder);
+        $breadcrumb = $nodeRepository->getBreadcrumb($folder);
 
         $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
 
@@ -110,6 +111,7 @@ final class SessionController extends AbstractController
             'query' => $query,
             'filter' => $filter,
             'folder' => $folder,
+            'breadcrumb' => $breadcrumb,
         ]);
     }
 
