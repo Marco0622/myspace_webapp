@@ -8,7 +8,8 @@
 	<div class="py-3">
 		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
 	</div>
-	<h1 class="h2">SESSION : {{ session.name }}</h1>
+	<h1 class="h2">SESSION :
+		{{ session.name }}</h1>
 	<div class="row g-4 mt-2">
 
 		<div class="accordion" id="accordionExample">
@@ -272,28 +273,28 @@
 				</div>
 			</div>
 			{# <div class="card card-section text-white  mb-4">
-				<div class="card-header border-white">
-					Stockage de la session
-					<twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
-				</div>
-				<div class="card-body">
-
-					<div class="d-flex justify-content-between align-items-end mb-2">
-						<div>
-							<div class="storage-pct">62%</div>
-							<div class="storage-label">utilisé</div>
-						</div>
-						<div class="text-end">
-							<div class="fw-semibold small">635 Mo</div>
-							<div class="storage-label">/ 1.0 Go</div>
-						</div>
-					</div>
-
-					<div class="progress storage-bar mb-3" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
-						<div class="progress-bar bg-warning" style="width: 62%"></div>
-					</div>
-				</div>
-			</div> #}
+													<div class="card-header border-white">
+														Stockage de la session
+														<twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
+													</div>
+													<div class="card-body">
+									
+														<div class="d-flex justify-content-between align-items-end mb-2">
+															<div>
+																<div class="storage-pct">62%</div>
+																<div class="storage-label">utilisé</div>
+															</div>
+															<div class="text-end">
+																<div class="fw-semibold small">635 Mo</div>
+																<div class="storage-label">/ 1.0 Go</div>
+															</div>
+														</div>
+									
+														<div class="progress storage-bar mb-3" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
+															<div class="progress-bar bg-warning" style="width: 62%"></div>
+														</div>
+													</div>
+												</div> #}
 			<div class="card card-section text-white">
 				<div class="card-header border-white">
 					Session
@@ -301,8 +302,11 @@
 				</div>
 				<div class="card-body">
 					{% if is_granted('IS_OWNER_SESSION', session) %}
-						<button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteSession">
+						<button type="button" class="btn btn-danger btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#deleteSession">
 							Supprimer la Session
+						</button>
+						<button type="button" class="btn btn-warning btn-sm w-100" data-bs-toggle="modal" data-bs-target="#renameSession">
+							Renommer la Session
 						</button>
 
 						<div class="modal fade" id="deleteSession" tabindex="-1" aria-labelledby="deleteSessionLabel" aria-hidden="true">
@@ -326,6 +330,30 @@
 										<div class="modal-footer">
 											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 											<button type="submit" class="btn btn-danger">Supprimer définitivement</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div class="modal fade" id="renameSession" tabindex="-1" aria-labelledby="renameSessionLabel" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="renameSessionLabel">Renommer la session</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+									</div>
+									<form action="{{ path('app_session_rename', { id: session.id })}}" method="post">
+										<div class="modal-body d-flex flex-column gap-3">
+											<p class="mb-0">Saisissez un nouveau nom pour cette session.</p>
+											<div>
+												<label class="form-label fw-semibold">Nouveau nom</label>
+												<input type="hidden" name="_token" value="{{ csrf_token('rename_session') }}">
+												<input type="text" class="form-control" name="name" placeholder="{{ session.name }}" autocomplete="off" required minlength="2">
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+											<button type="submit" class="btn btn-warning">Renommer</button>
 										</div>
 									</form>
 								</div>

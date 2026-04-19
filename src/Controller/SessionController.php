@@ -91,7 +91,7 @@ final class SessionController extends AbstractController
      */
     #[Route('/manager/{id<\d+>}', name: 'manager')]
     public function manager(int $id, Request $request, SessionRepository $sessionRepository, NodeRepository $nodeRepository, BreadcrumbService $breadcrumbService): Response
-    {   
+    {
         $breadcrumb = '';
         $query = $request->query->get('query', '');
         $filter = $request->query->get('filter', '');
@@ -105,7 +105,7 @@ final class SessionController extends AbstractController
             $breadcrumb = $breadcrumbService->buildBreadcrumb($folder);
         }
 
-        
+
 
         $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
 
@@ -162,7 +162,7 @@ final class SessionController extends AbstractController
 
         try {
             $name = $request->request->get('name');
-            
+
             $objStorage = $storageRepository->findOneBy(['id' => 1]);
 
             if (empty($name) || strlen($name) < 2) {
@@ -267,5 +267,40 @@ final class SessionController extends AbstractController
         }
 
         return $this->redirectToRoute('app_dashboard_sessions');
+    }
+
+    /**
+     * Renomme une session existante (réservé au propriétaire de la session).
+     * 
+     * @param Session $session
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route('/rename/{id<\d+>}', name: 'rename', methods: ['POST'])]
+    public function rename(Session $session, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('IS_OWNER_SESSION', $session);
+
+        if (!$this->isCsrfTokenValid('rename_session', $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+
+        $name = $request->request->get('name');
+
+        if (empty($name) || strlen($name) < 2) {
+            $this->addFlash('warning', "Le nom de la session est obligatoire (2 caractères min) !");
+            return $this->redirectToRoute('app_session_home', [
+                'id' => $session->getId(),
+            ]);
+        }
+
+        $session->setName($name);
+        $entityManager->flush();
+
+        $this->addFlash('success', "La session a été renommée !");
+        return $this->redirectToRoute('app_session_home', [
+            'id' => $session->getId(),
+        ]);
     }
 }
