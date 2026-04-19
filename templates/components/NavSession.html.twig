@@ -28,6 +28,10 @@
 									{{ page.name }}
 								</a>
 							</li>
+						{% else %}
+							<li>
+								<span class="text-white ps-3">Aucune Page</span>
+							</li>
 						{% endfor %}
 						<li><hr class="dropdown-divider"></li>
 						<li>
@@ -86,10 +90,10 @@
 						{% endfor %}
 						<li><hr class="dropdown-divider"></li>
 						<li>
-							<button class="dropdown-item d-flex align-items-center gap-2 ps-4 text-white" type="button" data-bs-toggle="modal" data-bs-target="#modalCreatePage">
+							<a class="dropdown-item text-white" type="button" data-bs-toggle="modal" data-bs-target="#modalCreatePage">
 								<twig:ux:icon name="fluent-mdl2:page-add"/>
 								Créer une page
-							</button>
+							</a>
 						</li>
 					</ul>
 				</div>

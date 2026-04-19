@@ -5,11 +5,11 @@ namespace App\Controller;
 use App\Entity\Access;
 use App\Entity\Page;
 use App\Entity\Session;
-use App\Entity\Storage;
 use App\Repository\AccessRepository;
 use App\Repository\NodeRepository;
 use App\Repository\PictureRepository;
 use App\Repository\SessionRepository;
+use App\Repository\StorageRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -148,7 +148,7 @@ final class SessionController extends AbstractController
      * @return Response
      */
     #[Route('/create', name: 'create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, StorageRepository $storageRepository): Response
     {
         if (!$this->isCsrfTokenValid('session_create', $request->request->get('_token'))) {
             throw $this->createAccessDeniedException('Token CSRF invalide.');
@@ -156,8 +156,8 @@ final class SessionController extends AbstractController
 
         try {
             $name = $request->request->get('name');
-            $storageId = $request->request->get('storage_id');
-            $objStorage = $entityManager->getRepository(Storage::class)->find($storageId);
+            
+            $objStorage = $storageRepository->findOneBy(['id' => 1]);
 
             if (empty($name) || strlen($name) < 2) {
                 $this->addFlash('warning', "Le nom de la session est obligatoire (2 caractères min) !");
