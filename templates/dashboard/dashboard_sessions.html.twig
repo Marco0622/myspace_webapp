@@ -82,25 +82,6 @@
 								</div>
 							{% endfor %}
 						</div> 
-						{# <div class="mx-3 mt-2 border-bottom border-white text-white">
-							<h5><twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
-								Stockage
-							</h5>
-						</div>
-						<div class="px-3 py-3">
-							<div class="d-flex justify-content-between mb-1">
-								<span class="text-secondary" style="font-size:12px;">187 Ko utilisés</span>
-								<span class="text-secondary" style="font-size:12px;">512 Ko max</span>
-							</div>
-							<div class="progress mb-2">
-								<div class="progress-bar bg-info" style="width:37%"></div>
-							</div>
-						</div>
-
-						<div class="mx-3 mt-2 border-bottom border-white">
-							<h5>Les Actions
-							</h5>
-						</div> #}
 						<div class="d-flex align-items-center gap-2 mx-3 py-3 flex-wrap">
 							{% if session.isblocked %}
 								<button type="button" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#blockSessionModal{{ session.id }}">

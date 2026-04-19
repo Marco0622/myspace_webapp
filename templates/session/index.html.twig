@@ -33,7 +33,7 @@
 										{% endif %}
 									</div>
 
-									<span class="fw-semibold text-white">{{ access.member.firstname ~" "~ access.member.name }}</span>
+									<span class="fw-semibold text-white">{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</span>
 
 									{% if 'ROLE_EDITOR' in access.role %}
 										<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
@@ -56,7 +56,7 @@
 											<div class="modal-header">
 												<h5 class="modal-title" id="manageModalLabel-{{ access.id }}">
 													Gérer
-													{{ access.member.firstname ~" "~ access.member.name }}
+													{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
 												</h5>
 												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 											</div>
@@ -80,7 +80,7 @@
 											<div class="modal-header">
 												<h5 class="modal-title" id="roleModalLabel-{{ access.id }}">
 													Modifier le rôle de
-													{{ access.member.firstname ~" "~ access.member.name }}
+													{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
 												</h5>
 												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 											</div>
@@ -108,14 +108,14 @@
 											<div class="modal-header">
 												<h5 class="modal-title text-danger" id="excludeModalLabel-{{ access.id }}">
 													Exclure
-													{{ access.member.firstname ~" "~ access.member.name }}
+													{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
 												</h5>
 												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 											</div>
 											<form action="{{ path('app_access_remove', { id: session.id }) }}" method="post">
 												<div class="modal-body">
 													<p class="mb-0">Êtes-vous sûr de vouloir exclure
-														<strong>{{ access.member.firstname ~" "~ access.member.name }}</strong>
+														<strong>{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</strong>
 														? Cette action lui retirera l'accès à la session.
 													</p>
 													<input type="hidden" name="_token" value="{{ csrf_token('remove_access') }}">
@@ -181,7 +181,7 @@
 											<img src="{{ asset('assets/uploads/pictures/' ~ invitation.receiver.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 										{% endif %}
 									</div>
-									<span class="fw-semibold text-white">{{ invitation.receiver.firstname ~" "~ invitation.receiver.name }}</span>
+									<span class="fw-semibold text-white">{{ invitation.receiver.pseudo ?? (invitation.receiver.firstname ~" "~ invitation.receiver.name) }}</span>
 									{% if invitation.responce is null %}
 										<span class="badge rounded-pill text-bg-warning" style="font-size:11px;">En attente</span>
 									{% elseif invitation.responce %}
@@ -209,7 +209,7 @@
 												</div>
 												<div class="modal-body">
 													Voulez-vous vraiment annuler l'invitation pour
-													<strong>{{ invitation.receiver.firstname }}</strong>
+													<strong>{{ invitation.receiver.pseudo ?? (invitation.receiver.firstname ~" "~ invitation.receiver.name) }}</strong>
 													?
 												</div>
 												<div class="modal-footer">
@@ -266,35 +266,12 @@
 				<div class="card-body">
 					<dl class="row mb-0 small">
 						<dt class="col-5 text-white">Propriétaire</dt>
-						<dd class="col-7 fw-semibold mb-2 text-white">{{ owner.name ~" "~ owner.firstname}}</dd>
+						<dd class="col-7 fw-semibold mb-2 text-white">{{ owner.pseudo (owner.name ~" "~ owner.firstname)}}</dd>
 						<dt class="col-5 text-white">Créer le</dt>
 						<dd class="col-7 mb-0 text-white">{{ session.createdAt|format_datetime( 'long', 'none', locale='fr') }}</dd>
 					</dl>
 				</div>
 			</div>
-			{# <div class="card card-section text-white  mb-4">
-													<div class="card-header border-white">
-														Stockage de la session
-														<twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
-													</div>
-													<div class="card-body">
-									
-														<div class="d-flex justify-content-between align-items-end mb-2">
-															<div>
-																<div class="storage-pct">62%</div>
-																<div class="storage-label">utilisé</div>
-															</div>
-															<div class="text-end">
-																<div class="fw-semibold small">635 Mo</div>
-																<div class="storage-label">/ 1.0 Go</div>
-															</div>
-														</div>
-									
-														<div class="progress storage-bar mb-3" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100">
-															<div class="progress-bar bg-warning" style="width: 62%"></div>
-														</div>
-													</div>
-												</div> #}
 			<div class="card card-section text-white">
 				<div class="card-header border-white">
 					Session

@@ -1,26 +1,30 @@
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="toast align-items-center text-bg-{{ type }} border-0 show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body d-flex align-items-center gap-2">
-
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+                <div class="toast-header text-white bg-{{ type }} border-0">
+                    <span class="me-2 d-flex align-items-center">
                         {% if type == 'success' %}
-                            {{ ux_icon('lucide:circle-check', { class: 'flex-shrink-0' }) }}
-                        {% elseif type == 'error' or type == 'danger' %}
-                            {{ ux_icon('lucide:triangle-alert', { class: 'flex-shrink-0' }) }}
+                            {{ ux_icon('lucide:circle-check', { width: 18, height: 18 }) }}
+                        {% elseif type == 'danger' %}
+                            {{ ux_icon('lucide:triangle-alert', { width: 18, height: 18 }) }}
                         {% elseif type == 'warning' %}
-                            {{ ux_icon('lucide:circle-alert', { class: 'flex-shrink-0' }) }}
+                            {{ ux_icon('lucide:circle-alert', { width: 18, height: 18 }) }}
                         {% else %}
-                            {{ ux_icon('lucide:info', { class: 'flex-shrink-0' }) }}
+                            {{ ux_icon('lucide:info', { width: 18, height: 18 }) }}
                         {% endif %}
-
-                        <span class="text-wrap text-white text-md-nowrap">{{ message }}</span>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </span>
+                    
+                    <strong class="me-auto text-capitalize">
+                        {% if type == 'danger' %}Erreur{% elseif type == 'success' %}Succès{% else %}Alert{% endif %}
+                    </strong>
+                    
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body text-white bg-{{ type }}">
+                    {{ message }}
                 </div>
             </div>
-
         {% endfor %}
     {% endfor %}
 </div>

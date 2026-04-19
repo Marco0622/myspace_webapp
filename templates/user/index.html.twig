@@ -107,7 +107,7 @@
 									{% endif %}
 								</div>
 								<div>
-									<p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname }}</p>
+									<p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? (invitation.sender.name ~ " " ~ invitation.sender.firstname) }}</p>
 									<small class="text-muted">vous invite à rejoindre
 										<strong>{{ invitation.session.name }}</strong>
 									</small>
@@ -172,7 +172,7 @@
 											{% endif %}
 										</div>
 										<p class="fw-bold text-white m-0">
-											{{ access.member.firstname }} {{ access.member.name }}
+											{{ access.member.pseudo ?? (access.member.name ~ " " ~ access.member.firstname) }}
 										</p>
 										{% if access.member == app.user %}
 											<span class="text-white">(Vous)</span>
