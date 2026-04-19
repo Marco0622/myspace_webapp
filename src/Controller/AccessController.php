@@ -35,7 +35,7 @@ final class AccessController extends AbstractController
       $objAccess = new Access();
 
       $objAccess->setJoinedAt(new DateTimeImmutable('now'));
-      $objAccess->setRole('ROLE_OWNER');
+      $objAccess->setRole('ROLE_VISITOR');
       $objAccess->setMember($this->getUser());
       $objAccess->setSession($session);
 

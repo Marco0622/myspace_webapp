@@ -96,9 +96,11 @@ final class SessionController extends AbstractController
         $query = trim($request->query->get('query', ''));
         $filter = $request->query->get('filter', '');
         $folder = $request->query->get('folder', 0);
+        $type = $request->query->get('nodeType', '');
 
         $session = $sessionRepository->findSessionWithRelations($id);
-        $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query, $folder);
+        $arrNodes = $nodeRepository->findAllNodeForManager($id, $filter, $query, $folder, $type);
+        $arrType = $nodeRepository->findTypeForFilter($id, $folder);
 
         if ($folder > 0) {
             $folder = $nodeRepository->findOneBy(['id' => $folder]);
@@ -116,6 +118,8 @@ final class SessionController extends AbstractController
             'filter' => $filter,
             'folder' => $folder,
             'breadcrumb' => $breadcrumb,
+            'arrType' => $arrType,
+            'nodeType' => $type,
         ]);
     }
 

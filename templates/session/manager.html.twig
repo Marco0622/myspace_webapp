@@ -13,53 +13,88 @@
 			<div class="list-group list-group-flush ">
 				<h1 class="h3 mb-0 text-white">Gestionnaire de fichiers</h1>
 
-				<div class="d-flex flex-column flex-md-row align-items-center justify-content-between border-bottom border-white gap-3 py-3 ">
-					{% if folder.id is defined %}
-						<a href="{{ path('app_session_manager', { id: session.id, folder: folder.parent.id ?? 0 }) }}" class="btn btn-outline-light btn-sm d-flex align-items-center justify-content-center" title="Retour">
-							<twig:ux:icon name="bi:arrow-left" style="height:18px;width:18px;"/>
-						</a>
-					{% endif %}
-					{% if is_granted('IS_EDITOR_SESSION', session) %}
-						<div class="d-flex gap-2 w-100 w-md-auto justify-content-start">
-							<button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
-								<twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
-								<span class="d-sm-inline">Nouveau dossier</span>
-							</button>
+				<div class="d-flex flex-wrap align-items-center gap-3 border-bottom border-white py-3">
 
-							<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
-								<twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
-								<span class="d-sm-inline">Ajouter un fichier</span>
-							</button>
-						</div>
-					{% endif %}
 
-					<div class="input-group input-group-sm w-100 w-sm-auto" style="min-width: 150px;">
-						<span class="input-group-text bg-dark border-secondary text-white">
-							{{ ux_icon('lucide:calendar') }}
-						</span>
-						<select class="form-select bg-dark border-secondary text-white shadow-none" onchange="location = this.value;">
-							<option value="?filter=&folder={{ folder.id ?? 0 }}" {% if filter is null %} selected disabled {% endif %}>Trier par...</option>
-							<option value="?filter=recent&folder={{ folder.id ?? 0   }}" {% if filter == 'recent' %} selected disabled {% endif %}>Plus récent</option>
-							<option value="?filter=old&folder={{ folder.id ?? 0  }}" {% if filter == 'old' %} selected disabled {% endif %}>Plus ancien</option>
-							<option value="?filter=A-Z&folder={{ folder.id ?? 0  }}" {% if filter == 'A-Z' %} selected disabled {% endif %}>Nom (A-Z)</option>
-							<option value="?filter=Z-A&folder={{ folder.id  ?? 0 }}" {% if filter == 'Z-A' %} selected disabled {% endif %}>Nom (Z-A)</option>
-						</select>
-					</div>
-
-					<form class="input-group input-group-sm flex-grow-1" id="search-form" method="get" action="{{ path('app_session_manager', { id: session.id }) }}">
+					<form class="input-group input-group-sm flex-grow-1" style="min-width: 250px;" method="get" action="{{ path('app_session_manager', { id: session.id }) }}">
 						<button type="submit" class="input-group-text bg-dark border-secondary text-white">
 							{{ ux_icon('lucide:search') }}
 						</button>
 						<input type="hidden" name="folder" value="{{ folder.id ?? 0 }}">
-
-						<input value="{{ query }}" type="text" name="query" class="form-control bg-dark border-secondary text-white placeholder-white" placeholder="Rechercher une image..." aria-label="Recherche">
+						<input type="hidden" name="filter" value="{{ filter }}">
+						<input type="hidden" name="nodeType" value="{{ nodeType }}">
+						<input value="{{ query }}" type="text" name="query" class="form-control bg-dark border-secondary text-white placeholder-white" placeholder="Rechercher un fichier..." aria-label="Recherche">
 						{% if query %}
-							<a href="{{ path('app_session_manager', { id: session.id, folder: folder.id ?? 0 }) }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
+							<a href="{{ path('app_session_manager', { id: session.id, folder: folder.id ?? 0, filter: filter, nodeType: nodeType }) }}" class="input-group-text bg-dark border-secondary text-white text-decoration-none">
 								{{ ux_icon('lucide:x') }}
 							</a>
 						{% endif %}
 					</form>
 
+					<div class="d-flex flex-wrap align-items-center gap-2">
+
+
+						{% if folder.id is defined %}
+							<a href="{{ path('app_session_manager', { id: session.id, folder: folder.parent.id ?? 0, filter: filter, query: query, nodeType: nodeType }) }}" class="btn btn-outline-light btn-sm d-flex align-items-center" title="Retour">
+								<twig:ux:icon name="bi:arrow-left" style="height:18px;width:18px;"/>
+							</a>
+						{% endif %}
+
+
+						<div class="input-group input-group-sm" style="width: auto;">
+							<label class="input-group-text bg-dark border-secondary text-white">
+								{{ ux_icon('lucide:calendar') }}
+							</label>
+							<select class="form-select bg-dark border-secondary text-white shadow-none" onchange="window.location.href = '{{ path('app_session_manager', { id: session.id }) }}' + '?folder={{ folder.id ?? 0 }}&query={{ query }}&nodeType=' + '{{ nodeType }}' + '&filter=' + this.value;">
+								<option value="" {% if not filter %} selected {% endif %}>Trier par...</option>
+								<option value="recent" {% if filter == 'recent' %} selected {% endif %}>Plus récent</option>
+								<option value="old" {% if filter == 'old' %} selected {% endif %}>Plus ancien</option>
+								<option value="A-Z" {% if filter == 'A-Z' %} selected {% endif %}>Nom (A-Z)</option>
+								<option value="Z-A" {% if filter == 'Z-A' %} selected {% endif %}>Nom (Z-A)</option>
+							</select>
+						</div>
+
+
+						{% if arrType|length > 1 %}
+							<div class="input-group input-group-sm" style="width: auto;">
+								<label class="input-group-text bg-dark border-secondary text-white">
+									{{ ux_icon('guidance:folder') }}
+								</label>
+								<select class="form-select bg-dark border-secondary text-white shadow-none" onchange="window.location.href = '{{ path('app_session_manager', { id: session.id }) }}' + '?folder={{ folder.id ?? 0 }}&query={{ query }}&filter={{ filter }}&nodeType=' + this.value;">
+									<option value="">Type...</option>
+									{% for type in arrType %}
+										<option class="text-capitalize" value="{{ type.type  }}" {% if nodeType == type.type %} selected {% endif %}>
+											{% if type.type  == 'folder' %}
+												Dossier
+											{% else %}
+												{{ type.type }}
+											{% endif %}
+										</option>
+									{% endfor %}
+								</select>
+							</div>
+						{% endif %}
+
+						{% if filter or query or nodeType %}
+							<a href="{{ path('app_session_manager', { id: session.id, folder: folder.id ?? 0 }) }}" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1" title="Réinitialiser les filtres">
+								<twig:ux:icon name="ri:reset-right-fill" style="height:18px;width:18px;"/>
+								<span class="d-none d-lg-inline">Réinitialiser</span>
+							</a>
+						{% endif %}
+
+						{% if is_granted('IS_EDITOR_SESSION', session) %}
+							<button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalNewFolder">
+								<twig:ux:icon name="bi:folder-plus" style="height:18px;width:18px;"/>
+								<span class="d-none d-lg-inline">Nouveau dossier</span>
+							</button>
+
+							<button class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalUploadFile">
+								<twig:ux:icon name="bi:cloud-upload" style="height:18px;width:18px;"/>
+								<span class="d-none d-lg-inline">Ajouter un fichier</span>
+							</button>
+						{% endif %}
+
+					</div>
 				</div>
 				<nav class="pt-3">
 					<ol class="breadcrumb text-white">
@@ -284,7 +319,7 @@
 					{% endif %}
 				{% else %}
 					<div class="py-5 text-center">
-						<p class="h5 text-white-50 ">Aucun élément trouver !</p>
+						<p class="h5 text-white-50 ">Aucun élément !</p>
 					</div>
 				{% endfor %}
 			</div>
@@ -332,10 +367,6 @@
 							<input type="hidden" value="{{ csrf_token('upload_node') }}" name="_token">
 							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 						</div>
-						{# <div>
-																															<label class="form-label">Nom de l'image</label>
-																															<input type="text" name="name" class="form-control" placeholder="Nom de l'image..." required>
-																														</div> #}
 					</div>
 				</div>
 				<div class="modal-footer border-top border-secondary">

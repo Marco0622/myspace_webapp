@@ -34,7 +34,7 @@
 							<div class="col-12 col-md">
 								<h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">{{ invitation.session.name }}</h6>
 								<small class="text-white-50 d-block text-center text-md-start">De :
-									{{ invitation.senderId.pseudo ?? invitation.senderId.name ~ " " ~ invitation.senderId.firstname}}
+									{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname}}
 									• il y a
 									{{ invitation.sendAt|date_diff }}</small>
 							</div>
@@ -62,14 +62,14 @@
 						<div class="modal-body">
 							<div class="d-flex align-items-center gap-3 mb-3">
 								<div class="rounded-circle overflow-hidden border border-2 flex-shrink-0" style="width: 48px; height: 48px;">
-									{% if invitation.senderId.photo is null %}
-										<img src="https://ui-avatars.com/api/?name={{ invitation.senderId.pseudo ?? invitation.senderId.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
+									{% if invitation.sender.photo is null %}
+										<img src="https://ui-avatars.com/api/?name={{ invitation.sender.pseudo ?? invitation.sender.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
 									{% else %}
-										<img src="{{ asset('assets/uploads/pictures/' ~ invitation.senderId.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+										<img src="{{ asset('assets/uploads/pictures/' ~ invitation.sender.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 									{% endif %}
 								</div>
 								<div>
-									<p class="mb-0 fw-semibold">{{ invitation.senderId.pseudo ?? invitation.senderId.name ~ " " ~ invitation.senderId.firstname }}</p>
+									<p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname }}</p>
 									<small class="text-muted">vous invite à rejoindre
 										<strong>{{ invitation.session.name }}</strong>
 									</small>
@@ -100,14 +100,14 @@
 						<div class="modal-body">
 							<div class="d-flex align-items-center gap-3 mb-3">
 								<div class="rounded-circle overflow-hidden border border-2 flex-shrink-0" style="width: 48px; height: 48px;">
-									{% if invitation.senderId.photo is null %}
-										<img src="https://ui-avatars.com/api/?name={{ invitation.senderId.pseudo ?? invitation.senderId.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
+									{% if invitation.sender.photo is null %}
+										<img src="https://ui-avatars.com/api/?name={{ invitation.sender.pseudo ?? invitation.sender.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
 									{% else %}
-										<img src="{{ asset('assets/uploads/pictures/' ~ invitation.senderId.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+										<img src="{{ asset('assets/uploads/pictures/' ~ invitation.sender.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 									{% endif %}
 								</div>
 								<div>
-									<p class="mb-0 fw-semibold">{{ invitation.senderId.pseudo ?? invitation.senderId.name ~ " " ~ invitation.senderId.firstname }}</p>
+									<p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname }}</p>
 									<small class="text-muted">vous invite à rejoindre
 										<strong>{{ invitation.session.name }}</strong>
 									</small>

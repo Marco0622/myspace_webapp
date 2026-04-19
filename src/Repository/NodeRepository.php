@@ -24,7 +24,7 @@ class NodeRepository extends ServiceEntityRepository
      * @param $query recherche de l'utilisateur.
      * @param $parent id du parent.
      */
-    public function findAllNodeForManager(int $id, string $filter = '', string $query = '', int $parent = 0): array
+    public function findAllNodeForManager(int $id, string $filter = '', string $query = '', int $parent = 0, string $type = ''): array
     {
         $queryBuilder = $this->createQueryBuilder('n')
             ->innerJoin('n.session', 's')
@@ -33,6 +33,7 @@ class NodeRepository extends ServiceEntityRepository
 
         if (!empty($query)) {
             $queryBuilder->andWhere('LOWER(n.name )LIKE LOWER(:q)')
+                ->orWhere('LOWER(n.type )LIKE LOWER(:q)')
                 ->setParameter('q', '%' . $query . '%');
         }
 
@@ -41,6 +42,11 @@ class NodeRepository extends ServiceEntityRepository
                 ->setParameter('parent', $parent);
         } else {
             $queryBuilder->andWhere('n.parent IS NULL');
+        }
+
+        if(!empty($type)){
+            $queryBuilder->andWhere('n.type = :type')
+                ->setParameter('type', $type);
         }
 
         switch ($filter) {
@@ -64,4 +70,27 @@ class NodeRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * Retourne les types/extensions de fichiers distincts présents dans un dossier ou à la racine.
+     *
+     * @param int $sessionId
+     * @param int|null $folderId
+     * @return array
+     */
+    public function findTypeForFilter(int $sessionId, mixed $folderId = null): array
+    {
+        $queryBuilder = $this->createQueryBuilder('n')
+            ->select('DISTINCT n.type')
+            ->where('n.session = :sessionId')
+            ->setParameter('sessionId', $sessionId);
+
+        if ($folderId > 0) {
+            $queryBuilder->andWhere('n.parent = :folder')
+                ->setParameter('folder', $folderId);
+        } else {
+            $queryBuilder->andWhere('n.parent IS NULL');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
