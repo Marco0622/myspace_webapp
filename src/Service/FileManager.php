@@ -20,7 +20,8 @@ class FileManager
     /**
      * Téléchargement d'un fichier.
      * 
-     * @param UploadedFile $file fichier à télécharger
+     * @param UploadedFile $file fichier à télécharger.
+     * @return string nom du fichier télécharger.
      */
     public function upload(UploadedFile $file): string
     {

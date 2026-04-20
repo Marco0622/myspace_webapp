@@ -21,6 +21,7 @@ class PictureRepository extends ServiceEntityRepository
      * 
      * @param $id de la session.
      * @param $query recherche de l'utilisateur.
+     * @return array
      */
     public function findAllPictureForGallery(int $id, string $query): array
     {

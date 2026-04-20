@@ -190,7 +190,7 @@ final class SessionController extends AbstractController
             $entityManager->persist($objAccess);
             $entityManager->flush();
 
-
+            $this->addFlash('success', "La session a été créée !");
             return $this->redirectToRoute('app_session_home', [
                 'id' => $objSession->getId(),
             ]);

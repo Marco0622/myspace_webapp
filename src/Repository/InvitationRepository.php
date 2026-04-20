@@ -20,8 +20,9 @@ class InvitationRepository extends ServiceEntityRepository
      * Cherche les invitations pour l'utilisateur en session.
      * 
      * @param $user utilisateur en session.
+     * @return array
      */
-    public function findInvitationsForUser($user)
+    public function findInvitationsForUser($user): array
     {
         return $this->createQueryBuilder('i')
             ->leftJoin('i.sender', 's')

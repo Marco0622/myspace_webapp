@@ -1,7 +1,7 @@
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
     {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="toast show rounded" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
                 <div class="toast-header text-white bg-{{ type }} border-0">
                     <span class="me-2 d-flex align-items-center">
                         {% if type == 'success' %}

@@ -12,6 +12,7 @@ window.addEventListener('turbo:load', function () {
 
     tinymce.init({
         selector: '#my-editor',
+        license_key: 'gpl',
         language: 'fr_FR',
         language_url: 'https://cdn.jsdelivr.net/npm/tinymce-i18n@23.10.9/langs6/fr_FR.js',
         content_css: 'dark',

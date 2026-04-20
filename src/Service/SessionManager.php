@@ -23,6 +23,7 @@ class SessionManager
      * 
      * @param object $objSession Session concernée.
      * @param object $objConnectUser Utilisateur connecté.
+     * @return bool
      */
     public function isOwner(object $objSession, object $objConnectUser): bool
     {
@@ -48,8 +49,9 @@ class SessionManager
      * 
      * @param object $objSession Session concernée.
      * @param object $objConnectUser Utilisateur connecté.
+     * @return bool
      */
-    public function isEditor(object $objSession, object $objConnectUser): string
+    public function isEditor(object $objSession, object $objConnectUser): bool
     {
         if($objSession->getIsBlocked()){
             return false;
@@ -72,8 +74,9 @@ class SessionManager
      * 
      * @param object $objSession Session concernée.
      * @param object $objConnectUser Utilisateur connecté.
+     * @return bool
      */
-    public function isVisitor(object $objSession, object $objConnectUser): string
+    public function isVisitor(object $objSession, object $objConnectUser): bool
     {
         if($objSession->getIsBlocked()){
             return false;
@@ -96,8 +99,9 @@ class SessionManager
      * 
      * @param object $objSession Session concernée.
      * @param object $objConnectUser Utilisateur connecté.
+     * @return bool
      */
-    public function isReceiver(object $objSession, object $objConnectUser): string
+    public function isReceiver(object $objSession, object $objConnectUser): bool
     {
         $objUserInvitation = $this->invitationRepository->findOneBy([
             'session' => $objSession,
