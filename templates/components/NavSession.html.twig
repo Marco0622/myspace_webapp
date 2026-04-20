@@ -2,15 +2,15 @@
 	<nav class="navbar border-0">
 		<div class="p-1 border border-secondary rounded mx-auto w-100">
 			<div class="d-none d-lg-flex justify-content-center gap-2 p-2 text-white">
-				<a href="{{ path('app_session_home', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
+				<a href="{{ path('app_session_home', { id: session.id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
 					<twig:ux:icon name="heroicons:home"/>
 					Home
 				</a>
-				<a href="{{ path('app_session_manager', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
+				<a href="{{ path('app_session_manager', { id: session.id  }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
 					<twig:ux:icon name="heroicons:folder"/>
 					Gestionnaire
 				</a>
-				<a href="{{ path('app_session_gallery', { id: id }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
+				<a href="{{ path('app_session_gallery', { id: session.id  }) }}" class="nav-link text-white d-flex align-items-center gap-2 px-3">
 					<twig:ux:icon name="heroicons:photo"/>
 					Galerie
 				</a>
@@ -33,6 +33,7 @@
 								<span class="text-white ps-3">Aucune Page</span>
 							</li>
 						{% endfor %}
+						{% if is_granted('IS_EDITOR_SESSION', session) %}
 						<li><hr class="dropdown-divider"></li>
 						<li>
 							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="#" data-bs-toggle="modal" data-bs-target="#modalCreatePage">
@@ -40,6 +41,7 @@
 								Créer une page
 							</a>
 						</li>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
@@ -53,21 +55,21 @@
 					</button>
 					<ul class="dropdown-menu w-100 mt-1 shadow-sm">
 						<li>
-							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_home', { id: id }) }}">
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_home', { id: session.id  }) }}">
 								<twig:ux:icon name="heroicons:home"/>
 								Home
 							</a>
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li>
-							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_manager', { id: id }) }}">
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_manager', { id: session.id  }) }}">
 								<twig:ux:icon name="heroicons:folder"/>
 								Gestionnaire de fichiers
 							</a>
 						</li>
 						<li><hr class="dropdown-divider"></li>
 						<li>
-							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_gallery', { id: id }) }}">
+							<a class="dropdown-item d-flex align-items-center gap-2 text-white" href="{{ path('app_session_gallery', { id: session.id  }) }}">
 								<twig:ux:icon name="heroicons:photo"/>
 								Galerie d'images
 							</a>
@@ -88,6 +90,7 @@
 								</a>
 							</li>
 						{% endfor %}
+						{% if is_granted('IS_EDITOR_SESSION', session ) %}
 						<li><hr class="dropdown-divider"></li>
 						<li>
 							<a class="dropdown-item text-white" type="button" data-bs-toggle="modal" data-bs-target="#modalCreatePage">
@@ -95,6 +98,7 @@
 								Créer une page
 							</a>
 						</li>
+						{% endif %}
 					</ul>
 				</div>
 			</div>
@@ -111,7 +115,7 @@
 					</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<form action="{{ path('app_page_create', { id: id }) }}" method="POST">
+				<form action="{{ path('app_page_create', { id: session.id }) }}" method="POST">
 					<div class="modal-body">
 						<div class="mb-3">
 							<label for="pageName" class="form-label">Nom de la page</label>

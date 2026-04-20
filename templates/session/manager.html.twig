@@ -6,7 +6,7 @@
 
 {% block body %}
 	<div class="py-3">
-		<twig:NavSession id="{{ session.id }}" allPage="{{ session.sessionPages }}"/>
+		<twig:NavSession session="{{ session }}" allPage="{{ session.sessionPages }}"/>
 	</div>
 	<div class="row">
 		<div class="col-12">

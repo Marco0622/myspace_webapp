@@ -9,7 +9,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 #[AsTwigComponent]
 final class NavSession
 {
-    private int $_intId;
+    private object $_session;
     #[ExposeInTemplate(name: 'arrPage')]
     private ?array $_arrPage;
 
@@ -19,9 +19,9 @@ final class NavSession
      * @param int $id identifiant de la session.
      * @param ?iterable $allPage tableaux contenant la liste des pages propres à la session.
      */
-    public function mount(int $id, ?iterable $allPage = []): void
+    public function mount(object $session, ?iterable $allPage = []): void
     {
-        $this->_intId = $id;   
+        $this->_session = $session;   
 
         if ($allPage instanceof \Doctrine\Common\Collections\Collection) {
             $this->_arrPage = $allPage->toArray();
@@ -35,9 +35,9 @@ final class NavSession
      * 
      * @return int
      */
-    public function getId(): int
+    public function getSession(): object
     {
-        return $this->_intId;
+        return $this->_session;
     }
 
     /**
