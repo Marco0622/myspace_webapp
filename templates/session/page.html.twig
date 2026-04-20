@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block javascripts %}
-	<script src="https://cdn.tiny.cloud/1/ovzm4shy65ncra9oxee7ht64dadq533lxlx2cl26w3ghhvjm/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+	<script src="{{ asset('assets/js/tinymce/tinymce.min.js') }}"></script>
 	{{ importmap(['app', 'editor']) }}
 {% endblock %}
 

@@ -21,6 +21,7 @@ class SessionRepository extends ServiceEntityRepository
      * Cherche les sessions auxquelles un utilisateur appartient, avec les accès et membres associés.
      * 
      * @param $user l'utilisateur en sessions.
+     * @return array un tableau de toutes les sessions de l'utilisateur connecter.
      */
     public function findSessionsForUser($user): array
     {
@@ -41,6 +42,7 @@ class SessionRepository extends ServiceEntityRepository
      * Prépare la requête de recherche des sessions pour la pagination du dashboard.
      * 
      * @param $query recherche de l'utilisateur sur le nom de la session.
+     * @return QueryBuilder retourne le QueryBuilder pour paginator.
      */
     public function sessionQuerybuilderForPaginator(string $query): QueryBuilder
     {
@@ -67,6 +69,7 @@ class SessionRepository extends ServiceEntityRepository
      * Récupère une session complète avec ses relations (accès, invitations, membres, pages) par son ID.
      * 
      * @param $id l'identifiant de la session.
+     * @return Session Retourne l'objet session avec ses relations.
      */
     public function findSessionWithRelations(int $id): ?Session
     {

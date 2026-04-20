@@ -39,6 +39,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * Recherche par nom, prénom ou nom complet, mail, pseudo, en excluant les comptes supprimés.
      * 
      * @param $query recherche de l'administrateur.
+     * @return QueryBuilder retourne le QueryBuilder pour paginator.
      */
     public function userCreateQueryBuilderPaginator(string $query): QueryBuilder
     {

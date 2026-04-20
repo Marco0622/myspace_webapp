@@ -82,6 +82,7 @@ class PictureManager
      * 
      * @param UploadedFile $file fichier à télécharger.
      * @param string $oldFilename Nom du fichier a supprimer.
+     * @return string nom du fichier de la photo.
      */
     public function upload(UploadedFile $file, ?string $oldFilename = null): string
     {

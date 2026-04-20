@@ -16,6 +16,8 @@ class CodeInvitationGenerator
 
     /**
      * Permet de s'assurer du fait que le code d'invitation de l'utilisateur soit unique.
+     * 
+     * @return string Code unique généré.
      */
     public function newCode(): string
     {
