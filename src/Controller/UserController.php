@@ -104,7 +104,7 @@ final class UserController extends AbstractController
             $user->setUpdatedAt(new DateTimeImmutable('now'));
             $entityManager->flush();
 
-            if ($user !== $this->getUser()) {
+            if ($user != $this->getUser()) {
                 $this->addFlash('success', "L'utilisateur a été modifié");
                 return $this->redirectToRoute('app_dashboard_users');
             } else {

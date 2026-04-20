@@ -267,12 +267,14 @@
 
 								<div class="col-4 col-md-2 text-end">
 									<div class="d-flex justify-content-end gap-2">
-										<button type="button" class="btn btn-sm btn-soft-info text-info" data-bs-toggle="modal" data-bs-target="#renameModal{{ node.id }}" title="Renommer">
-											<twig:ux:icon name="bi:pencil" style="height:18px;width:18px;"/>
-										</button>
-										<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
-											<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
-										</button>
+										{% if is_granted('IS_EDITOR_SESSION', session) %}
+											<button type="button" class="btn btn-sm btn-soft-info text-info" data-bs-toggle="modal" data-bs-target="#renameModal{{ node.id }}" title="Renommer">
+												<twig:ux:icon name="bi:pencil" style="height:18px;width:18px;"/>
+											</button>
+											<button type="button" class="btn btn-sm btn-soft-danger text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ node.id }}" title="Supprimer">
+												<twig:ux:icon name="bi:trash" style="height:18px;width:18px;"/>
+											</button>
+										{% endif %}
 										<div class="modal fade" id="deleteModal{{ node.id }}" tabindex="-1" aria-hidden="true">
 											<div class="modal-dialog modal-dialog-centered modal-sm">
 												<div class="modal-content border-secondary text-dark">
