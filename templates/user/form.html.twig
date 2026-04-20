@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil utilisateur - {{ parent() }}
+{% block title %}Profil utilisateur -
+	{{ parent() }}
 {% endblock %}
 
 {% block javascripts %}
@@ -37,7 +38,7 @@
 					<p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 py-3 mb-3">
 						Code d'invitation
 					</p>
-					<span class="form-control font-monospace fw-bold col-12" id="code-display" >
+					<span class="form-control font-monospace fw-bold col-12" id="code-display">
 						{{ user.code }}
 					</span>
 					<div class="py-3 text-center text-md-start">
@@ -62,32 +63,28 @@
 					<div class="col-md-6">{{ form_row(userForm.birthdate) }}</div>
 					<div class="col-12">{{ form_row(userForm.email) }}</div>
 					<div class="col-12">
-                        <div class="d-flex align-items-center gap-3">
-                            {% if user is defined and user %}
-                                <div class="position-relative flex-shrink-0">
-                                    <div class="rounded-circle overflow-hidden border border-2 border-white" style="width: 64px; height: 64px;">
-                                        {% if user.photo is null %}
-                                            <img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
-                                        {% else %}
-                                            <img src="{{ asset('assets/uploads/pictures/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-                                        {% endif %}
-                                    </div>
-                                    {% if user.photo is not null %}
-                                        <button type="button"
-                                                class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0 p-1 d-flex align-items-center justify-content-center"
-                                                style="width: 30px; height: 30px;"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#deletePhotoModal">
-                                            <twig:ux:icon name="mynaui:trash" class="w-100 h-100"/>
-                                        </button>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                            <div class="flex-grow-1">
-                                {{ form_row(userForm.photo) }}
-                            </div>
-                        </div>
-                    </div>
+						<div class="d-flex align-items-center gap-3">
+							{% if user is defined and user %}
+								<div class="position-relative flex-shrink-0">
+									<div class="rounded-circle overflow-hidden border border-2 border-white" style="width: 64px; height: 64px;">
+										{% if user.photo is null %}
+											<img src="https://ui-avatars.com/api/?name={{ user.name }}&background=random" alt="Profil" class="w-100 h-100">
+										{% else %}
+											<img src="{{ asset('assets/uploads/pictures/' ~ user.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+										{% endif %}
+									</div>
+									{% if user.photo is not null %}
+										<button type="button" class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0 p-1 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;" data-bs-toggle="modal" data-bs-target="#deletePhotoModal">
+											<twig:ux:icon name="mynaui:trash" class="w-100 h-100"/>
+										</button>
+									{% endif %}
+								</div>
+							{% endif %}
+							<div class="flex-grow-1">
+								{{ form_row(userForm.photo) }}
+							</div>
+						</div>
+					</div>
 
 				</div>
 				<p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
@@ -101,35 +98,60 @@
 					{{ ux_icon('lucide:info', {width: 12, height: 12}) }}
 					12 caractères minimum — laisser vide pour ne pas modifier
 				</small>
-				{% if user is defined and user is not null %}
-					{% if app.user.id == user.id %}
-						<a href="{{ path('app_user_delete', { id: app.user.id }) }}" class="btn btn-sm btn-outline-danger w-100 mb-3" onclick="return confirm('Supprimer ?')">Supprimer mon compte</a>
-					{% endif %}
-				{% endif %}
+				
 				{{ form_row(userForm.submit) }}
 			</div>
 		</div>
-		
-		{{ form_end(userForm) }}
 
-<div class="modal fade" id="deletePhotoModal" tabindex="-1" aria-labelledby="deletePhotoModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deletePhotoModalLabel">Supprimer la photo de profil</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <div class="modal-body">
-                Êtes-vous sûr de vouloir supprimer la photo ?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <form id="deleteForm" action="{{ path('app_user_picture', { id: user.id }) }}" method="post" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete_picture') }}">
-                    <button type="submit" id="deleteBtn" class="btn btn-danger">Supprimer</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+		{{ form_end(userForm) }}
+		{% if user is defined and user is not null %}
+					{% if app.user.id == user.id %}
+						<button type="button" class="btn btn-sm btn-outline-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+							Supprimer mon compte
+						</button>
+
+						<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="deleteAccountModalLabel">Confirmer la suppression</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+										<form method="post" action="{{ path('app_user_delete', {'id': app.user.id}) }}">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+
+											<button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endif %}
+
+		<div class="modal fade" id="deletePhotoModal" tabindex="-1" aria-labelledby="deletePhotoModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="deletePhotoModalLabel">Supprimer la photo de profil</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body">
+						Êtes-vous sûr de vouloir supprimer la photo ?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<form id="deleteForm" action="{{ path('app_user_picture', { id: user.id }) }}" method="post" class="d-inline">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete_picture') }}">
+							<button type="submit" id="deleteBtn" class="btn btn-danger">Supprimer</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	{% endblock %}
