@@ -49,7 +49,7 @@ final class PictureController extends AbstractController
         $fileSize = $picToAdd->getSize();
 
         if (is_null($namePicture) || is_null($picToAdd)) {
-            $this->addFlash('warning', "Erreur, veuillez réessayer !");
+            $this->addFlash('warning', 'Erreur, veuillez réessayer !');
             return $this->redirectToRoute('app_session_gallery', [
                 'id' => $session->getId(),
             ]);
@@ -62,7 +62,7 @@ final class PictureController extends AbstractController
         $mimeType = $picToAdd->getMimeType();
 
         if (!in_array($extension, $allowedExtensions) || !in_array($mimeType, $allowedMimeTypes)) {
-            $this->addFlash('warning', "Format invalide. Seuls les formats PNG, JPG, JPEG et WEBP sont acceptés.");
+            $this->addFlash('warning', 'Format invalide. Seuls les formats PNG, JPG, JPEG et WEBP sont acceptés.');
             return $this->redirectToRoute('app_session_gallery', [
                 'id' => $session->getId(),
             ]);
@@ -84,7 +84,7 @@ final class PictureController extends AbstractController
         $entityManager->persist($objPicture);
         $entityManager->flush();
 
-        $this->addFlash('success', "L'image a été téléchargée avec succès !");
+        $this->addFlash('success', 'L\'image a été téléchargée avec succès !');
 
         return $this->redirectToRoute('app_session_gallery', [
             'id' => $session->getId(),
@@ -116,7 +116,7 @@ final class PictureController extends AbstractController
         $entityManager->remove($picture);
         $entityManager->flush();
 
-        $this->addFlash('success', "L'image a été supprimer avec succès !");
+        $this->addFlash('success', 'L\'image a été supprimer avec succès !');
 
         return $this->redirectToRoute('app_session_gallery', [
             'id' => $sessionId->getId(),
@@ -172,7 +172,7 @@ final class PictureController extends AbstractController
         $picture->setName($newName);
         $entityManager->flush();
 
-        $this->addFlash('success', "L'image a été renommée avec succès !");
+        $this->addFlash('success', 'L\'image a été renommée avec succès !');
 
         return $this->redirectToRoute('app_session_gallery', [
             'id' => $picture->getSession()->getId()

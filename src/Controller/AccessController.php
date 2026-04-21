@@ -82,7 +82,7 @@ final class AccessController extends AbstractController
       $entityManager->remove($objUserToRemove);
       $entityManager->flush();
 
-      $this->addFlash('success', "L'utilisateur a été exclu !");
+      $this->addFlash('success', 'L\'utilisateur a été exclu !');
 
 
       return $this->redirectToRoute('app_session_home', [
@@ -169,7 +169,7 @@ final class AccessController extends AbstractController
 
       $entityManager->flush();
 
-      $this->addFlash('success', "Le rôle a été modifié !");
+      $this->addFlash('success', 'Le rôle a été modifié !');
 
 
       return $this->redirectToRoute('app_session_home', [

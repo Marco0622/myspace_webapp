@@ -1,1 +1,1 @@
-https://myspace.marco.schmitt.servd16161.odns.fr/login
+https://myspace.marco-dev.fr

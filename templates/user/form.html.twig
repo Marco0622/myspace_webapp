@@ -45,14 +45,14 @@
 						<button type="button" class="btn btn-light btn-sm px-5 me-3" id="copyCode">
 							Copier
 						</button>
-						<form action="{{ path('app_user_code', { id: user.id }) }}" method="post" class="d-inline">
+						<form action="{{ path('app_user_code', { id: user.id }) }}" method="post" class="d-inline" data-turbo="false">
 							<input type="hidden" name="_token" value="{{ csrf_token('new_code') }}">
 							<button type="submit" class="btn btn-success btn-sm px-5">Régénérer le code</button>
 						</form>
 					</div>
 				{% endif %}
-				<small class="text-success" id="toast" style="opacity:0; transition: opacity .3s;">Code copié !</small>
-				{{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data'}}) }}
+				<small class="text-success" id="copy-feedback" style="opacity:0; transition: opacity .3s;">Code copié !</small>
+				{{ form_start(userForm, {'attr': {'novalidate': 'novalidate', 'enctype': 'multipart/form-data', 'data-turbo': 'false'}}) }}
 				<p class="text-uppercase text-secondary fw-500 small border-bottom pb-2 mb-3">
 					Informations personnelles
 				</p>
@@ -98,41 +98,41 @@
 					{{ ux_icon('lucide:info', {width: 12, height: 12}) }}
 					12 caractères minimum — laisser vide pour ne pas modifier
 				</small>
-				
+
 				{{ form_row(userForm.submit) }}
 			</div>
 		</div>
 
 		{{ form_end(userForm) }}
 		{% if user is defined and user is not null %}
-					{% if app.user.id == user.id %}
-						<button type="button" class="btn btn-sm btn-outline-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
-							Supprimer mon compte
-						</button>
+			{% if app.user.id == user.id %}
+				<button type="button" class="btn btn-sm btn-outline-danger w-100 mb-3" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+					Supprimer mon compte
+				</button>
 
-						<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="deleteAccountModalLabel">Confirmer la suppression</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.
-									</div>
-									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-										<form method="post" action="{{ path('app_user_delete', {'id': app.user.id}) }}">
-											<input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
+				<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="deleteAccountModalLabel">Confirmer la suppression</h5>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body">
+								Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+								<form method="post" action="{{ path('app_user_delete', {'id': app.user.id}) }}">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete') }}">
 
-											<button type="submit" class="btn btn-danger">Confirmer la suppression</button>
-										</form>
-									</div>
-								</div>
+									<button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+								</form>
 							</div>
 						</div>
-					{% endif %}
-				{% endif %}
+					</div>
+				</div>
+			{% endif %}
+		{% endif %}
 
 		<div class="modal fade" id="deletePhotoModal" tabindex="-1" aria-labelledby="deletePhotoModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
@@ -146,7 +146,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<form id="deleteForm" action="{{ path('app_user_picture', { id: user.id }) }}" method="post" class="d-inline">
+						<form id="deleteForm" action="{{ path('app_user_picture', { id: user.id }) }}" method="post" class="d-inline" data-turbo="false">
 							<input type="hidden" name="_token" value="{{ csrf_token('delete_picture') }}">
 							<button type="submit" id="deleteBtn" class="btn btn-danger">Supprimer</button>
 						</form>

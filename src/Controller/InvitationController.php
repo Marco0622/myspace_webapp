@@ -44,7 +44,7 @@ final class InvitationController extends AbstractController
         $invitation->setResponce(false);
         $entityManager->flush();
 
-        $this->addFlash('success', "Vous avez décliné l'invitation !");
+        $this->addFlash('success', 'Vous avez décliné l\'invitation !');
 
         return $this->redirectToRoute('app_user_home');
     }
@@ -94,7 +94,7 @@ final class InvitationController extends AbstractController
         $entityManager->remove($invitation);
         $entityManager->flush();
 
-        $this->addFlash('success', "L'invitation a été supprimé !");
+        $this->addFlash('success', 'L\'invitation a été supprimé !');
 
         return $this->redirectToRoute('app_session_home', [
             'id' => $id,
@@ -132,7 +132,7 @@ final class InvitationController extends AbstractController
         ]);
 
         if ($objUser == $this->getUser()) {
-            $this->addFlash('warning', "Vous ne pouvez pas vous auto-envoyer une invitation !");
+            $this->addFlash('warning', 'Vous ne pouvez pas vous auto-envoyer une invitation !');
 
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),
@@ -140,7 +140,7 @@ final class InvitationController extends AbstractController
         }
 
         if (is_null($objUser)) {
-            $this->addFlash('warning', "Erreur, Aucun utilisateur trouvé !");
+            $this->addFlash('warning', 'Erreur, Aucun utilisateur trouvé !');
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),
             ]);
@@ -178,7 +178,7 @@ final class InvitationController extends AbstractController
         $entityManager->persist($objInvitation);
         $entityManager->flush();
 
-        $this->addFlash('success', "L'invitation a été envoyée !");
+        $this->addFlash('success', 'L\'invitation a été envoyée !');
 
         return $this->redirectToRoute('app_session_home', [
             'id' => $session->getId(),

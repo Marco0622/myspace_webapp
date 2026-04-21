@@ -71,9 +71,10 @@ final class SupportController extends AbstractController
                 $strFormError = "L'adresse email n'est pas valide.";
             } else {
 
-                $email = new TemplatedEmail()
-                    ->from($emailUser)
-                    ->to(new Address('slendsher48@gmail.com'))
+                $email = (new TemplatedEmail())
+                    ->from(new Address('contact@marco-dev.fr', 'Contact MySpace'))
+                    ->to('slendsher48@gmail.com')
+                    ->replyTo($emailUser)
                     ->subject('Contact MySpace - ' . $fullName)
                     ->htmlTemplate('emails/contact.html.twig')
                     ->context([
@@ -83,7 +84,7 @@ final class SupportController extends AbstractController
                         'message' => $message,
                     ]);
                 $mailer->send($email);
-                $this->addFlash('success', "L'email a bien été envoyé !");
+                $this->addFlash('success', 'L\'email a bien été envoyé !');
 
                 if ($this->getUser()) {
                     return $this->redirectToRoute('app_user_home');

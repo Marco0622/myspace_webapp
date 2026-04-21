@@ -43,7 +43,7 @@ final class ReportController extends AbstractController
             $entityManager->persist($objReport);
             $entityManager->flush();
 
-            $this->addFlash('success', "Le signalement a été envoyé !");
+            $this->addFlash('success', 'Le signalement a été envoyé !');
 
             return $this->redirectToRoute('app_user_home');
         }
@@ -73,12 +73,12 @@ final class ReportController extends AbstractController
             $entityManager->remove($report);
             $entityManager->flush();
 
-            $this->addFlash('success', "Le signalement a été supprimé !");
+            $this->addFlash('success', 'Le signalement a été supprimé !');
 
             return $this->redirectToRoute('app_user_home');
         }
 
-        $this->addFlash('warning', "Erreur !");
+        $this->addFlash('warning', 'Erreur !');
         return $this->redirectToRoute('app_user_home');
     }
 
@@ -106,7 +106,7 @@ final class ReportController extends AbstractController
             $entityManager->persist($report);
             $entityManager->flush();
 
-            $this->addFlash('success', "Le signalement a été modifié !");
+            $this->addFlash('success', 'Le signalement a été modifié !');
 
             return $this->redirectToRoute('app_user_home');
         }
@@ -140,10 +140,10 @@ final class ReportController extends AbstractController
             $entityManager->persist($report);
             $entityManager->flush();
 
-            $this->addFlash('success', "La réponse a bien été envoyée !");
+            $this->addFlash('success', 'La réponse a bien été envoyée !');
             return $this->redirectToRoute('app_dashboard_reports');
         } else {
-            $this->addFlash('danger', "Vous devez donner une réponse conforme.");
+            $this->addFlash('danger', 'Vous devez donner une réponse conforme.');
             return $this->redirectToRoute('app_dashboard_reports');
         }
     }

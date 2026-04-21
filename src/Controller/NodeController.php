@@ -115,7 +115,7 @@ final class NodeController extends AbstractController
         $entityManager->remove($node);
         $entityManager->flush();
 
-        $this->addFlash('success', "Le fichier a été supprimée avec succès !");
+        $this->addFlash('success', 'Le fichier a été supprimée avec succès !');
 
         return $this->redirectToRoute('app_session_manager', [
             'id' => $sessionId
@@ -210,7 +210,7 @@ final class NodeController extends AbstractController
         $node->setName($newName);
         $entityManager->flush();
 
-        $this->addFlash('success', "Le fichier a été renommée avec succès !");
+        $this->addFlash('success', 'Le fichier a été renommée avec succès !');
 
         return $this->redirectToRoute('app_session_manager', [
             'id' => $node->getSession()->getId()
@@ -228,7 +228,7 @@ final class NodeController extends AbstractController
         $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $node->getSession());
 
         if ($node->getType() === 'folder') {
-            $this->addFlash('warning', "Les dossier ne sont pas téléchargable !");
+            $this->addFlash('warning', 'Les dossier ne sont pas téléchargable !');
             return $this->redirectToRoute('app_session_manager', [
                 'id' => $node->getSession()->getId()
             ]);
@@ -237,7 +237,7 @@ final class NodeController extends AbstractController
         $filepath = $this->getParameter('files_session_directory') . '/' . $node->getPath();
 
         if (!file_exists($filepath)) {
-            $this->addFlash('warning', "Fichier introuvable.");
+            $this->addFlash('warning', 'Fichier introuvable.');
             return $this->redirectToRoute('app_session_manager', [
                 'id' => $node->getSession()->getId()
             ]);

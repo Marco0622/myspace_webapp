@@ -170,7 +170,7 @@ final class SessionController extends AbstractController
             $objStorage = $storageRepository->findOneBy(['id' => 1]);
 
             if (empty($name) || strlen($name) < 2) {
-                $this->addFlash('warning', "Le nom de la session est obligatoire (2 caractères min) !");
+                $this->addFlash('warning', 'Le nom de la session est obligatoire (2 caractères min) !');
                 return $this->redirectToRoute('app_user_home');
             }
             $objSession = new Session();
@@ -190,7 +190,7 @@ final class SessionController extends AbstractController
             $entityManager->persist($objAccess);
             $entityManager->flush();
 
-            $this->addFlash('success', "La session a été créée !");
+            $this->addFlash('success', 'La session a été créé !');
             return $this->redirectToRoute('app_session_home', [
                 'id' => $objSession->getId(),
             ]);
@@ -202,7 +202,7 @@ final class SessionController extends AbstractController
             ]);
 
 
-            $this->addFlash('danger', "L'action n'a pas pu être effectuée.");
+            $this->addFlash('danger', 'L\'action n\'a pas pu être effectuée.');
             return $this->redirectToRoute('app_user_home');
         }
     }
@@ -228,7 +228,7 @@ final class SessionController extends AbstractController
         $confirm = $request->request->get('deleteConfirm');
 
         if ($confirm != "Je confirme") {
-            $this->addFlash('danger', "Erreur lors de la tentative de suppression !");
+            $this->addFlash('danger', 'Erreur lors de la tentative de suppression !');
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),
             ]);
@@ -237,7 +237,7 @@ final class SessionController extends AbstractController
         $entityManager->remove($session);
         $entityManager->flush();
 
-        $this->addFlash('success', "La session a été supprimé !");
+        $this->addFlash('success', 'La session a été supprimé !');
         return $this->redirectToRoute('app_user_home');
     }
 
@@ -262,12 +262,12 @@ final class SessionController extends AbstractController
             $session->setIsBlocked(false);
             $entityManager->flush();
 
-            $this->addFlash('success', "La session est débloquée !");
+            $this->addFlash('success', 'La session est débloquée !');
         } else {
             $session->setIsBlocked(true);
             $entityManager->flush();
 
-            $this->addFlash('success', "La session est bloquée !");
+            $this->addFlash('success', 'La session est bloquée !');
         }
 
         return $this->redirectToRoute('app_dashboard_sessions');
@@ -293,7 +293,7 @@ final class SessionController extends AbstractController
         $name = $request->request->get('name');
 
         if (empty($name) || strlen($name) < 2) {
-            $this->addFlash('warning', "Le nom de la session est obligatoire (2 caractères min) !");
+            $this->addFlash('warning', 'Le nom de la session est obligatoire (2 caractères min) !');
             return $this->redirectToRoute('app_session_home', [
                 'id' => $session->getId(),
             ]);
@@ -302,7 +302,7 @@ final class SessionController extends AbstractController
         $session->setName($name);
         $entityManager->flush();
 
-        $this->addFlash('success', "La session a été renommée !");
+        $this->addFlash('success', 'La session a été renommée !');
         return $this->redirectToRoute('app_session_home', [
             'id' => $session->getId(),
         ]);

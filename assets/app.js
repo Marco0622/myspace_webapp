@@ -13,4 +13,8 @@ document.addEventListener('turbo:load', function () {
     document.querySelectorAll('.modal').forEach(function (modal) {
         document.body.appendChild(modal);
     });
+    document.querySelectorAll('.toast').forEach(function (toastEl) {
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    });
 });

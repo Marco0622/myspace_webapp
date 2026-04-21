@@ -105,10 +105,10 @@ final class UserController extends AbstractController
             $entityManager->flush();
 
             if ($user !== $this->getUser()) {
-                $this->addFlash('success', "L'utilisateur a été modifié");
+                $this->addFlash('success', 'L\'utilisateur a été modifié');
                 return $this->redirectToRoute('app_dashboard_users');
             } else {
-                $this->addFlash('success', "Votre profil a été modifié !");
+                $this->addFlash('success', 'Votre profil a été modifié !');
                 return $this->redirectToRoute('app_user_home');
             }
         }
@@ -144,7 +144,7 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_logout');
         }
         
-        $this->addFlash('success', "L'utilisateur a été supprimé !");
+        $this->addFlash('success', 'L\'utilisateur a été supprimé !');
         return $this->redirectToRoute('app_dashboard_users');
     }
 
@@ -169,11 +169,11 @@ final class UserController extends AbstractController
             $user->setBanAt(new \DateTimeImmutable());
             $entityManager->flush();
 
-            $this->addFlash('success', "L'utilisateur a été banni !");
+            $this->addFlash('success', 'L\'utilisateur a été banni !');
         } else {
             $user->setBanAt(null);
             $entityManager->flush();
-            $this->addFlash('success', "L'utilisateur a été débanni !");
+            $this->addFlash('success', 'L\'utilisateur a été débanni !');
         }
 
         return $this->redirectToRoute('app_dashboard_users');
@@ -214,7 +214,7 @@ final class UserController extends AbstractController
             $entityManager->persist($objUser);
             $entityManager->flush();
 
-            $this->addFlash('success', "L'utilisateur a été créé");
+            $this->addFlash('success', 'L\'utilisateur a été créé');
 
             return $this->redirectToRoute('app_dashboard_users');
         }
@@ -261,7 +261,7 @@ final class UserController extends AbstractController
                 $user->setRoles($arrRoles);
                 $entityManager->flush();
 
-                $this->addFlash('success', "Les rôles de l'utilisateur ont été modifiés");
+                $this->addFlash('success', 'Les rôles de l\'utilisateur ont été modifiés');
 
                 return $this->redirectToRoute('app_dashboard_users');
             }
@@ -299,9 +299,9 @@ final class UserController extends AbstractController
 
             $user->setCode($code);
             $entityManager->flush();
-            $this->addFlash('success', "Un nouveau code a été généré !");
+            $this->addFlash('success', 'Un nouveau code a été généré !');
         } else {
-            $this->addFlash('danger', "Vous n'avez pas les droits !");
+            $this->addFlash('danger', 'Vous n\'avez pas les droits !');
         }
 
         return $this->redirectToRoute('app_user_update', [
@@ -331,7 +331,7 @@ final class UserController extends AbstractController
 
         $user->setPhoto(null);
         $entityManager->flush();
-        $this->addFlash('success', "La photo a été supprimée !");
+        $this->addFlash('success', 'La photo a été supprimée !');
 
         return $this->redirectToRoute('app_user_update', [
             'id' => $user->getId(),
