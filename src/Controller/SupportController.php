@@ -17,6 +17,21 @@ use Symfony\Component\Routing\Attribute\Route;
 final class SupportController extends AbstractController
 {
     /**
+     * Page d'accueil pour les utilisateurs non connectés.
+     * 
+     * @return Response
+     */
+    #[Route('/', name: 'app_support_home')]
+    public function index(): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_user_home');
+        }    
+
+        return $this->render('support/home.html.twig');
+    }
+
+    /**
      * Affiche la page des mentions légales.
      * 
      * @return Response

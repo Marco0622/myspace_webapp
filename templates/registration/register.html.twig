@@ -1,71 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription -
-	{{ parent() }}
-{% endblock %}
+{% block title %}Inscription - {{ parent() }}{% endblock %}
 
 {% block body %}
-	<div class="card p-3 p-md-5">
-		{% for flash_error in app.flashes('verify_email_error') %}
-			<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-		{% endfor %}
-		<div class="text-center">
-			<h1 class="text-uppercase">Inscription</h1>
-			<p class="text-white">
-				Créez votre compte en quelques secondes et débloquez des fonctionnalités exclusives !
-			</p>
-		</div>
-		{{ form_start(registrationForm, {'attr': {'class': 'py-3'}}) }}
+<div class="py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
 
+            {% for flash_error in app.flashes('verify_email_error') %}
+                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+            {% endfor %}
 
-		{% if form_errors(registrationForm) %}
-			<div class="alert alert-danger">
-				{{ form_errors(registrationForm) }}
-			</div>
-		{% endif %}
+            <div class="text-center mb-4">
+                <h1 class="text-uppercase fw-bold">Inscription</h1>
+                <p class="text-white-50 small">
+                    Créez votre compte en quelques secondes et débloquez des fonctionnalités exclusives !
+                </p>
+            </div>
 
-		<div class="row">
+            {% if form_errors(registrationForm) %}
+                <div class="alert alert-danger">
+                    {{ form_errors(registrationForm) }}
+                </div>
+            {% endif %}
 
-			<div class="col-12 col-md-6 mb-3">
-				{{ form_row(registrationForm.name) }}
-			</div>
-			<div class="col-12 col-md-6 mb-3">
-				{{ form_row(registrationForm.firstname) }}
-			</div>
-		</div>
+            {{ form_start(registrationForm) }}
 
-		<div class="row">
+                <div class="row g-3">
 
-			<div class="col-12 col-md-6 mb-3">
-				{{ form_row(registrationForm.pseudo) }}
-			</div>
-			<div class="col-12 col-md-6 mb-3">
-				{{ form_row(registrationForm.birthdate) }}
-			</div>
-		</div>
+                    <div class="col-12 col-sm-6">
+                        {{ form_row(registrationForm.name) }}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        {{ form_row(registrationForm.firstname) }}
+                    </div>
 
-		<div class="mb-3">
-			{{ form_row(registrationForm.email) }}
-		</div>
+                    <div class="col-12 col-sm-6">
+                        {{ form_row(registrationForm.pseudo) }}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        {{ form_row(registrationForm.birthdate) }}
+                    </div>
 
+                    <div class="col-12">
+                        {{ form_row(registrationForm.email) }}
+                    </div>
 
-		<div class="row">
+                    <div class="col-12 col-sm-6">
+                        {{ form_row(registrationForm.plainPassword.first) }}
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        {{ form_row(registrationForm.plainPassword.second) }}
+                    </div>
 
-			<div class="col-12 col-md-6 mb-3">
-				{{ form_row(registrationForm.plainPassword.first) }}
-			</div>
-			<div class="col-12 col-md-6 mb-3">
-				{{ form_row(registrationForm.plainPassword.second) }}
-			</div>
-		</div>
+                    <div class="col-12">
+                        {{ form_row(registrationForm.agreeTerms) }}
+                    </div>
 
-		<div class="mb-4 form-check text-sm">
-			{{ form_row(registrationForm.agreeTerms) }}
-		</div>
+                    <div class="col-12 d-grid">
+                        {{ form_row(registrationForm.submit) }}
+                    </div>
 
-		<div class="d-grid gap-2">
-			{{ form_row(registrationForm.submit) }}
-		</div>
-		{{ form_end(registrationForm) }}
-	</div>
+                </div>
+
+            {{ form_end(registrationForm) }}
+
+            <p class="text-center text-white small mt-3">
+                Déjà un compte ?
+                <a href="{{ path('app_login') }}" class="text-white">Connexion</a>
+            </p>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

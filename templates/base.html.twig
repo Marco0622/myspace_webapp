@@ -20,8 +20,11 @@
         {% endif %}
     </head>
     <body>
-        {% include '_partials/header.html.twig' %}
-
+        {% if app.user %}
+            {% include '_partials/header_user.html.twig' %}
+        {% else %}
+            {% include '_partials/header_visitor.html.twig' %}
+        {% endif %}
         
 
         <main class="container">

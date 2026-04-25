@@ -11,9 +11,9 @@ body {
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..900&display=swap');
 
 :root {
-    --white1: rgb(248, 245, 240);
+    --white1: #e0e0e0;
     --white2: rgb(255, 255, 255);
-    --black1: rgb(28, 28, 28);
+    --black1: #1a1a1a;
     --black2: rgb(15, 15, 15);
     --padding-section: clamp(2rem, 3vw, 4rem);
     --padding: clamp(1rem, 2vw, 2rem);
@@ -191,9 +191,9 @@ h3 {
     z-index: 1050 !important;
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     content: ">";
-    color: var(--white1); 
+    color: var(--white1);
 }
 
 
@@ -393,3 +393,107 @@ h3 {
     opacity: 1;
 }
 
+/*Page d'acceuil*/
+.section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-bottom: 1px solid #333;
+    padding-bottom: .5rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-card {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 6px;
+}
+
+.btn-primary {
+    background-color: #1a6ef5;
+    border-color: #1a6ef5;
+    font-family: 'Courier New', monospace;
+}
+
+.btn-primary:hover {
+    background-color: #155ec7;
+    border-color: #155ec7;
+}
+
+.badge-session {
+    background-color: #1a6ef5;
+    font-family: 'Courier New', monospace;
+    font-size: .7rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.hero-title {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.hero-sub {
+    font-size: .95rem;
+    color: #888;
+}
+
+.stat-block {
+    border-left: 3px solid #e0e0e0;
+    padding-left: 1rem;
+}
+
+.stat-num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.stat-label {
+    font-size: .75rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.avatar-placeholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #333;
+    border: 1px solid #444;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .75rem;
+    color: #aaa;
+}
+
+
+
+.footer-link {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+    color: #fff; 
+}
+
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}
+
+
+@media (max-width: 768px) {
+    .footer-link {
+        display: inline-block;
+        padding: 0.5rem 0;
+    }
+}

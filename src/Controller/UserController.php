@@ -34,7 +34,7 @@ final class UserController extends AbstractController
      * @param StorageRepository $storageRepository
      * @return Response
      */
-    #[Route('/', name: 'app_user_home')]
+    #[Route('/home', name: 'app_user_home')]
     public function index(InvitationRepository $invitationRepository, 
     SessionRepository $sessionRepository, ReportRepository $reportRepository,
     StorageRepository $storageRepository): Response
@@ -44,7 +44,7 @@ final class UserController extends AbstractController
         $arrStorage = $storageRepository->findAll();
 
         if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_user_home');
         }
 
         $arrSession = $sessionRepository->findSessionsForUser($objUser);
@@ -189,7 +189,7 @@ final class UserController extends AbstractController
      */
     #[Route('/user/create', name: 'app_user_create')]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, CodeInvitationGenerator $codeInvitation): Response
     {
         $objUser = new User();
 
@@ -210,6 +210,8 @@ final class UserController extends AbstractController
 
 
             $objUser->setCreatedAt(new DateTimeImmutable('now'));
+            $objUser->setCode($codeInvitation->newCode());
+            $objUser->setIsVerified(true);
 
             $entityManager->persist($objUser);
             $entityManager->flush();
