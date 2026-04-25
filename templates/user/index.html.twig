@@ -1,362 +1,321 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Acceuil - {{ parent() }}
-{% endblock %}
+{% block title %}Accueil - {{ parent() }}{% endblock %}
 
 {% block body %}
-	<div class="d-flex align-items-center justify-content-between mb-4">
-		<div>
-			<h1 class="mb-0 fw-medium">Bonjour,
-				{{ app.user.pseudo ?? (app.user.name ~ " " ~ app.user.firstname) }}
-			</h1>
-			<p class="text-white mb-0 ">Bienvenue sur votre espace !
-				{{ ux_icon('boxicons:smile-filled') }}</p>
-		</div>
-	</div>
-	<div class="d-flex align-items-center justify-content-between w-100 py-2 border-bottom border-white pb-2">
-		<h3 class="fw-medium mb-0">
-			Invitations reçues
-		</h3>
-		<a href="{{ path('app_user_home') }}" class="btn btn-light btn-sm d-flex align-items-center gap-2">
-			{{ ux_icon('zondicons:reload') }}
-			Actualiser
-		</a>
-	</div>
-	<div class="row g-3 my-2">
-		{% for invitation in arrInvitation %}
-			<div class="col-12 mb-2">
-				<div class="card border">
-					<div class="card-body py-2">
-						<div class="row align-items-center g-3">
-							<div class="col-12 col-sm-auto text-center">
-								<span class="badge bg-success">Invitation</span>
-							</div>
-							<div class="col-12 col-md">
-								<h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">{{ invitation.session.name }}</h6>
-								<small class="text-white-50 d-block text-center text-md-start">De :
-									{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname}}
-									• il y a
-									{{ invitation.sendAt|date_diff }}</small>
-							</div>
-							<div class="col-12 col-md-auto d-flex flex-column flex-md-row gap-2 ms-md-auto">
-								<button type="button" class="btn btn-sm btn-success d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#acceptModal{{ invitation.id }}">
-									{{ ux_icon('rivet-icons:check') }}
-									Accepter
-								</button>
-								<button type="button" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#declineModal{{ invitation.id }}">
-									{{ ux_icon('lucide:x') }}
-									Refuser
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal fade" id="acceptModal{{ invitation.id }}" tabindex="-1" aria-labelledby="acceptModalLabel{{ invitation.id }}" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="acceptModalLabel{{ invitation.id }}">Accepter l'invitation</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-						</div>
-						<div class="modal-body">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="rounded-circle overflow-hidden border border-2 flex-shrink-0" style="width: 48px; height: 48px;">
-									{% if invitation.sender.photo is null %}
-										<img src="https://ui-avatars.com/api/?name={{ invitation.sender.pseudo ?? invitation.sender.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
-									{% else %}
-										<img src="{{ asset('assets/uploads/pictures/' ~ invitation.sender.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-									{% endif %}
-								</div>
-								<div>
-									<p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname }}</p>
-									<small class="text-muted">vous invite à rejoindre
-										<strong>{{ invitation.session.name }}</strong>
-									</small>
-								</div>
-							</div>
-							Voulez-vous accepter cette invitation ?
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-							<form action="{{ path('app_invitation_accept', { id: invitation.id })}}" method="post" class="d-inline">
-								<input type="hidden" name="_token" value="{{ csrf_token('accept_invitation') }}">
-								<button type="submit" class="btn btn-success d-flex align-items-center gap-1">
-									{{ ux_icon('rivet-icons:check') }}
-									Accepter
-								</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal fade" id="declineModal{{ invitation.id }}" tabindex="-1" aria-labelledby="declineModalLabel{{ invitation.id }}" aria-hidden="true">
-				<div class="modal-dialog modal-dialog-centered">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h5 class="modal-title" id="declineModalLabel{{ invitation.id }}">Refuser l'invitation</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-						</div>
-						<div class="modal-body">
-							<div class="d-flex align-items-center gap-3 mb-3">
-								<div class="rounded-circle overflow-hidden border border-2 flex-shrink-0" style="width: 48px; height: 48px;">
-									{% if invitation.sender.photo is null %}
-										<img src="https://ui-avatars.com/api/?name={{ invitation.sender.pseudo ?? invitation.sender.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
-									{% else %}
-										<img src="{{ asset('assets/uploads/pictures/' ~ invitation.sender.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-									{% endif %}
-								</div>
-								<div>
-									<p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? (invitation.sender.name ~ " " ~ invitation.sender.firstname) }}</p>
-									<small class="text-muted">vous invite à rejoindre
-										<strong>{{ invitation.session.name }}</strong>
-									</small>
-								</div>
-							</div>
-							Voulez-vous vraiment refuser cette invitation ?
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-							<form action="{{ path('app_invitation_decline', { id: invitation.id })}}" method="post" class="d-inline">
-								<input type="hidden" name="_token" value="{{ csrf_token('decline_invitation') }}">
-								<button type="submit" class="btn btn-danger d-flex align-items-center gap-1">
-									{{ ux_icon('lucide:x') }}
-									Refuser
-								</button>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-		{% else %}
-			<h5 class="text-center text-white-50">
-				Aucune Invitation !
-			</h5>
-		{% endfor %}
-	</div>
-	<div class="d-flex align-items-center justify-content-between w-100 py-2 border-bottom border-white pb-2">
-		<h3 class="fw-medium mb-0">
-			Vos sessions
-		</h3>
-		<button type="button" class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
-			{{ ux_icon('fa7-solid:plus') }}
-			Créer une session
-		</button>
-	</div>
-	<div class="row g-3 py-3">
-		{% for session in arrSession %}
-			<div class="col-12 col-md-6 col-xl-4">
-				<div class="card border h-100">
-					<div class="card-body d-flex flex-column gap-2">
-						<div class="d-flex align-items-start justify-content-between">
-							{% if session.isblocked %}
-								<span class="badge bg-danger">Session</span>
-							{% else %}
-								<span class="badge bg-primary">Session</span>
-							{% endif %}
-							<small class="text-white">{{ session.createdAt.date|format_datetime( 'long', 'none', locale='fr') }}</small>
-						</div>
-						<h6 class="mb-0 fw-medium text-white text-uppercase">{{ session.name }}</h6>
-						<p class="text-white">
-							<strong>Propriétaire :</strong>
-						</p>
-						{% for access in session.sessionAccesses %}
-							{% if access.role == 'ROLE_OWNER' %}
-								
-									<div class="d-flex align-items-center gap-2">
-										<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
-											{% if access.member.photo is null %}
-												<img src="https://ui-avatars.com/api/?name={{ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
-											{% else %}
-												<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-											{% endif %}
-										</div>
-										<p class="fw-bold text-white m-0">
-											{{ access.member.pseudo ?? (access.member.name ~ " " ~ access.member.firstname) }}
-										</p>
-										{% if access.member == app.user %}
-											<span class="text-white">(Vous)</span>
-										{% endif %}
-									</div>
-								
-							{% endif %}
-						{% endfor %}
 
-						<div class="d-flex align-items-center gap-1 text-white small">
-							{{ ux_icon('tdesign:member-filled') }}
-							{{ session.sessionAccesses|length }}
-							membres
-						</div>
-					</div>
-					{% if session.isblocked %}
-						<div class="card-footer border-top d-flex gap-2 py-2 px-3">
-							<a href="" class="btn btn-sm btn-danger flex-fill">Session Bloquée</a>
-						</div>
-					{% else %}
-						<div class="card-footer border-top d-flex gap-2 py-2 px-3">
-							<a href="{{ path('app_session_home', {id: session.id}) }}" class="btn btn-sm btn-primary flex-fill">Rejoindre</a>
-						</div>
-					{% endif %}
-				</div>
-			</div>
-		{% else %}
-			<h5 class="text-center text-white-50">
-				Aucune Session. Créez votre session !</h5>
-		{% endfor %}
-	</div>
-	<div class="d-flex align-items-center justify-content-between w-100 py-2 border-bottom border-white pb-2">
-		<h3 class="fw-medium mb-0">
-			Vos Signalement
-		</h3>
-	</div>
-	<div class="row g-3 py-3">
-		{% for report in arrReport %}
-			<div class="col-12 col-md-6">
-				<div class="card border h-100">
-					<div class="card-body d-flex flex-column gap-2">
-						<div class="d-flex align-items-start justify-content-between">
-							<span class="badge bg-warning text-dark">Signalement</span>
-							<small class="text-white">{{ report.sendAt.date|format_datetime('long', 'none', locale='fr') }}</small>
-						</div>
 
-						<div class="d-flex flex-column gap-1">
-							<h6 class="text-white text-uppercase fw-semibold">Sujet:</h6>
-							<p class="mb-0 text-white small">{{ report.subject }}</p>
-						</div>
+    <div class="d-flex align-items-center justify-content-between mb-5">
+        <div>
+            <h1 class="mb-0 fw-medium">Bonjour, {{ app.user.pseudo ?? (app.user.name ~ " " ~ app.user.firstname) }}</h1>
+            <p class="text-white-50 mb-0">Bienvenue sur votre espace ! {{ ux_icon('boxicons:smile-filled') }}</p>
+        </div>
+    </div>
 
-						<div class="d-flex flex-column gap-1">
-							<h6 class="text-white text-uppercase fw-semibold">Message:</h6>
-							<p class="mb-0 text-white small">{{ report.content }}</p>
-						</div>
+    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-25 pb-2 mb-3">
+        <h2 class="h4 fw-medium mb-0">Invitations reçues</h2>
+        <a href="{{ path('app_user_home') }}" class="btn btn-light btn-sm d-flex align-items-center gap-2">
+            {{ ux_icon('zondicons:reload') }}
+            Actualiser
+        </a>
+    </div>
 
-						<div class="d-flex flex-column gap-1">
-							<h6 class="text-white text-uppercase fw-semibold">Réponse:</h6>
-							{% if report.response %}
-								<p class="mb-0 text-white small">{{ report.response }}</p>
-							{% else %}
-								<h6 class="text-white-50">En attente</h6>
-							{% endif %}
-						</div>
-					</div>
+    <div class="row g-3 mb-5">
+        {% for invitation in arrInvitation %}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body py-2">
+                        <div class="row align-items-center g-3">
+                            <div class="col-12 col-sm-auto text-center">
+                                <span class="badge bg-success">Invitation</span>
+                            </div>
+                            <div class="col-12 col-md">
+                                <h6 class="mb-0 fw-medium text-white text-center text-md-start text-uppercase">{{ invitation.session.name }}</h6>
+                                <small class="text-white-50 d-block text-center text-md-start">
+                                    De : {{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname }}
+                                    • il y a {{ invitation.sendAt|date_diff }}
+                                </small>
+                            </div>
+                            <div class="col-12 col-md-auto d-flex flex-column flex-md-row gap-2 ms-md-auto">
+                                <button type="button" class="btn btn-sm btn-success d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#acceptModal{{ invitation.id }}">
+                                    {{ ux_icon('rivet-icons:check') }} Accepter
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center gap-1 w-100 w-md-auto" data-bs-toggle="modal" data-bs-target="#declineModal{{ invitation.id }}">
+                                    {{ ux_icon('lucide:x') }} Refuser
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="acceptModal{{ invitation.id }}" tabindex="-1" aria-labelledby="acceptModalLabel{{ invitation.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="acceptModalLabel{{ invitation.id }}">Accepter l'invitation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="rounded-circle overflow-hidden border border-2 flex-shrink-0" style="width: 48px; height: 48px;">
+                                    {% if invitation.sender.photo is null %}
+                                        <img src="https://ui-avatars.com/api/?name={{ invitation.sender.pseudo ?? invitation.sender.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                    {% else %}
+                                        <img src="{{ asset('assets/uploads/pictures/' ~ invitation.sender.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? invitation.sender.name ~ " " ~ invitation.sender.firstname }}</p>
+                                    <small class="text-muted">vous invite à rejoindre <strong>{{ invitation.session.name }}</strong></small>
+                                </div>
+                            </div>
+                            Voulez-vous accepter cette invitation ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <form action="{{ path('app_invitation_accept', { id: invitation.id })}}" method="post" class="d-inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('accept_invitation') }}">
+                                <button type="submit" class="btn btn-success d-flex align-items-center gap-1">
+                                    {{ ux_icon('rivet-icons:check') }} Accepter
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-					<div class="card-footer border-top d-flex py-2 px-3 gap-2">
-						{% if report.response %}
-							<button type="button" class="btn btn-sm btn-warning w-100" data-bs-toggle="modal" data-bs-target="#deleteReportModal{{ report.id }}">
-								Effacer
-							</button>
-						{% else %}
-							<button type="button" class="btn btn-sm btn-danger w-50" data-bs-toggle="modal" data-bs-target="#cancelReportModal{{ report.id }}">
-								Annuler
-							</button>
-							<a href="{{ path('app_report_edit', { id: report.id }) }}" class="btn btn-sm btn-primary flex-fill">Modifier</a>
-						{% endif %}
-					</div>
-				</div>
-			</div>
-			{% if report.response %}
-				<div class="modal fade" id="deleteReportModal{{ report.id }}" tabindex="-1" aria-labelledby="deleteReportModalLabel{{ report.id }}" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="deleteReportModalLabel{{ report.id }}">Effacer le signalement</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-							</div>
-							<div class="modal-body">
-								<div class="d-flex flex-column gap-2 mb-3">
-									<div>
-										<h6 class="fw-semibold mb-1">Sujet</h6>
-										<p class="mb-0 small text-muted">{{ report.subject }}</p>
-									</div>
-									<div>
-										<h6 class="fw-semibold mb-1">Réponse reçue</h6>
-										<p class="mb-0 small text-muted">{{ report.response }}</p>
-									</div>
-								</div>
-								Voulez-vous vraiment effacer ce signalement ? Il sera définitivement supprimé.
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-								<form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline">
-									<input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
-									<button type="submit" class="btn btn-warning">Effacer</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			{% else %}
-				<div class="modal fade" id="cancelReportModal{{ report.id }}" tabindex="-1" aria-labelledby="cancelReportModalLabel{{ report.id }}" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="cancelReportModalLabel{{ report.id }}">Annuler le signalement</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-							</div>
-							<div class="modal-body">
-								<div class="d-flex flex-column gap-2 mb-3">
-									<div>
-										<h6 class="fw-semibold mb-1">Sujet</h6>
-										<p class="mb-0 small text-muted">{{ report.subject }}</p>
-									</div>
-									<div>
-										<h6 class="fw-semibold mb-1">Message</h6>
-										<p class="mb-0 small text-muted">{{ report.content }}</p>
-									</div>
-									<div>
-										<span class="badge bg-warning text-dark">En attente de réponse</span>
-									</div>
-								</div>
-								Voulez-vous vraiment annuler ce signalement ? Il sera définitivement supprimé.
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
-								<form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline">
-									<input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
-									<button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			{% endif %}
-		{% else %}
-			<h5 class="text-center text-white-50">Aucun Signalement.</h5>
-		{% endfor %}
-	</div>
-	<div class="modal fade" id="createSessionModal" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Créer une session</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<form action="{{ path('app_session_create') }}" method="post">
-					<div class="modal-body">
-						<input type="hidden" name="_token" value="{{ csrf_token('session_create') }}">
-						<div class="mb-3">
-							<label for="sessionName" class="form-label">Nom de la session</label>
-							<input type="text" class="form-control" id="sessionName" name="name" placeholder="Ex: Session 2025..." required autofocus>
-						</div>
-						{# <div class="mb-3">
-							<label for="sessionStorage" class="form-label">Niveau de stockage</label>
-							<select class="form-select" id="sessionStorage" name="storage_id" required>
-								<option value="" disabled selected>-- Choisir un niveau --</option>
-								{% for storage in arrStorage %}
-									<option value="{{ storage.id }}">{{ storage.size }}
-										GO</option>
-								{% endfor %}
-							</select>
-						</div> #}
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<button type="submit" class="btn btn-success d-flex align-items-center gap-2">
-							{{ ux_icon('fa7-solid:plus') }}
-							Créer
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
+            <div class="modal fade" id="declineModal{{ invitation.id }}" tabindex="-1" aria-labelledby="declineModalLabel{{ invitation.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="declineModalLabel{{ invitation.id }}">Refuser l'invitation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="rounded-circle overflow-hidden border border-2 flex-shrink-0" style="width: 48px; height: 48px;">
+                                    {% if invitation.sender.photo is null %}
+                                        <img src="https://ui-avatars.com/api/?name={{ invitation.sender.pseudo ?? invitation.sender.name }}&background=random" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                    {% else %}
+                                        <img src="{{ asset('assets/uploads/pictures/' ~ invitation.sender.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <p class="mb-0 fw-semibold">{{ invitation.sender.pseudo ?? (invitation.sender.name ~ " " ~ invitation.sender.firstname) }}</p>
+                                    <small class="text-muted">vous invite à rejoindre <strong>{{ invitation.session.name }}</strong></small>
+                                </div>
+                            </div>
+                            Voulez-vous vraiment refuser cette invitation ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <form action="{{ path('app_invitation_decline', { id: invitation.id })}}" method="post" class="d-inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('decline_invitation') }}">
+                                <button type="submit" class="btn btn-danger d-flex align-items-center gap-1">
+                                    {{ ux_icon('lucide:x') }} Refuser
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+            <p class="text-center text-white-50 py-3">Aucune invitation.</p>
+        {% endfor %}
+    </div>
+    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-25 pb-2 mb-3">
+        <h2 class="h4 fw-medium mb-0">Vos sessions</h2>
+        <button type="button" class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
+            {{ ux_icon('fa7-solid:plus') }} Créer une session
+        </button>
+    </div>
+
+    <div class="row g-3 mb-5">
+        {% for session in arrSession %}
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column gap-2">
+                        <div class="d-flex align-items-start justify-content-between">
+                            {% if session.isblocked %}
+                                <span class="badge bg-danger">Session</span>
+                            {% else %}
+                                <span class="badge bg-primary">Session</span>
+                            {% endif %}
+                            <small class="text-white">{{ session.createdAt.date|format_datetime('long', 'none', locale='fr') }}</small>
+                        </div>
+                        <h6 class="mb-0 fw-medium text-white text-uppercase">{{ session.name }}</h6>
+                        <p class="text-white mb-0"><strong>Propriétaire :</strong></p>
+                        {% for access in session.sessionAccesses %}
+                            {% if access.role == 'ROLE_OWNER' %}
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+                                        {% if access.member.photo is null %}
+                                            <img src="https://ui-avatars.com/api/?name={{ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
+                                        {% else %}
+                                            <img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
+                                        {% endif %}
+                                    </div>
+                                    <p class="fw-bold text-white m-0">{{ access.member.pseudo ?? (access.member.name ~ " " ~ access.member.firstname) }}</p>
+                                    {% if access.member == app.user %}
+                                        <span class="text-white-50 small">(Vous)</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="d-flex align-items-center gap-1 text-white small">
+                            {{ ux_icon('tdesign:member-filled') }}
+                            {{ session.sessionAccesses|length }} membres
+                        </div>
+                    </div>
+                    <div class="card-footer border-top d-flex gap-2 py-2 px-3">
+                        {% if session.isblocked %}
+                            <span class="btn btn-sm btn-danger flex-fill" disabled>Session Bloquée</span>
+                        {% else %}
+                            <a href="{{ path('app_session_home', {id: session.id}) }}" class="btn btn-sm btn-primary flex-fill">Rejoindre</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center text-white-50 py-3">Aucune session. Créez votre première session !</p>
+        {% endfor %}
+    </div>
+    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-50 pb-2 mb-3">
+        <h2 class="h4 fw-medium mb-0">Vos signalements</h2>
+    </div>
+
+    <div class="row g-3 mb-5">
+        {% for report in arrReport %}
+            <div class="col-12 col-md-6">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column gap-2">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <span class="badge bg-warning text-dark">Signalement</span>
+                            <small class="text-white">{{ report.sendAt.date|format_datetime('long', 'none', locale='fr') }}</small>
+                        </div>
+                        <div class="d-flex flex-column gap-1">
+                            <h6 class="text-white text-uppercase fw-semibold">Sujet :</h6>
+                            <p class="mb-0 text-white small">{{ report.subject }}</p>
+                        </div>
+                        <div class="d-flex flex-column gap-1">
+                            <h6 class="text-white text-uppercase fw-semibold">Message :</h6>
+                            <p class="mb-0 text-white small">{{ report.content }}</p>
+                        </div>
+                        <div class="d-flex flex-column gap-1">
+                            <h6 class="text-white text-uppercase fw-semibold">Réponse :</h6>
+                            {% if report.response %}
+                                <p class="mb-0 text-white small">{{ report.response }}</p>
+                            {% else %}
+                                <span class="text-white-50 small">En attente</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer border-top d-flex py-2 px-3 gap-2">
+                        {% if report.response %}
+                            <button type="button" class="btn btn-sm btn-warning w-100" data-bs-toggle="modal" data-bs-target="#deleteReportModal{{ report.id }}">Effacer</button>
+                        {% else %}
+                            <button type="button" class="btn btn-sm btn-danger w-50" data-bs-toggle="modal" data-bs-target="#cancelReportModal{{ report.id }}">Annuler</button>
+                            <a href="{{ path('app_report_edit', { id: report.id }) }}" class="btn btn-sm btn-primary flex-fill">Modifier</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% if report.response %}
+                <div class="modal fade" id="deleteReportModal{{ report.id }}" tabindex="-1" aria-labelledby="deleteReportModalLabel{{ report.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="deleteReportModalLabel{{ report.id }}">Effacer le signalement</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex flex-column gap-2 mb-3">
+                                    <div>
+                                        <h6 class="fw-semibold mb-1">Sujet</h6>
+                                        <p class="mb-0 small text-muted">{{ report.subject }}</p>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-semibold mb-1">Réponse reçue</h6>
+                                        <p class="mb-0 small text-muted">{{ report.response }}</p>
+                                    </div>
+                                </div>
+                                Voulez-vous vraiment effacer ce signalement ? Il sera définitivement supprimé.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                <form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
+                                    <button type="submit" class="btn btn-warning">Effacer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="modal fade" id="cancelReportModal{{ report.id }}" tabindex="-1" aria-labelledby="cancelReportModalLabel{{ report.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cancelReportModalLabel{{ report.id }}">Annuler le signalement</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex flex-column gap-2 mb-3">
+                                    <div>
+                                        <h6 class="fw-semibold mb-1">Sujet</h6>
+                                        <p class="mb-0 small text-muted">{{ report.subject }}</p>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-semibold mb-1">Message</h6>
+                                        <p class="mb-0 small text-muted">{{ report.content }}</p>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-warning text-dark">En attente de réponse</span>
+                                    </div>
+                                </div>
+                                Voulez-vous vraiment annuler ce signalement ? Il sera définitivement supprimé.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Retour</button>
+                                <form action="{{ path('app_report_delete', { id: report.id }) }}" method="post" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_report') }}">
+                                    <button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        {% else %}
+            <p class="text-center text-white-50 py-3">Aucun signalement.</p>
+        {% endfor %}
+    </div>
+    <div class="modal fade" id="createSessionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Créer une session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ path('app_session_create') }}" method="post">
+                    <div class="modal-body">
+                        <input type="hidden" name="_token" value="{{ csrf_token('session_create') }}">
+                        <div class="mb-3">
+                            <label for="sessionName" class="form-label">Nom de la session</label>
+                            <input type="text" class="form-control" id="sessionName" name="name" placeholder="Ex: Session 2025..." required autofocus>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-success d-flex align-items-center gap-2">
+                            {{ ux_icon('fa7-solid:plus') }} Créer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

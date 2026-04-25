@@ -115,7 +115,7 @@
 					</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
-				<form action="{{ path('app_page_create', { id: session.id }) }}" method="POST">
+				<form action="{{ path('app_page_create', { id: session.id }) }}" method="POST" data-turbo="false">
 					<div class="modal-body">
 						<div class="mb-3">
 							<label for="pageName" class="form-label">Nom de la page</label>
