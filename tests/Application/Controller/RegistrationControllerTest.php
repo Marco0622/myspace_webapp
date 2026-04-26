@@ -52,7 +52,7 @@ class RegistrationControllerTest extends WebTestCase
         $email = $this->getMailerMessage();
 
         $this->assertEmailAddressContains($email, 'To', 'john.doe@email.com');
-        $this->assertEmailSubjectContains($email, "Confirmez votre adresse email - MySpace");
+        $this->assertEmailSubjectContains($email, "Confirmez votre adresse email - Labority");
         $client->followRedirect();
         $this->assertRouteSame('app_verify_email_pending');
     }

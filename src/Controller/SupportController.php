@@ -87,10 +87,10 @@ final class SupportController extends AbstractController
             } else {
 
                 $email = (new TemplatedEmail())
-                    ->from(new Address('contact@marco-dev.fr', 'Contact MySpace'))
+                    ->from(new Address('contact@marco-dev.fr', 'Contact Labority'))
                     ->to('slendsher48@gmail.com')
                     ->replyTo($emailUser)
-                    ->subject('Contact MySpace - ' . $fullName)
+                    ->subject('Contact Labority - ' . $fullName)
                     ->htmlTemplate('emails/contact.html.twig')
                     ->context([
                         'fullName' => $fullName,

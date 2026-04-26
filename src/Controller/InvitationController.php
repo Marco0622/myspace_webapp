@@ -164,9 +164,9 @@ final class InvitationController extends AbstractController
 
 
         $email = (new TemplatedEmail())
-            ->from(new Address('contact@marco-dev.fr', 'Contact MySpace'))
+            ->from(new Address('contact@marco-dev.fr', 'Contact Labority'))
             ->to($objUser->getEmail())
-            ->subject('Nouvelle invitation - MySpace')
+            ->subject('Nouvelle invitation - Labority')
             ->htmlTemplate('invitation/email.html.twig')
             ->context([
                 'user'    => $this->getUser(),
