@@ -2,6 +2,10 @@
 
 {% block title %}Signalement - {{ parent() }}{% endblock %}
 
+{% block javascripts %}
+	{{ importmap(['app', 'inputAnimation']) }}
+{% endblock %}
+
 {% block body %}
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -13,7 +17,21 @@
                 <hr class="border-secondary opacity-25">
             </div>
 
-            {{ form(reportForm) }}
+            {{ form_start(reportForm) }}
+                
+                <div class="mb-3 animate-in">
+                    {{ form_row(reportForm.subject) }}
+                </div>
+
+                <div class="mb-3 animate-in">
+                    {{ form_row(reportForm.content) }}
+                </div>
+
+                <div class="mt-4 animate-in">
+                    {{ form_row(reportForm.submit) }}
+                </div>
+
+            {{ form_end(reportForm) }}
 
         </div>
     </div>

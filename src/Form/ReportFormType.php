@@ -30,7 +30,7 @@ class ReportFormType extends AbstractType
                 'label' => 'Envoyer',
                 'attr' => ['class' => 'btn btn-light w-100']
             ])
-            
+
         ;
     }
 

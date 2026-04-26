@@ -110,7 +110,7 @@ h3 {
     color: var(--white1);
 }
 
-.card:hover {
+.card:hover, .accordion-item:hover {
     background-color: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.5);
 }
@@ -472,8 +472,6 @@ h3 {
     color: #aaa;
 }
 
-
-
 .footer-link {
     color: #888;
     text-decoration: none;
@@ -496,4 +494,14 @@ h3 {
         display: inline-block;
         padding: 0.5rem 0;
     }
+}
+
+.animate-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.animate-in.visible {
+    opacity: 1;
+    transform: translateY(0);
 }

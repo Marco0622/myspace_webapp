@@ -23,7 +23,6 @@
 				<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 					<div class="accordion-body">
 						{% for access in session.sessionAccesses %}
-							{% if access.member != app.user %}
 								<div class="d-flex align-items-center gap-2 py-2">
 									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
 										{% if access.member.photo is null %}
@@ -32,8 +31,11 @@
 											<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 										{% endif %}
 									</div>
-
-									<span class="fw-semibold text-white">{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</span>
+									{% if access.member != app.user %}
+										<span class="fw-semibold text-white">{{ access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</span>
+									{% else %}
+										<span class="fw-semibold text-white">Vous</span>
+									{% endif %}
 
 									{% if 'ROLE_EDITOR' in access.role %}
 										<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
@@ -42,7 +44,8 @@
 									{% else %}
 										<span class="badge rounded-pill text-bg-danger text-capitalize">Propriétaire</span>
 									{% endif %}
-									{% if is_granted('IS_OWNER_SESSION', session) %}
+
+									{% if is_granted('IS_OWNER_SESSION', session) and access.member != app.user %}
 										<button class="btn btn-sm btn-outline-warning ms-auto" data-bs-toggle="modal" data-bs-target="#manageModal-{{ access.id }}">
 											Gérer
 											<twig:ux:icon name="mingcute:edit-line" style="width:20px;height:20px;"/>
@@ -129,7 +132,6 @@
 										</div>
 									</div>
 								</div>
-							{% endif %}
 						{% else %}
 							<div class="text-center py-5 text-muted border-secondary">
 								<p class="text-white">Aucun utilisateur.</p>

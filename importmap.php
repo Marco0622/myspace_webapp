@@ -24,6 +24,10 @@ return [
         'path' => './assets/js/togglePassword.js',
         'entrypoint' => true,
     ],
+    'inputAnimation' => [ 
+        'path' => './assets/js/inputAnimation.js',
+        'entrypoint' => true,
+    ],
     'editor' => [ 
         'path' => './assets/js/editor.js',
         'entrypoint' => true,

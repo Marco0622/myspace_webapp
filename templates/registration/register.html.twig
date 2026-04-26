@@ -2,6 +2,10 @@
 
 {% block title %}Inscription - {{ parent() }}{% endblock %}
 
+{% block javascripts %}
+	{{ importmap(['app', 'inputAnimation']) }}
+{% endblock %}
+
 {% block body %}
 <div class="py-5">
     <div class="row justify-content-center">
@@ -28,36 +32,36 @@
 
                 <div class="row g-3">
 
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 animate-in">
                         {{ form_row(registrationForm.name) }}
                     </div>
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 animate-in">
                         {{ form_row(registrationForm.firstname) }}
                     </div>
 
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 animate-in">
                         {{ form_row(registrationForm.pseudo) }}
                     </div>
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 animate-in">
                         {{ form_row(registrationForm.birthdate) }}
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-12 animate-in">
                         {{ form_row(registrationForm.email) }}
                     </div>
 
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 animate-in">
                         {{ form_row(registrationForm.plainPassword.first) }}
                     </div>
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-6 animate-in">
                         {{ form_row(registrationForm.plainPassword.second) }}
                     </div>
 
-                    <div class="col-12">
+                    <div class="col-12 animate-in">
                         {{ form_row(registrationForm.agreeTerms) }}
                     </div>
 
-                    <div class="col-12 d-grid">
+                    <div class="col-12 d-grid animate-in">
                         {{ form_row(registrationForm.submit) }}
                     </div>
 

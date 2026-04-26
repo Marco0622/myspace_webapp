@@ -30,9 +30,7 @@
 				</div>
 			</div>
 		</form>
-		<div class="d-flex justify-content-center">
-			{{ knp_pagination_render(pagination) }}
-		</div>
+		
 		{% for session in pagination.items %}
 			<div class="accordion-item my-3 rounded">
 				<h2 class="accordion-header bg-transparent">
@@ -158,6 +156,8 @@
 				<p class="text-white">Aucune session.</p>
 			</div>
 		{% endfor %}
-
+		<div class="d-flex justify-content-center">
+			{{ knp_pagination_render(pagination) }}
+		</div>
 	</div>
 {% endblock %}

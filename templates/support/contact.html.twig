@@ -2,6 +2,10 @@
 
 {% block title %}Contact - {{ parent() }}{% endblock %}
 
+{% block javascripts %}
+	{{ importmap(['app', 'inputAnimation']) }}
+{% endblock %}
+
 {% block body %}
 <section class="py-5">
     <div>
@@ -20,24 +24,24 @@
 
                 <form action="{{ path('app_support_contact') }}" method="POST">
                     <div class="row g-4">
-                        <div class="col-md-6">
+                        <div class="col-md-6 animate-in">
                             <label for="fullName" class="form-label text-white small text-uppercase">Nom complet*</label>
                             <input value="{{ fullName }}" type="text" class="form-control text-dark border-secondary focus-ring focus-ring-light" id="name" name="fullName" placeholder="Jean Dupont" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 animate-in">
                             <label for="email" class="form-label text-white small text-uppercase">Email*</label>
                             <input value="{{ userEmail }}" type="email" class="form-control text-dark border-secondary  focus-ring focus-ring-light" id="email" name="email" placeholder="nom@exemple.com" required>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 animate-in">
                             <label for="subject" class="form-label text-white small text-uppercase">Objet*</label>
                             <input value="{{ subject }}" type="text" class="form-control text-dark border-secondary  focus-ring focus-ring-light" id="subject" name="subject" placeholder="Sujet de votre message">
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 animate-in">
                             <label for="message" class="form-label text-white small text-uppercase">Message*</label>
                             <textarea class="form-control text-dark border-secondary py-3 focus-ring focus-ring-light" id="message" name="message" rows="9" placeholder="Votre message ici..." required>{{ message }}</textarea>
                         </div>
                         <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('contact_form') }}">
-                        <div class="col-12 mt-4">
+                        <div class="col-12 mt-4 animate-in">
                             <button type="submit" class="btn btn-outline-light px-5 text-uppercase fw-bold w-100">
                                 Envoyer
                             </button>

@@ -3,7 +3,7 @@
 {% block title %}Connexion - {{ parent() }}{% endblock %}
 
 {% block javascripts %}
-    {{ importmap(['app', 'togglePassword']) }}
+    {{ importmap(['app', 'togglePassword', 'inputAnimation']) }}
 {% endblock %}
 
 {% block body %}
@@ -22,12 +22,12 @@
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security')|raw }}</div>
                 {% endif %}
 
-                <div class="mb-3">
+                <div class="mb-3 animate-in">
                     <label for="inputEmail" class="form-label text-uppercase fw-semibold">Email</label>
                     <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control form-control-lg fs-6" autocomplete="email" required autofocus placeholder="nom@exemple.com" style="border-radius: 0.75rem;">
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-3 animate-in">
                     <label for="inputPassword" class="form-label text-uppercase fw-semibold">Mot de passe</label>
                     <div class="position-relative">
                         <input type="password" name="_password" id="inputPassword" class="form-control form-control-lg fs-6" autocomplete="current-password" required placeholder="••••••••" style="border-radius: 0.75rem; padding-right: 2.5rem;">
@@ -38,7 +38,7 @@
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                <button class="btn btn-light btn-sm w-100 fw-bold py-2 mt-2" type="submit" style="border-radius: 0.75rem;">
+                <button class="btn btn-light btn-sm w-100 fw-bold py-2 mt-2 animate-in" type="submit" style="border-radius: 0.75rem;">
                     Se connecter
                 </button>
 

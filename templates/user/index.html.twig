@@ -12,9 +12,9 @@
         </div>
     </div>
 
-    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-25 pb-2 mb-3">
+    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-50 pb-2 mb-3">
         <h2 class="h4 fw-medium mb-0">Invitations reçues</h2>
-        <a href="{{ path('app_user_home') }}" class="btn btn-light btn-sm d-flex align-items-center gap-2">
+        <a href="{{ path('app_user_home') }}" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2">
             {{ ux_icon('zondicons:reload') }}
             Actualiser
         </a>
@@ -124,9 +124,9 @@
             <p class="text-center text-white-50 py-3">Aucune invitation.</p>
         {% endfor %}
     </div>
-    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-25 pb-2 mb-3">
+    <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-50 pb-2 mb-3">
         <h2 class="h4 fw-medium mb-0">Vos sessions</h2>
-        <button type="button" class="btn btn-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
+        <button type="button" class="btn btn-outline-light btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#createSessionModal">
             {{ ux_icon('fa7-solid:plus') }} Créer une session
         </button>
     </div>
@@ -178,13 +178,18 @@
                 </div>
             </div>
         {% else %}
-            <p class="text-center text-white-50 py-3">Aucune session. Créez votre première session !</p>
+            <div class="text-center text-white-50">
+						<div style="font-size:2rem">
+							{{ ux_icon('bi:plus-circle') }}
+						</div>
+						<p>Aucune session. Créer une session</p>
+					</div>
         {% endfor %}
     </div>
+    {% if arrReport %}
     <div class="d-flex align-items-center justify-content-between border-bottom border-secondary border-opacity-50 pb-2 mb-3">
         <h2 class="h4 fw-medium mb-0">Vos signalements</h2>
     </div>
-
     <div class="row g-3 mb-5">
         {% for report in arrReport %}
             <div class="col-12 col-md-6">
@@ -287,11 +292,9 @@
                     </div>
                 </div>
             {% endif %}
-
-        {% else %}
-            <p class="text-center text-white-50 py-3">Aucun signalement.</p>
         {% endfor %}
     </div>
+    {% endif %}
     <div class="modal fade" id="createSessionModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
