@@ -11,7 +11,6 @@
 	<h1 class="h2">SESSION :
 		{{ session.name }}</h1>
 	<div class="row g-4 mt-2">
-
 		<div class="accordion" id="accordionExample">
 			<div class="accordion-item">
 				<h2 class="accordion-header border-bottom border-white" id="headingOne">
@@ -23,115 +22,115 @@
 				<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 					<div class="accordion-body">
 						{% for access in session.sessionAccesses %}
-								<div class="d-flex align-items-center gap-2 py-2">
-									<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
-										{% if access.member.photo is null %}
-											<img src="https://ui-avatars.com/api/?name={{ access.member.firstname ~" "~ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
-										{% else %}
-											<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
-										{% endif %}
-									</div>
-									{% if access.member != app.user %}
-										<span class="fw-semibold text-white">{{ access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</span>
+							<div class="d-flex align-items-center gap-2 py-2">
+								<div class="rounded-circle overflow-hidden border border-2 border-white flex-shrink-0" style="width: 40px; height: 40px;">
+									{% if access.member.photo is null %}
+										<img src="https://ui-avatars.com/api/?name={{ access.member.firstname ~" "~ access.member.name }}&background=random" alt="Profil" class="w-100 h-100">
 									{% else %}
-										<span class="fw-semibold text-white">Vous</span>
-									{% endif %}
-
-									{% if 'ROLE_EDITOR' in access.role %}
-										<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
-									{% elseif 'ROLE_VISITOR' in access.role %}
-										<span class="badge rounded-pill text-bg-success text-capitalize">Visiteur</span>
-									{% else %}
-										<span class="badge rounded-pill text-bg-danger text-capitalize">Propriétaire</span>
-									{% endif %}
-
-									{% if is_granted('IS_OWNER_SESSION', session) and access.member != app.user %}
-										<button class="btn btn-sm btn-outline-warning ms-auto" data-bs-toggle="modal" data-bs-target="#manageModal-{{ access.id }}">
-											Gérer
-											<twig:ux:icon name="mingcute:edit-line" style="width:20px;height:20px;"/>
-										</button>
+										<img src="{{ asset('assets/uploads/pictures/' ~ access.member.photo) }}" alt="Profil" class="w-100 h-100 object-fit-cover">
 									{% endif %}
 								</div>
+								{% if access.member != app.user %}
+									<span class="fw-semibold text-white">{{ access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</span>
+								{% else %}
+									<span class="fw-semibold text-white">Vous</span>
+								{% endif %}
 
-								<div class="modal fade" id="manageModal-{{ access.id }}" tabindex="-1" aria-labelledby="manageModalLabel-{{ access.id }}" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-centered">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title" id="manageModalLabel-{{ access.id }}">
-													Gérer
-													{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
-												</h5>
-												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-											</div>
-											<div class="modal-body d-flex flex-column gap-3">
-												<button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#roleModal-{{ access.id }}">
-													<i class="bi bi-shield-fill me-1"></i>
-													Modifier le rôle
-												</button>
-												<button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#excludeModal-{{ access.id }}">
-													<i class="bi bi-person-x-fill me-1"></i>
-													Exclure ce membre
-												</button>
+								{% if 'ROLE_EDITOR' in access.role %}
+									<span class="badge rounded-pill text-bg-primary text-capitalize">éditeur</span>
+								{% elseif 'ROLE_VISITOR' in access.role %}
+									<span class="badge rounded-pill text-bg-success text-capitalize">Visiteur</span>
+								{% else %}
+									<span class="badge rounded-pill text-bg-danger text-capitalize">Propriétaire</span>
+								{% endif %}
 
-											</div>
+								{% if is_granted('IS_OWNER_SESSION', session) and access.member != app.user %}
+									<button class="btn btn-sm btn-outline-warning ms-auto" data-bs-toggle="modal" data-bs-target="#manageModal-{{ access.id }}">
+										Gérer
+										<twig:ux:icon name="mingcute:edit-line" style="width:20px;height:20px;"/>
+									</button>
+								{% endif %}
+							</div>
+
+							<div class="modal fade" id="manageModal-{{ access.id }}" tabindex="-1" aria-labelledby="manageModalLabel-{{ access.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="manageModalLabel-{{ access.id }}">
+												Gérer
+												{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
+											</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+										</div>
+										<div class="modal-body d-flex flex-column gap-3">
+											<button class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#roleModal-{{ access.id }}">
+												<i class="bi bi-shield-fill me-1"></i>
+												Modifier le rôle
+											</button>
+											<button class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#excludeModal-{{ access.id }}">
+												<i class="bi bi-person-x-fill me-1"></i>
+												Exclure ce membre
+											</button>
+
 										</div>
 									</div>
 								</div>
-								<div class="modal fade" id="roleModal-{{ access.id }}" tabindex="-1" aria-labelledby="roleModalLabel-{{ access.id }}" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-centered">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title" id="roleModalLabel-{{ access.id }}">
-													Modifier le rôle de
-													{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
-												</h5>
-												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-											</div>
-											<form action="{{ path('app_access_role', { id: session.id }) }}" method="post">
-												<div class="modal-body">
-													<label class="form-label fw-semibold">Rôle</label>
-													<select name="role" class="form-select">
-														<option value="editor" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
-														<option value="visitor" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
-													</select>
-												</div>
-												<input type="hidden" name="_token" value="{{ csrf_token('role_access') }}">
-												<input type="hidden" name="userToUpdate" value="{{ access.member.id }}">
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-													<button type="submit" class="btn btn-primary">Enregistrer</button>
-												</div>
-											</form>
+							</div>
+							<div class="modal fade" id="roleModal-{{ access.id }}" tabindex="-1" aria-labelledby="roleModalLabel-{{ access.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="roleModalLabel-{{ access.id }}">
+												Modifier le rôle de
+												{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
+											</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 										</div>
+										<form action="{{ path('app_access_role', { id: session.id }) }}" method="post">
+											<div class="modal-body">
+												<label class="form-label fw-semibold">Rôle</label>
+												<select name="role" class="form-select">
+													<option value="editor" {% if 'ROLE_EDITOR' in access.role %} selected {% endif %}>Éditeur</option>
+													<option value="visitor" {% if 'ROLE_EDITOR' not in access.role %} selected {% endif %}>Visiteur</option>
+												</select>
+											</div>
+											<input type="hidden" name="_token" value="{{ csrf_token('role_access') }}">
+											<input type="hidden" name="userToUpdate" value="{{ access.member.id }}">
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+												<button type="submit" class="btn btn-primary">Enregistrer</button>
+											</div>
+										</form>
 									</div>
 								</div>
-								<div class="modal fade" id="excludeModal-{{ access.id }}" tabindex="-1" aria-labelledby="excludeModalLabel-{{ access.id }}" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-centered">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h5 class="modal-title text-danger" id="excludeModalLabel-{{ access.id }}">
-													Exclure
-													{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
-												</h5>
-												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-											</div>
-											<form action="{{ path('app_access_remove', { id: session.id }) }}" method="post">
-												<div class="modal-body">
-													<p class="mb-0">Êtes-vous sûr de vouloir exclure
-														<strong>{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</strong>
-														? Cette action lui retirera l'accès à la session.
-													</p>
-													<input type="hidden" name="_token" value="{{ csrf_token('remove_access') }}">
-													<input type="hidden" name="userToRemove" value="{{ access.member.id }}">
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-													<button type="submit" class="btn btn-danger">Confirmer l'exclusion</button>
-												</div>
-											</form>
+							</div>
+							<div class="modal fade" id="excludeModal-{{ access.id }}" tabindex="-1" aria-labelledby="excludeModalLabel-{{ access.id }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title text-danger" id="excludeModalLabel-{{ access.id }}">
+												Exclure
+												{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}
+											</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 										</div>
+										<form action="{{ path('app_access_remove', { id: session.id }) }}" method="post">
+											<div class="modal-body">
+												<p class="mb-0">Êtes-vous sûr de vouloir exclure
+													<strong>{{access.member.pseudo ?? (access.member.firstname ~" "~ access.member.name) }}</strong>
+													? Cette action lui retirera l'accès à la session.
+												</p>
+												<input type="hidden" name="_token" value="{{ csrf_token('remove_access') }}">
+												<input type="hidden" name="userToRemove" value="{{ access.member.id }}">
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+												<button type="submit" class="btn btn-danger">Confirmer l'exclusion</button>
+											</div>
+										</form>
 									</div>
 								</div>
+							</div>
 						{% else %}
 							<div class="text-center py-5 text-muted border-secondary">
 								<p class="text-white">Aucun utilisateur.</p>
@@ -272,6 +271,28 @@
 						<dt class="col-5 text-white">Créer le</dt>
 						<dd class="col-7 mb-0 text-white">{{ session.createdAt|format_datetime( 'long', 'none', locale='fr') }}</dd>
 					</dl>
+				</div>
+			</div>
+			<div class="card card-section text-white  mb-4">
+				<div class="card-header border-white">
+					Stockage de la session
+					<twig:ux:icon name="akar-icons:data" style="width:30px;height:30px;"/>
+				</div>
+				<div class="card-body">
+
+					<div class="d-flex justify-content-between align-items-end mb-2">
+						<div>
+							<div class="storage-label">Utilisé</div>
+						</div>
+						<div class="text-end">
+							<div class="storage-label">{{ storageUse }} / {{ session.storage.size }} Go</div>
+						</div>
+					</div>
+					
+
+					<div class="progress storage-bar mb-3">
+						<div class="progress-bar bg-warning" style="width: {{ (storageUse * 100)|round }}%"></div>
+					</div>
 				</div>
 			</div>
 			<div class="card card-section text-white">

@@ -6,6 +6,7 @@ use App\Entity\Node;
 use App\Entity\Session;
 use App\Repository\NodeRepository;
 use App\Service\FileManager;
+use App\Service\StorageService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,7 +38,8 @@ final class NodeController extends AbstractController
         Request $request,
         FileManager $fileManager,
         EntityManagerInterface $entityManager,
-        NodeRepository $nodeRepository
+        NodeRepository $nodeRepository,
+        StorageService $storageService
     ): Response {
         $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $session);
 
@@ -49,23 +51,33 @@ final class NodeController extends AbstractController
         $parentId   = $request->request->get('parent_id');
         $objNodeParent = $nodeRepository->find($parentId) ?? null;
         $nodeName = pathinfo($fileToAdd->getClientOriginalName(), PATHINFO_FILENAME);
+        $fileSize = $fileToAdd->getSize();
+
+        if(!$storageService->sessionHasEnoughStorage($session, $session->getStorage()->getSize(), $fileSize)){
+            $this->addFlash('warning', 'Vous n\'avez plus l\'espace de stockage nécessaire pour ajouter ce fichier!');
+            return $this->redirectToRoute('app_session_manager', [
+                'id' => $session->getId(),
+                'folder' => $objNodeParent?->getId() ?? 0,
+            ]);
+        }
 
         if (is_null($nodeName) || is_null($fileToAdd)) {
             $this->addFlash('warning', 'Erreur, veuillez réessayer !');
             return $this->redirectToRoute('app_session_manager', [
-                'id' => $session->getId()
+                'id' => $session->getId(),
+                'folder' => $objNodeParent?->getId() ?? 0,
             ]);
         }
 
-        $size = $fileToAdd->getSize();
+        
         $extension = $fileToAdd->getClientOriginalExtension();
-        $filename = $fileManager->upload($fileToAdd);
+        $fileName = $fileManager->upload($fileToAdd);
 
 
         $node = new Node();
         $node->setName($nodeName);
-        $node->setPath($filename);
-        $node->setSize($size);
+        $node->setPath($fileName);
+        $node->setSize($fileSize);
         $node->setType($extension);
         $node->setSession($session);
         $node->setAddAt(new DateTimeImmutable('now'));
@@ -83,7 +95,7 @@ final class NodeController extends AbstractController
         } else {
             return $this->redirectToRoute('app_session_manager', [
                 'id' => $session->getId(),
-                'folder' => $objNodeParent->getId() ?? 0,
+                'folder' => $objNodeParent?->getId() ?? 0,
             ]);
         }
     }

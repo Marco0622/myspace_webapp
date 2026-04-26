@@ -11,6 +11,7 @@ use App\Repository\PictureRepository;
 use App\Repository\SessionRepository;
 use App\Repository\StorageRepository;
 use App\Service\BreadcrumbService;
+use App\Service\StorageService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -43,11 +44,14 @@ final class SessionController extends AbstractController
      * @return Response
      */
     #[Route('/{id<\d+>}', name: 'home')]
-    public function index(int $id, SessionRepository $sessionRepository, AccessRepository $accessRepository): Response
+    public function index(int $id, SessionRepository $sessionRepository, AccessRepository $accessRepository, StorageService $storageService): Response
     {
         $session = $sessionRepository->findSessionWithRelations($id);
+        
 
         $this->denyAccessUnlessGranted('IS_VISITOR_SESSION', $session);
+
+        $storageUse = $storageService->storageUseByOneSession($session);
 
         $objOwner = $accessRepository->findOneBy([
             'role' => 'ROLE_OWNER',
@@ -57,6 +61,7 @@ final class SessionController extends AbstractController
         return $this->render('session/index.html.twig', [
             'session' => $session,
             'owner' => $objOwner->getMember(),
+            'storageUse' => $storageUse,
         ]);
     }
 

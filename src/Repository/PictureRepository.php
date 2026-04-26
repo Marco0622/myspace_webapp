@@ -29,12 +29,27 @@ class PictureRepository extends ServiceEntityRepository
             ->innerJoin('p.session', 's')
             ->where('s.id = :id')
             ->setParameter('id', $id);
-            if(!empty($query)){
-                $queryBuilder->andWhere('LOWER(p.name) LIKE LOWER(:q)')
-                    ->setParameter('q','%'. $query . '%');
-            }
+        if (!empty($query)) {
+            $queryBuilder->andWhere('LOWER(p.name) LIKE LOWER(:q)')
+                ->setParameter('q', '%' . $query . '%');
+        }
 
-          return  $queryBuilder->getQuery()
-                ->getResult();
+        return  $queryBuilder->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Calcule le stockage total utilisé par les photos d'une session.
+     * 
+     * @param $id de la session.
+     */
+    public function getTotalSizePicture(int $sessionId): int
+    {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(p.size)')
+            ->where('p.session = :id')
+            ->setParameter('id', $sessionId)
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
     }
 }

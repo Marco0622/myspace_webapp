@@ -1,1 +1,1 @@
-https://myspace.marco-dev.fr
+https://Labority.marco-dev.fr

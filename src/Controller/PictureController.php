@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Picture;
 use App\Entity\Session;
 use App\Service\PictureManager;
+use App\Service\StorageService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,7 +34,7 @@ final class PictureController extends AbstractController
      * @return Response
      */
     #[Route('/download/{id<\d+>}', name: 'download', methods: ['POST'])]
-    public function download(Session $session, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager): Response
+    public function download(Session $session, Request $request, PictureManager $pictureManager, EntityManagerInterface $entityManager, StorageService $storageService): Response
     {
         $this->denyAccessUnlessGranted('IS_EDITOR_SESSION', $session);
 
@@ -47,6 +48,13 @@ final class PictureController extends AbstractController
         $picToAdd = $request->files->get('photo');
         $namePicture = pathinfo($picToAdd->getClientOriginalName(), PATHINFO_FILENAME);
         $fileSize = $picToAdd->getSize();
+
+        if(!$storageService->sessionHasEnoughStorage($session, $session->getStorage()->getSize(), $fileSize)){
+            $this->addFlash('warning', 'Vous n\'avez plus l\'espace de stockage nécessaire pour ajouter cette image!');
+            return $this->redirectToRoute('app_session_gallery', [
+                'id' => $session->getId(),
+            ]);
+        }
 
         if (is_null($namePicture) || is_null($picToAdd)) {
             $this->addFlash('warning', 'Erreur, veuillez réessayer !');

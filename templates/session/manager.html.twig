@@ -365,7 +365,7 @@
 						<h6>Glissez vos fichiers ici</h6>
 						<p class="text-muted small">ou cliquez pour parcourir votre ordinateur</p>
 						<div class="pb-3">
-							<input type="file" name="file" class="form-control mt-3">
+							<input type="file" name="file" class="form-control mt-3" required>
 							<input type="hidden" value="{{ csrf_token('upload_node') }}" name="_token">
 							<input type="hidden" name="parent_id" value="{{ folder.id ?? 0 }}">
 						</div>

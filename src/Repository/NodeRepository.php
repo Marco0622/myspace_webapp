@@ -93,4 +93,19 @@ class NodeRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    /**
+     * Calcule le stockage total utilisé par les fichiers d'une session.
+     * 
+     * @param $id de la session.
+     */
+    public function getTotalSizeNode(int $sessionId): int
+    {
+        return $this->createQueryBuilder('n')
+            ->select('SUM(n.size)')
+            ->where('n.session = :id')
+            ->setParameter('id', $sessionId)
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
+    }
 }
