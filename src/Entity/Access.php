@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AccessRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AccessRepository::class)]
@@ -27,6 +28,9 @@ class Access
 
     #[ORM\Column(name: 'acc_joined_at')] 
     private ?\DateTimeImmutable $joined_at = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true, name: 'acc_last_activity')]
+    private ?\DateTimeImmutable $lastActivity = null;
 
     public function getId(): ?int
     {
@@ -77,6 +81,18 @@ class Access
     public function setJoinedAt(\DateTimeImmutable $joined_at): static
     {
         $this->joined_at = $joined_at;
+
+        return $this;
+    }
+
+    public function getLastActivity(): ?\DateTimeImmutable
+    {
+        return $this->lastActivity;
+    }
+
+    public function setLastActivity(?\DateTimeImmutable $lastActivity): static
+    {
+        $this->lastActivity = $lastActivity;
 
         return $this;
     }
